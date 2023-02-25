@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createHashRouter, RouterProvider } from "react-router-dom";
 import FoodItems from "./pages/FoodItems";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { setUser } from "./store/slices/userSlice";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/login",
         element: <Login />,
