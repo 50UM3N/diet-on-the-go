@@ -25,17 +25,17 @@ const FoodItems = () => {
     const form = useForm({
         initialValues: {
             name: "",
-            protein: "",
-            fat: "",
-            carbohydrate: "",
+            protein: 0,
+            fat: 0,
+            carbohydrate: 0,
             metric: "",
         },
 
         validate: {
             name: (value) => (value ? null : "Required"),
-            protein: (value) => (value ? null : "Required"),
-            fat: (value) => (value ? null : "Required"),
-            carbohydrate: (value) => (value ? null : "Required"),
+            protein: (value) => (value || value >= 0 ? null : "Required"),
+            fat: (value) => (value || value >= 0 ? null : "Required"),
+            carbohydrate: (value) => (value || value >= 0 ? null : "Required"),
             metric: (value) => (value ? null : "Required"),
         },
     });
@@ -43,6 +43,7 @@ const FoodItems = () => {
         setIsSaving(true);
         await addDoc(collection(db, "foodItems"), values);
         setIsSaving(false);
+        form.reset();
     };
 
     useEffect(() => {
