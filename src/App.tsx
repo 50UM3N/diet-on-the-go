@@ -31,6 +31,7 @@ const App = () => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 let userData = userDoc.data();
+                if (userData) userData.dob = userData?.dob?.toDate().toLocaleDateString()
                 if (!userDoc.exists()) {
                     userData = {
                         id: user.uid,

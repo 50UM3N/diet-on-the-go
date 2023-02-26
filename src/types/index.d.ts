@@ -2,7 +2,7 @@ interface User {
     id: string;
     name: string;
     email: string;
-    height: number;
+    height: { feet: number; inches: number };
     weight: number;
     dob: Date;
     photoURL: string;

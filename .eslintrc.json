@@ -3,12 +3,7 @@
         "browser": true,
         "es2021": true
     },
-    "extends": [
-        "react-app",
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
+    "extends": ["react-app", "eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
     "overrides": [],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -23,6 +18,7 @@
         "react-hooks/exhaustive-deps": "off",
         "eqeqeq": "off",
         "default-case": "off",
-        "@typescript-eslint/ban-ts-comment":"off"
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

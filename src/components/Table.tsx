@@ -1,5 +1,5 @@
 import React from "react";
-import { createStyles, Group, Pagination, ScrollArea, Table as MTable, Text } from "@mantine/core";
+import { createStyles, Group, Pagination, Table as MTable, Text } from "@mantine/core";
 import { fuzzyFilter } from "../utils";
 import GlobalFilter from "./GlobalFilter";
 
@@ -50,7 +50,7 @@ const Table = (props: Props) => {
     return (
         <>
             <GlobalFilter setGlobalFilter={setGlobalFilter} />
-            <div style={{overflow:"auto"}}>
+            <div style={{ overflow: "auto" }}>
                 <MTable className={classes.table} fontSize="xs" mt="md" mb="xs">
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (

@@ -1,25 +1,8 @@
-import {
-    Avatar,
-    Burger,
-    createStyles,
-    Divider,
-    Group,
-    Header,
-    Menu,
-    Text,
-    UnstyledButton,
-} from "@mantine/core";
-import {
-    IconChevronDown,
-    IconHome,
-    IconLock,
-    IconLogout,
-    IconUser,
-} from "@tabler/icons-react";
+import { Burger, createStyles, Divider, Group, Header, Menu, Text, UnstyledButton } from "@mantine/core";
+import { IconChevronDown, IconHome, IconLock, IconLogout, IconUser } from "@tabler/icons-react";
 import { getAuth, signOut } from "firebase/auth";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 const useStyles = createStyles((theme, _param: { height: number }) => ({
     header: {
@@ -31,7 +14,7 @@ const useStyles = createStyles((theme, _param: { height: number }) => ({
         paddingRight: theme.spacing.md,
         position: "sticky",
         top: "0px",
-        zIndex:20
+        zIndex: 20,
     },
 
     burger: {
@@ -59,18 +42,12 @@ const useStyles = createStyles((theme, _param: { height: number }) => ({
         padding: "8px 12px",
         borderRadius: theme.radius.sm,
         textDecoration: "none",
-        color:
-            theme.colorScheme === "dark"
-                ? theme.colors.dark[0]
-                : theme.colors.gray[7],
+        color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
         fontSize: theme.fontSizes.sm,
         fontWeight: 500,
 
         "&:hover": {
-            backgroundColor:
-                theme.colorScheme === "dark"
-                    ? theme.colors.dark[6]
-                    : theme.colors.gray[0],
+            backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
         },
     },
     // user menu
@@ -91,28 +68,23 @@ const useStyles = createStyles((theme, _param: { height: number }) => ({
     },
 }));
 interface props {
+    gap: number;
     height: number;
     setNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
     navOpen: boolean;
 }
-const TopNav: React.FC<props> = ({ setNavOpen, navOpen, height }) => {
-    const user = useSelector<RootState, User | null>(
-        (state) => state.user.user
-    );
+const TopNav: React.FC<props> = ({ setNavOpen, navOpen, height, gap }) => {
+    const user = useSelector<RootState, User | null>((state) => state.user.user);
     const { classes, theme, cx } = useStyles({ height });
     const [userMenuOpened, setUserMenuOpened] = useState(false);
     const logoutUser = async () => {
         await signOut(getAuth());
     };
     return (
-        <Header height={height} px="xs" className={classes.header}>
+        <Header height={height} px="xs" m={gap} className={classes.header}>
             <div className={classes.inner}>
                 <Group>
-                    <Burger
-                        opened={!navOpen}
-                        onClick={() => setNavOpen(!navOpen)}
-                        size="sm"
-                    />
+                    <Burger opened={!navOpen} onClick={() => setNavOpen(!navOpen)} size="sm" />
                     <div id="tt--breadcrumbs"></div>
                 </Group>
 
@@ -131,12 +103,7 @@ const TopNav: React.FC<props> = ({ setNavOpen, navOpen, height }) => {
                                 })}
                             >
                                 <Group spacing={7}>
-                                    <img
-                                        width={20}
-                                        height={20}
-                                        style={{ borderRadius: "20px" }}
-                                        src={user?.photoURL}
-                                    />
+                                    <img width={20} height={20} style={{ borderRadius: "20px" }} src={user?.photoURL} alt="profile " />
                                     <Text
                                         weight={500}
                                         size="sm"
@@ -154,32 +121,17 @@ const TopNav: React.FC<props> = ({ setNavOpen, navOpen, height }) => {
                         </Menu.Target>
                         {/* <Menu.Item icon={<Settings size={14} />}>Account settings</Menu.Item> */}
                         <Menu.Dropdown>
-                            <Menu.Item
-                                component={Link}
-                                to="/"
-                                icon={<IconHome size={14} />}
-                            >
+                            <Menu.Item component={Link} to="/" icon={<IconHome size={14} />}>
                                 Home
                             </Menu.Item>
-                            <Menu.Item
-                                component={Link}
-                                to="/profile"
-                                icon={<IconUser size={14} />}
-                            >
+                            <Menu.Item component={Link} to="/profile" icon={<IconUser size={14} />}>
                                 Profile
                             </Menu.Item>
-                            <Menu.Item
-                                component={Link}
-                                to="/change-password"
-                                icon={<IconLock size={14} />}
-                            >
+                            <Menu.Item component={Link} to="/change-password" icon={<IconLock size={14} />}>
                                 Change Password
                             </Menu.Item>
                             <Divider />
-                            <Menu.Item
-                                icon={<IconLogout size={14} />}
-                                onClick={logoutUser}
-                            >
+                            <Menu.Item icon={<IconLogout size={14} />} onClick={logoutUser}>
                                 Logout
                             </Menu.Item>
                         </Menu.Dropdown>

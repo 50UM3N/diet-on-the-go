@@ -73,9 +73,9 @@ const FoodItems = () => {
         () => [
             {
                 accessorKey: "id",
-                header: "Index",
+                header: "No",
                 cell(props) {
-                    return props.row.index;
+                    return props.row.index+1;
                 },
             },
             {
@@ -138,7 +138,7 @@ const FoodItems = () => {
     );
     return (
         <>
-            <Grid>
+            <Grid gutter="xs">
                 <Col md={6}>
                     <Paper>
                         <Title order={4}>Food Items Form (100g Basis)</Title>

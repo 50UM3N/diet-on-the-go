@@ -1,33 +1,6 @@
-import {
-    ActionIcon,
-    Avatar,
-    Box,
-    Burger,
-    Collapse,
-    createStyles,
-    Divider,
-    Group,
-    Image,
-    Navbar,
-    ScrollArea,
-    Text,
-    ThemeIcon,
-    Title,
-} from "@mantine/core";
-import {
-    Icon123,
-    IconActivity,
-    IconBuildingSkyscraper,
-    IconChevronRight,
-    IconDashboard,
-    IconHome,
-    IconLogout,
-    IconMeat,
-    IconSearch,
-} from "@tabler/icons-react";
+import { Burger, Collapse, createStyles, Group, Image, Navbar, ScrollArea, Title } from "@mantine/core";
+import { IconBuildingSkyscraper, IconChevronRight, IconHome, IconMeat } from "@tabler/icons-react";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 
 import logo from "@/assets/logo.png";
@@ -78,20 +51,12 @@ const useStyles = createStyles((theme, _params: { width: number }, getRef) => {
         header: {
             paddingBottom: theme.spacing.md,
             marginBottom: theme.spacing.md * 1.5,
-            borderBottom: `1px solid ${
-                theme.colorScheme === "dark"
-                    ? theme.colors.dark[4]
-                    : theme.colors.gray[2]
-            }`,
+            borderBottom: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]}`,
         },
         footer: {
             paddingTop: theme.spacing.md,
             marginTop: theme.spacing.md,
-            borderTop: `1px solid ${
-                theme.colorScheme === "dark"
-                    ? theme.colors.dark[4]
-                    : theme.colors.gray[2]
-            }`,
+            borderTop: `1px solid ${theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[2]}`,
         },
 
         link: {
@@ -173,34 +138,19 @@ interface props {
     navOpen: boolean;
 }
 const SideNav: React.FC<props> = ({ setNavOpen, navOpen, width }) => {
-    const user = useSelector<RootState, User | null>(
-        (state) => state.user.user
-    );
     const { classes, cx } = useStyles({ width });
 
-    const links = data.map((item) => (
-        <LinkGroup key={item.label} link={item} classes={classes} cx={cx} />
-    ));
+    const links = data.map((item) => <LinkGroup key={item.label} link={item} classes={classes} cx={cx} />);
 
     return (
         <Navbar p="xs" className={classes.navbar}>
             <Navbar.Section mb={16} mt={10}>
                 <Group align="center" position="apart">
                     <Group align="center" spacing={12}>
-                        <Image
-                            src={logo}
-                            alt="logo"
-                            className={classes.adminLogo}
-                        />
+                        <Image src={logo} alt="logo" className={classes.adminLogo} />
                         <Title className={classes.adminTitle}>Dashboard</Title>
                     </Group>
-                    <Burger
-                        color="white"
-                        className={classes.burger}
-                        opened={!navOpen}
-                        onClick={() => setNavOpen(!navOpen)}
-                        size="sm"
-                    />
+                    <Burger color="white" className={classes.burger} opened={!navOpen} onClick={() => setNavOpen(!navOpen)} size="sm" />
                 </Group>
             </Navbar.Section>
             <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
@@ -212,15 +162,7 @@ const SideNav: React.FC<props> = ({ setNavOpen, navOpen, width }) => {
 
 export default SideNav;
 
-const LinkGroup = ({
-    link,
-    classes,
-    cx,
-}: {
-    link: LinksData;
-    classes: any;
-    cx: (...args: any) => string;
-}) => {
+const LinkGroup = ({ link, classes, cx }: { link: LinksData; classes: any; cx: (...args: any) => string }) => {
     const [opened, setOpened] = useState(false);
     const hasLinks = Array.isArray(link.links);
 
@@ -277,8 +219,7 @@ const LinkGroup = ({
                                 <NavLink
                                     className={(navData) =>
                                         cx(classes.subLink, {
-                                            [classes.subLinkActive]:
-                                                navData.isActive,
+                                            [classes.subLinkActive]: navData.isActive,
                                         })
                                     }
                                     to={link.link + item.link}
