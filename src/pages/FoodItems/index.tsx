@@ -51,23 +51,20 @@ const FoodItems = () => {
             });
             setList(localList);
         })();
-        const unsubscribe = onSnapshot(
-            collection(db, "foodItems"),
-            (snapshot) => {
-                const localList: any = [];
-                snapshot.forEach((doc) => {
-                    localList.push({ id: doc.id, ...doc.data() });
-                });
-                setList(localList);
-            }
-        );
+        const unsubscribe = onSnapshot(collection(db, "foodItems"), (snapshot) => {
+            const localList: any = [];
+            snapshot.forEach((doc) => {
+                localList.push({ id: doc.id, ...doc.data() });
+            });
+            setList(localList);
+        });
         return () => {
             unsubscribe();
         };
     }, []);
     const handleDelete = async (id: string) => {
-        await deleteDoc(doc(db, "foodItems", id))
-    }
+        await deleteDoc(doc(db, "foodItems", id));
+    };
     const columns = React.useMemo<ColumnDef<any, any>[]>(
         () => [
             {
@@ -111,12 +108,12 @@ const FoodItems = () => {
                             <Menu.Dropdown>
                                 <Menu.Label>Application</Menu.Label>
 
-                                <Menu.Item icon={<IconEdit size={14} />}>
-                                    Edit
-                                </Menu.Item>
+                                <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
                                 <Menu.Divider />
                                 <Menu.Label>Danger zone</Menu.Label>
-                                <Menu.Item color="red" onClick={()=>handleDelete(id)}>Delete</Menu.Item>
+                                <Menu.Item color="red" onClick={() => handleDelete(id)}>
+                                    Delete
+                                </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
                     );
@@ -127,9 +124,9 @@ const FoodItems = () => {
     );
     return (
         <>
-            <Grid gutter={4}>
+            <Grid>
                 <Col md={6}>
-                    <Paper p="md" withBorder>
+                    <Paper>
                         <Title order={4}>Food Items Form (100g Basis)</Title>
                         <Divider my="xs" />
                         <form onSubmit={form.onSubmit(formSubmit)}>
@@ -150,6 +147,8 @@ const FoodItems = () => {
                                 ]}
                             >
                                 <NumberInput
+                                    step={0.05}
+                                    precision={2}
                                     size="xs"
                                     placeholder="eg. 10"
                                     label="Protein (g)"
@@ -158,6 +157,8 @@ const FoodItems = () => {
                                     {...form.getInputProps("protein")}
                                 />
                                 <NumberInput
+                                    step={0.05}
+                                    precision={2}
                                     size="xs"
                                     placeholder="eg. 4"
                                     label="Fat (g)"
@@ -166,6 +167,8 @@ const FoodItems = () => {
                                     {...form.getInputProps("fat")}
                                 />
                                 <NumberInput
+                                    step={0.05}
+                                    precision={2}
                                     size="xs"
                                     placeholder="eg. 10"
                                     label="Carbohydrate (g)"
@@ -175,11 +178,7 @@ const FoodItems = () => {
                                 />
                             </SimpleGrid>
                             <Group position="right" mt="md">
-                                <Button
-                                    size="xs"
-                                    type="submit"
-                                    loading={isSaving}
-                                >
+                                <Button size="xs" type="submit" loading={isSaving}>
                                     Save
                                 </Button>
                             </Group>
@@ -187,7 +186,7 @@ const FoodItems = () => {
                     </Paper>
                 </Col>
                 <Col md={6}>
-                    <Paper p="md" withBorder>
+                    <Paper>
                         <Title order={4}>Food Items List</Title>
 
                         <Table columns={columns} data={list} />

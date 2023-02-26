@@ -1,5 +1,7 @@
-import { createStyles, Container, ScrollArea } from "@mantine/core";
-import React, { useState } from "react";
+import { createStyles, Container, ScrollArea, Modal } from "@mantine/core";
+import { showNotification } from '@mantine/notifications';
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Footer from "./Footer";
 import SideNav from "./SideNav";
 import TopNav from "./TopNav";
@@ -72,23 +74,41 @@ const useStyles = createStyles(
                 flexDirection: "column",
             },
             ".main-content": {
-                paddingTop:theme.spacing.xs,
+                paddingTop: theme.spacing.xs,
                 position: "relative",
                 flex: 1,
+                overflowX: "hidden",
             },
         },
     })
 );
 
 const AppShell: React.FC<any> = ({ children, footer = true }) => {
+    const user = useSelector<RootState, User | null>((state) => state.user.user);
+    const [openModal, setOpenModal] = useState(false);
+
     const { classes, theme, cx } = useStyles({
         mainGap: MAIN_GAP,
         sideBarWidth: SIDEBAR_WIDTH,
         topNavHeight: TOPNAV_HEIGHT,
     });
-    const [navOpen, setNavOpen] = useState(
-        window.innerWidth <= theme.breakpoints.md ? true : false
-    );
+    const [navOpen, setNavOpen] = useState(window.innerWidth <= theme.breakpoints.md ? true : false);
+    useEffect(() => {
+        if (!user?.height) {
+            setOpenModal(true);
+        }
+    }, [user]);
+    const closeModal = () => {
+        if (user?.height) {
+            setOpenModal(true);
+        } else {
+            showNotification({
+                color: "red",
+                title: "Set the information",
+                message: "Please enter your information",
+            });
+        }
+    };
     return (
         <div className={classes.layout}>
             <aside
@@ -96,11 +116,7 @@ const AppShell: React.FC<any> = ({ children, footer = true }) => {
                     [classes.closeSideBar]: navOpen,
                 })}
             >
-                <SideNav
-                    width={SIDEBAR_WIDTH}
-                    navOpen={navOpen}
-                    setNavOpen={setNavOpen}
-                />
+                <SideNav width={SIDEBAR_WIDTH} navOpen={navOpen} setNavOpen={setNavOpen} />
             </aside>
             <main
                 className={cx(classes.main, {
@@ -108,11 +124,7 @@ const AppShell: React.FC<any> = ({ children, footer = true }) => {
                 })}
             >
                 <div className={classes.contentWrapper}>
-                    <TopNav
-                        height={TOPNAV_HEIGHT}
-                        navOpen={navOpen}
-                        setNavOpen={setNavOpen}
-                    />
+                    <TopNav height={TOPNAV_HEIGHT} navOpen={navOpen} setNavOpen={setNavOpen} />
                     <Container fluid className={classes.content} m={0} p={0}>
                         <ScrollArea
                             className={classes.scrollArea}
@@ -123,6 +135,10 @@ const AppShell: React.FC<any> = ({ children, footer = true }) => {
                             }}
                         >
                             <main className="main-content">{children}</main>
+                            {/* <Modal opened={openModal} onClose={closeModal} title="Basic Information">
+                                
+                            </Modal> */}
+
                             {footer && <Footer />}
                         </ScrollArea>
                     </Container>

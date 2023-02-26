@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    createStyles,
-    Group,
-    Pagination,
-    Table as MTable,
-    Text,
-} from "@mantine/core";
+import { createStyles, Group, Pagination, ScrollArea, Table as MTable, Text } from "@mantine/core";
 import { fuzzyFilter } from "../utils";
 import GlobalFilter from "./GlobalFilter";
 
@@ -56,50 +50,37 @@ const Table = (props: Props) => {
     return (
         <>
             <GlobalFilter setGlobalFilter={setGlobalFilter} />
-            <MTable className={classes.table} fontSize="xs" mt="md" mb="xs">
-                <thead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <th
-                                        key={header.id}
-                                        colSpan={header.colSpan}
-                                    >
-                                        {
-                                            header?.column?.columnDef
-                                                ?.header as "string"
-                                        }
-                                    </th>
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody>
-                    {table.getRowModel().rows.map((row) => {
-                        return (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map((cell) => {
+            <div style={{overflow:"auto"}}>
+                <MTable className={classes.table} fontSize="xs" mt="md" mb="xs">
+                    <thead>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <tr key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
                                     return (
-                                        <td key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </td>
+                                        <th key={header.id} colSpan={header.colSpan}>
+                                            {header?.column?.columnDef?.header as "string"}
+                                        </th>
                                     );
                                 })}
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </MTable>
+                        ))}
+                    </thead>
+                    <tbody>
+                        {table.getRowModel().rows.map((row) => {
+                            return (
+                                <tr key={row.id}>
+                                    {row.getVisibleCells().map((cell) => {
+                                        return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </MTable>
+            </div>
             <Group position="apart">
                 <Text>
-                    Showing{" "}
-                    <strong>{table.getState().pagination.pageIndex + 1}</strong>{" "}
-                    of <strong>{table.getPageCount()}</strong> results
+                    Showing <strong>{table.getState().pagination.pageIndex + 1}</strong> of <strong>{table.getPageCount()}</strong> results
                 </Text>
                 <Pagination
                     total={table.getPageCount()}

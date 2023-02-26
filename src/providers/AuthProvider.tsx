@@ -8,9 +8,13 @@ const AuthProvider = () => {
     if (user.isLoading) {
         return <Loader />;
     } else if (user.user) {
-        return <AppShell><Outlet /></AppShell>;
+        return (
+            <AppShell>
+                <Outlet />
+            </AppShell>
+        );
     } else {
-        return <Navigate to="/login" state={{ from: location }} />;
+        return <Navigate to="/login" />;
     }
 };
 
