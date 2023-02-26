@@ -1,6 +1,7 @@
 import Table from "@/components/Table";
+import { METRIC } from "@/data/constant";
 import { db } from "@/firebase";
-import { Title } from "@mantine/core";
+import { Select, Title } from "@mantine/core";
 import { Col } from "@mantine/core";
 import { TextInput } from "@mantine/core";
 import { NumberInput } from "@mantine/core";
@@ -27,6 +28,7 @@ const FoodItems = () => {
             protein: "",
             fat: "",
             carbohydrate: "",
+            metric: "",
         },
 
         validate: {
@@ -34,6 +36,7 @@ const FoodItems = () => {
             protein: (value) => (value ? null : "Required"),
             fat: (value) => (value ? null : "Required"),
             carbohydrate: (value) => (value ? null : "Required"),
+            metric: (value) => (value ? null : "Required"),
         },
     });
     const formSubmit = async (values: any) => {
@@ -77,6 +80,16 @@ const FoodItems = () => {
             {
                 accessorKey: "name",
                 header: "Name",
+            },
+
+            {
+                accessorKey: "metric",
+                header: "Metric",
+
+                cell(props) {
+                    // @ts-ignore
+                    return METRIC[props.getValue()];
+                },
             },
             {
                 accessorKey: "protein",
@@ -130,14 +143,30 @@ const FoodItems = () => {
                         <Title order={4}>Food Items Form (100g Basis)</Title>
                         <Divider my="xs" />
                         <form onSubmit={form.onSubmit(formSubmit)}>
-                            <TextInput
-                                size="xs"
-                                placeholder="eg. Chicken"
-                                label="Name"
-                                withAsterisk
-                                mb="xs"
-                                {...form.getInputProps("name")}
-                            />
+                            <Grid gutter="xs" mb="xs">
+                                <Col md={10}>
+                                    <TextInput
+                                        size="xs"
+                                        placeholder="eg. Chicken"
+                                        label="Name"
+                                        withAsterisk
+                                        {...form.getInputProps("name")}
+                                    />
+                                </Col>
+                                <Col md={2}>
+                                    <Select
+                                        withAsterisk
+                                        size="xs"
+                                        label="Metric"
+                                        placeholder="Pick one"
+                                        data={[
+                                            { value: "PER_100_G", label: "/100g" },
+                                            { value: "PER_PC", label: "/pc" },
+                                        ]}
+                                        {...form.getInputProps("metric")}
+                                    />
+                                </Col>
+                            </Grid>
                             <SimpleGrid
                                 cols={3}
                                 breakpoints={[
