@@ -6,6 +6,7 @@ import App from "./App";
 import store from "./store";
 import "@/style/app.scss";
 import { NotificationsProvider } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
@@ -15,9 +16,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
                 withNormalizeCSS
                 theme={{ loader: "dots", components: { Paper: { defaultProps: { radius: "md", withBorder: true, p: "md" } } } }}
             >
-                <NotificationsProvider>
-                    <App />
-                </NotificationsProvider>
+                <ModalsProvider>
+                    <NotificationsProvider>
+                        <App />
+                    </NotificationsProvider>
+                </ModalsProvider>
             </MantineProvider>
         </Provider>
     </React.StrictMode>

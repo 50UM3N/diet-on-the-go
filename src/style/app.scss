@@ -10,3 +10,20 @@ body,
     height: 100%;
     min-height: 100%;
 }
+
+.height-input-group{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    & > div{
+        width: 100%;
+    }
+    & > div:first-child input{
+        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+    & > div:last-child input{
+        border-bottom-left-radius: 0px;
+        border-top-left-radius: 0px;
+    }
+}

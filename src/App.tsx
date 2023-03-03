@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import FoodItems from "./pages/FoodItems";
-import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AuthProvider from "./providers/AuthProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -9,6 +8,7 @@ import firebaseApp, { db } from "./firebase";
 import { useDispatch } from "react-redux";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { setUser } from "./store/slices/userSlice";
+import DietCharts from "./pages/DietCharts";
 
 const router = createHashRouter([
     {
@@ -18,7 +18,7 @@ const router = createHashRouter([
     {
         element: <AuthProvider />,
         children: [
-            { path: "/", element: <Home /> },
+            { path: "/", element: <DietCharts /> },
             { path: "/food-items", element: <FoodItems /> },
         ],
     },

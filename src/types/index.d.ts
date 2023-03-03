@@ -14,3 +14,5 @@ interface LinksData {
     links?: { link: string; label: string; access: Roles[] }[];
     exact?: boolean;
 }
+
+type Gender = "male" | "female";
