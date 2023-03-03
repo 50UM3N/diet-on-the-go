@@ -1,5 +1,5 @@
 import { ActionIcon, Badge, Button, Group, Menu, Modal, Paper, Popover, Stack, Text } from "@mantine/core";
-import { IconDotsVertical, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconPencil, IconPlus, IconSalad, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 import FoodForm from "./FoodForm";
 import { useMealChart } from "./MealChartContext";
@@ -9,6 +9,7 @@ import { db } from "@/firebase";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";
+import MacrosBadge from "@/components/MacrosBadge";
 const Meal: React.FC<{ data: DetailsMeals; onEdit: () => void }> = ({ data, onEdit }) => {
     const [searchParams] = useSearchParams();
     const chartId = searchParams.get("chart");
@@ -66,34 +67,25 @@ const Meal: React.FC<{ data: DetailsMeals; onEdit: () => void }> = ({ data, onEd
                             {data.name}
                         </Text>
                         <Group spacing="xs">
-                            <Badge variant="outline" color="green">
-                                {data.protein}g P
-                            </Badge>
-                            <Badge variant="outline" color="orange">
-                                {data.fat}g F
-                            </Badge>
-                            <Badge variant="outline" color="cyan">
-                                {data.carbohydrate}g C
-                            </Badge>
+                            <MacrosBadge protein={data.protein} fat={data.fat} carbohydrate={data.carbohydrate} color="teal" />
+
                             <Group spacing="xs">
                                 <Popover.Target>
-                                    <Button
-                                        disabled={ctx?.overlay}
+                                    <ActionIcon
                                         variant="light"
-                                        leftIcon={<IconPlus size={14} />}
-                                        size="xs"
+                                        color="blue"
                                         onClick={() => {
                                             setFoodPopover(true);
                                             ctx?.setOverlay(true);
                                         }}
                                     >
-                                        Food
-                                    </Button>
+                                        <IconPlus size={14} />
+                                    </ActionIcon>
                                 </Popover.Target>
                                 <Menu shadow="md" width={100} position="bottom-end">
                                     <Menu.Target>
                                         <ActionIcon variant="light">
-                                            <IconDotsVertical />
+                                            <IconDotsVertical size={18} />
                                         </ActionIcon>
                                     </Menu.Target>
 
@@ -110,49 +102,58 @@ const Meal: React.FC<{ data: DetailsMeals; onEdit: () => void }> = ({ data, onEd
                         </Group>
                     </Group>
                 </Paper>
-                <Stack spacing="xs" pl="md">
-                    {data.foods?.map((item) => (
-                        <Paper
-                            px={16}
-                            py={8}
-                            bg="gray.0"
-                            key={item.food.id}
-                            className={cx(classes.paper, "paper", { "active-hover": !ctx?.overlay }, { [classes.overlay]: ctx?.overlay })}
-                        >
-                            <Group position="apart">
-                                <Group spacing="xs">
-                                    <Text size="sm" weight={500}>
-                                        {item.food.name}
-                                    </Text>
-                                    <Badge size="sm" variant="outline" color="green">
-                                        {item.qty} {item.food.metric === "PER_100_G" ? "g" : "pc "}
-                                    </Badge>
-                                </Group>
-                                <Group spacing="xs">
-                                    <Badge size="sm" variant="outline" color="green">
-                                        {item.food.protein}g P
-                                    </Badge>
-                                    <Badge size="sm" variant="outline" color="orange">
-                                        {item.food.fat}g F
-                                    </Badge>
-                                    <Badge size="sm" variant="outline" color="cyan">
-                                        {item.food.carbohydrate}g C
-                                    </Badge>
-                                </Group>
-                            </Group>
-                            <div className={"control-wrapper"}>
-                                <Group spacing="xs">
-                                    <ActionIcon onClick={() => handleFoodEditing(item.food.id)}>
-                                        <IconPencil size="1.125rem" />
-                                    </ActionIcon>
-                                    <ActionIcon color="red" onClick={() => setDeleteFoodModal(item.food.id)}>
-                                        <IconTrash size="1.125rem" />
-                                    </ActionIcon>
-                                </Group>
-                            </div>
-                        </Paper>
-                    ))}
-                </Stack>
+                {data.foods?.length > 0 && (
+                    <Paper p={0} style={{ overflow: "hidden" }}>
+                        <Stack spacing={0}>
+                            {data.foods?.map((item) => (
+                                <Paper
+                                    radius={0}
+                                    px={16}
+                                    py={8}
+                                    key={item.food.id}
+                                    className={cx(
+                                        classes.paper,
+                                        "paper",
+                                        { "active-hover": !ctx?.overlay },
+                                        { [classes.overlay]: ctx?.overlay }
+                                    )}
+                                >
+                                    <Group position="apart">
+                                        <Group spacing="xs">
+                                            <IconSalad size={20} />
+                                            <Text size="sm" weight={500}>
+                                                {item.food.name}
+                                            </Text>
+                                            <Badge size="sm" variant="outline" color="gray">
+                                                {item.qty} {item.food.metric === "PER_100_G" ? "g" : "pc "}
+                                            </Badge>
+                                        </Group>
+                                        <Group spacing="xs">
+                                            <MacrosBadge
+                                                protein={item.food.protein}
+                                                fat={item.food.fat}
+                                                carbohydrate={item.food.carbohydrate}
+                                                color="orange"
+                                                size="xs"
+                                            />
+                                        </Group>
+                                    </Group>
+                                    <div className={"control-wrapper"}>
+                                        <Group spacing="xs">
+                                            <ActionIcon onClick={() => handleFoodEditing(item.food.id)}>
+                                                <IconPencil size="1.125rem" />
+                                            </ActionIcon>
+                                            <ActionIcon color="red" onClick={() => setDeleteFoodModal(item.food.id)}>
+                                                <IconTrash size="1.125rem" />
+                                            </ActionIcon>
+                                        </Group>
+                                    </div>
+                                </Paper>
+                            ))}
+                        </Stack>
+                    </Paper>
+                )}
+
                 <Popover.Dropdown>
                     <FoodForm
                         meal={data}

@@ -92,7 +92,6 @@ const FoodForm: React.FC<{
                 <Grid gutter="xs">
                     <Col span={8}>
                         <Select
-                            size="xs"
                             label="Choose your food item"
                             placeholder="Pick one"
                             itemComponent={SelectItem}
@@ -113,7 +112,6 @@ const FoodForm: React.FC<{
                         <NumberInput
                             min={1}
                             precision={form.values.foodDetails?.metric === "PER_100_G" ? 1 : 0}
-                            size="xs"
                             placeholder="eg. 1"
                             label={`Quantity ${form.values.foodDetails?.metric ? METRIC[form.values.foodDetails.metric] : ""}`}
                             {...form.getInputProps("qty")}
@@ -121,10 +119,10 @@ const FoodForm: React.FC<{
                     </Col>
                 </Grid>
                 <Group position="right" mt="md">
-                    <Button size="xs" variant="outline" type="button" onClick={onClose} disabled={isSaving}>
+                    <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>
                         Cancel
                     </Button>
-                    <Button size="xs" type="submit" loading={isSaving}>
+                    <Button type="submit" loading={isSaving}>
                         {isEditing ? "Update" : "Add"}
                     </Button>
                 </Group>

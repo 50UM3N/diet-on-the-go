@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { Button, Group, Paper, Popover, Stack, Title } from "@mantine/core";
+import { Button, Group, LoadingOverlay, Paper, Popover, Stack, Title } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import useStyles from "./style";
 import { MealChartProvider } from "./MealChartContext";
 import Meal from "./Meal";
 import MealForm from "./MealForm";
+import MacrosBadge from "@/components/MacrosBadge";
 
 const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
     const { cx, classes } = useStyles();
@@ -22,6 +23,7 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
     const [overlay, setOverlay] = useState(false);
     const [mealPopper, setMealPopper] = useState(false);
     const [editingMealItem, setEditingMealItem] = useState<DetailsMeals>();
+    const [totalMacros, setTotalMacros] = useState<Macros>({ protein: 0, carbohydrate: 0, fat: 0 });
 
     const handleMealEditing = (item: DetailsMeals) => {
         setEditingMealItem(item);
@@ -35,6 +37,9 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
         setLoading(true);
         const unsubscribe = onSnapshot(collection(db, "users", user.id, "charts", id, "meals"), async (snapshot) => {
             const data: DetailsMeals[] = [];
+            let _protein = 0;
+            let _fat = 0;
+            let _carbohydrate = 0;
             for (let j = 0; j < snapshot.docs.length; j++) {
                 const item = snapshot.docs[j];
                 const dataItem = item.data() as Omit<Meals, "id">;
@@ -54,8 +59,16 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
                     carbohydrate += foodData.carbohydrate;
                     foodItems.push({ food: { id: foodDoc.id, ...foodData }, qty: element.qty });
                 }
+                _protein += protein;
+                _carbohydrate += carbohydrate;
+                _fat += fat;
                 data.push({ id: item.id, name: dataItem.name, foods: foodItems, protein, carbohydrate, fat });
             }
+            setTotalMacros({
+                protein: Number(_protein.toFixed(1)),
+                carbohydrate: Number(_carbohydrate.toFixed(1)),
+                fat: Number(_fat.toFixed(1)),
+            });
 
             setData(data);
             setLoading(false);
@@ -66,7 +79,6 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
                 return { value: item.id, label: dataItem.name, ...dataItem };
             }) as any;
             setFoodItems(data);
-            console.log(data);
         });
         return () => {
             unsubscribe();
@@ -79,6 +91,7 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
                 foodItems,
                 overlay,
                 setOverlay,
+                macros: totalMacros,
             }}
         >
             <Popover
@@ -91,21 +104,25 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
                 }}
             >
                 <Paper style={{ position: "relative" }} mt="md">
+                    <LoadingOverlay visible={loading} overlayBlur={2} />
                     <Group position="apart" mb="md" className={cx({ [classes.overlay]: overlay })}>
                         <Title order={4}>Create Your Meal</Title>
-                        <Popover.Target>
-                            <Button
-                                disabled={overlay}
-                                leftIcon={<IconPlus size={14} />}
-                                size="xs"
-                                onClick={() => {
-                                    setMealPopper(true);
-                                    setOverlay(true);
-                                }}
-                            >
-                                Add Meal
-                            </Button>
-                        </Popover.Target>
+                        <Group spacing="xs">
+                            <MacrosBadge {...totalMacros} color="blue" size="lg" />
+                            <Popover.Target>
+                                <Button
+                                    disabled={overlay}
+                                    leftIcon={<IconPlus size={14} />}
+                                    size="xs"
+                                    onClick={() => {
+                                        setMealPopper(true);
+                                        setOverlay(true);
+                                    }}
+                                >
+                                    Add Meal
+                                </Button>
+                            </Popover.Target>
+                        </Group>
                     </Group>
                     <Stack spacing="xs">
                         {_data?.map((item) => (

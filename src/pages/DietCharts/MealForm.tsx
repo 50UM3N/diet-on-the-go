@@ -44,12 +44,12 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
         <>
             <Text mb="xs">{isEditing ? "Update Your Meal" : "Add New Meal"}</Text>
             <form onSubmit={form.onSubmit(formSubmit)}>
-                <TextInput mb="xs" size="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
+                <TextInput mb="xs" placeholder="eg. Breakfast" label="Name" withAsterisk {...form.getInputProps("name")} />
                 <Group position="right" mt="md">
-                    <Button size="xs" variant="outline" type="button" onClick={onClose} disabled={isSaving}>
+                    <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>
                         Cancel
                     </Button>
-                    <Button size="xs" type="submit" loading={isSaving}>
+                    <Button type="submit" loading={isSaving}>
                         {isEditing ? "Update" : "Add"}
                     </Button>
                 </Group>

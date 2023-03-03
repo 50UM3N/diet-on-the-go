@@ -26,10 +26,12 @@ import { addDoc, collection, doc, onSnapshot, updateDoc } from "firebase/firesto
 import { db } from "@/firebase";
 import { calcPercentage, calculateAMR, calculateBMR, calToGm } from "@/utils";
 import { showNotification } from "@mantine/notifications";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MealChart from "./MealChart";
+import ChartList from "./ChartList";
 
 const DietCharts = () => {
+    const navigate = useNavigate();
     const user = useSelector<RootState, User | null>((state) => state.user.user);
     const [data, setData] = useState<DietChartData>();
     const [searchParams] = useSearchParams();
@@ -59,11 +61,11 @@ const DietCharts = () => {
         setLoading(true);
         const unsubscribe = onSnapshot(doc(db, "users", user.id, "charts", chartId), (snapshot) => {
             const data = snapshot.data() as any;
+            if (!data) navigate("/");
             setData(data);
             setLoading(false);
-            setActive(data.step || 0);
-            setHighestStepVisited(data.step || 0);
-            console.log("asasd")
+            setActive(data?.step !== undefined ? (data?.step === 0 ? 1 : data.step) : 0);
+            setHighestStepVisited(data?.step || 0);
         });
         return () => {
             unsubscribe();
@@ -80,22 +82,25 @@ const DietCharts = () => {
                         </Title>
 
                         <Stepper active={active} onStepClick={setActive} breakpoint="sm" size="sm">
-                            <Stepper.Step label="First step" description="Create an account" allowStepSelect={shouldAllowSelectStep(0)}>
+                            <Stepper.Step label="First step" description="Basic" allowStepSelect={shouldAllowSelectStep(0)}>
                                 <BasicForm onSuccess={nextStep} data={data} />
                             </Stepper.Step>
-                            <Stepper.Step label="Second step" description="Verify email" allowStepSelect={shouldAllowSelectStep(1)}>
+                            <Stepper.Step label="Second step" description="Details" allowStepSelect={shouldAllowSelectStep(1)}>
                                 <MaintenancesCalorie onSuccess={nextStep} onPressBack={prevStep} data={data} />
                             </Stepper.Step>
-                            <Stepper.Step label="Third step" description="Get full access" allowStepSelect={shouldAllowSelectStep(2)}>
+                            <Stepper.Step label="Third step" description="Gain or Loss" allowStepSelect={shouldAllowSelectStep(2)}>
                                 <IntakeCalorie onSuccess={nextStep} onPressBack={prevStep} data={data} />
                             </Stepper.Step>
-                            <Stepper.Step label="Fourth step" description="Get full access" allowStepSelect={shouldAllowSelectStep(3)}>
+                            <Stepper.Step label="Fourth step" description="Calculation" allowStepSelect={shouldAllowSelectStep(3)}>
                                 <Division onSuccess={nextStep} onPressBack={prevStep} data={data} />
                             </Stepper.Step>
                             <Stepper.Completed>Completed, click back button to get to previous step</Stepper.Completed>
                         </Stepper>
                     </Paper>
                     {data?.finish && <MealChart data={data} />}
+                </Col>
+                <Col md={6}>
+                    <ChartList />
                 </Col>
             </Grid>
         </>
@@ -151,11 +156,11 @@ const BasicForm: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
 
     return (
         <form onSubmit={form.onSubmit(formSubmit)}>
-            <TextInput mb="xs" size="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
-            <Textarea mb="xs" size="xs" placeholder="eg. something" label="Description" {...form.getInputProps("description")} />
+            <TextInput mb="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
+            <Textarea mb="xs" placeholder="eg. something" label="Description" {...form.getInputProps("description")} />
 
             <Group position="right" mt="md">
-                <Button size="xs" type="submit" loading={isSaving}>
+                <Button type="submit" loading={isSaving}>
                     Next
                 </Button>
             </Group>
@@ -242,7 +247,6 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
             <Grid gutter="xs" mb="xs">
                 <Col sm={3}>
                     <NumberInput
-                        size="xs"
                         step={0.5}
                         precision={1}
                         placeholder="eg. 10"
@@ -259,7 +263,6 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
                 <Col sm={3}>
                     <Select
                         withAsterisk
-                        size="xs"
                         label="Gender"
                         placeholder="Pick one"
                         data={[
@@ -277,7 +280,6 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
                     <div className="height-input-group">
                         <NumberInput
                             step={1}
-                            size="xs"
                             placeholder="eg. 10"
                             label="Height (feet)"
                             withAsterisk
@@ -292,7 +294,6 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
 
                         <NumberInput
                             step={1}
-                            size="xs"
                             placeholder="eg. 10"
                             label="inches"
                             withAsterisk
@@ -310,7 +311,6 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
 
                 <Col sm={3}>
                     <NumberInput
-                        size="xs"
                         placeholder="eg. 10"
                         label="Age (years)"
                         withAsterisk
@@ -325,7 +325,6 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
 
                 <Col sm={6}>
                     <Select
-                        size="xs"
                         label="Activity"
                         placeholder="Pick one"
                         data={Object.entries(ACTIVITY_LEVEL).map((item) => ({ value: item[0], label: item[1].label }))}
@@ -338,11 +337,10 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
                 </Col>
 
                 <Col sm={3}>
-                    <NumberInput size="xs" disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
+                    <NumberInput disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
                 </Col>
                 <Col sm={3}>
                     <NumberInput
-                        size="xs"
                         disabled
                         placeholder="eg. 10"
                         label="Maintenances Calorie"
@@ -353,14 +351,14 @@ const MaintenancesCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) 
                 </Col>
             </Grid>
             <Group position="right" mt="md">
-                <Button size="xs" variant="outline" type="button" onClick={onPressBack}>
+                <Button variant="outline" type="button" onClick={onPressBack}>
                     Back
                 </Button>
-                <Button size="xs" type="submit" loading={isSaving} hidden={!form.values.bmr}>
+                <Button type="submit" loading={isSaving} hidden={!form.values.bmr}>
                     Next
                 </Button>
 
-                <Button size="xs" type="button" onClick={calculate} hidden={form.values.bmr ? true : false}>
+                <Button type="button" onClick={calculate} hidden={form.values.bmr ? true : false}>
                     Calculate
                 </Button>
             </Group>
@@ -427,7 +425,6 @@ const IntakeCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
                 <Grid gutter="xs" mb="xs">
                     <Col sm={4}>
                         <NumberInput
-                            size="xs"
                             placeholder="eg. 10"
                             label="Calorie Deficit/Surplus amount"
                             withAsterisk
@@ -442,7 +439,6 @@ const IntakeCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
                     </Col>
                     <Col sm={2}>
                         <Select
-                            size="xs"
                             label="Type"
                             placeholder="Pick one"
                             data={[
@@ -458,7 +454,6 @@ const IntakeCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
                     </Col>
                     <Col sm={6}>
                         <NumberInput
-                            size="xs"
                             disabled
                             placeholder="eg. 10"
                             label="Intake Calorie"
@@ -470,14 +465,14 @@ const IntakeCalorie: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
                 </Grid>
                 <Group position="right" mt="md">
                     <Group position="right" mt="md">
-                        <Button size="xs" variant="outline" type="button" onClick={onPressBack}>
+                        <Button variant="outline" type="button" onClick={onPressBack}>
                             Back
                         </Button>
-                        <Button size="xs" type="submit" loading={isSaving} hidden={!form.values.calorie_intake}>
+                        <Button type="submit" loading={isSaving} hidden={!form.values.calorie_intake}>
                             Next
                         </Button>
 
-                        <Button size="xs" type="button" onClick={calculate} hidden={form.values.calorie_intake ? true : false}>
+                        <Button type="button" onClick={calculate} hidden={form.values.calorie_intake ? true : false}>
                             Calculate
                         </Button>
                     </Group>
@@ -627,18 +622,17 @@ const Division: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
             </Grid>
             {data && showResult && (
                 <Group grow>
-                    <Paper bg="gray.0" p="xs" radius="lg">
-                        <Text size="xs" align="center">
-                            Calories
-                        </Text>
-                        <Title order={5} align="center">
+                    <Paper bg="gray.0" p="xs">
+                        <Text align="center">Calories</Text>
+                        <Title order={5} align="center" mb={4}>
                             {data?.calorie_intake}
                         </Title>
+                        <Center>
+                            <Badge variant="filled">100%</Badge>
+                        </Center>
                     </Paper>
-                    <Paper bg="gray.0" p="xs" radius="lg">
-                        <Text size="xs" align="center">
-                            Protein
-                        </Text>
+                    <Paper bg="gray.0" p="xs">
+                        <Text align="center">Protein</Text>
                         <Title order={5} align="center" mb={4}>
                             {calToGm(calcPercentage(data.calorie_intake, form.values.protein_intake), "protein")}g
                         </Title>
@@ -648,10 +642,8 @@ const Division: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
                             </Badge>
                         </Center>
                     </Paper>
-                    <Paper bg="gray.0" p="xs" radius="lg">
-                        <Text size="xs" align="center">
-                            Fat
-                        </Text>
+                    <Paper bg="gray.0" p="xs">
+                        <Text align="center">Fat</Text>
                         <Title order={5} align="center" mb={4}>
                             {calToGm(calcPercentage(data.calorie_intake, form.values.fat_intake), "fat")}g
                         </Title>
@@ -661,10 +653,8 @@ const Division: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
                             </Badge>
                         </Center>
                     </Paper>
-                    <Paper bg="gray.0" p="xs" radius="lg">
-                        <Text size="xs" align="center">
-                            Carbohydrates
-                        </Text>
+                    <Paper bg="gray.0" p="xs">
+                        <Text align="center">Carbohydrates</Text>
                         <Title order={5} align="center" mb={4}>
                             {calToGm(calcPercentage(data.calorie_intake, form.values.carbohydrate_intake), "carbohydrates")}g
                         </Title>
@@ -679,14 +669,14 @@ const Division: React.FC<Forms> = ({ data, onSuccess, onPressBack }) => {
 
             <Group position="right" mt="md">
                 <Group position="right" mt="md">
-                    <Button size="xs" variant="outline" type="button" onClick={onPressBack}>
+                    <Button variant="outline" type="button" onClick={onPressBack}>
                         Back
                     </Button>
-                    <Button size="xs" type="submit" loading={isSaving} hidden={!showResult}>
+                    <Button type="submit" loading={isSaving} hidden={!showResult}>
                         Next
                     </Button>
 
-                    <Button size="xs" type="button" onClick={calculate} hidden={showResult}>
+                    <Button type="button" onClick={calculate} hidden={showResult}>
                         Calculate
                     </Button>
                 </Group>

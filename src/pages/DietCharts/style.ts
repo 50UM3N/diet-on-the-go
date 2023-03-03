@@ -6,6 +6,8 @@ const useStyles = createStyles((theme) => ({
         userSelect: "none",
     },
     paper: {
+        border:0,
+        "&.paper + &.paper": { borderTop:"1px solid lightgray" },
         "&.paper": { position: "relative", overflow: "hidden" },
         "&.paper .control-wrapper": { opacity: 0, zIndex: -1 },
         "&.paper.active-hover:hover .control-wrapper": { opacity: 1, zIndex: 0, cursor: "pointer" },

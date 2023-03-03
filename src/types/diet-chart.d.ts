@@ -55,3 +55,9 @@ interface DetailsMeals {
     fat: number;
     protein: number;
 }
+
+interface Macros {
+    carbohydrate: number;
+    fat: number;
+    protein: number;
+}

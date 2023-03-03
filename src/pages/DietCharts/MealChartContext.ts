@@ -4,6 +4,7 @@ export interface MealChartContextValue {
     foodItems: FoodItemSelect[];
     overlay: boolean;
     setOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+    macros:Macros
 }
 
 export const MealChartContext = createContext<MealChartContextValue | null>(null);
