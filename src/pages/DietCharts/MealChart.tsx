@@ -1,7 +1,7 @@
 import { db } from "@/firebase";
 import { Button, Group, LoadingOverlay, Paper, Popover, Stack, Title } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
@@ -35,44 +35,47 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
         if (!user) return;
         if (!id) return;
         setLoading(true);
-        const unsubscribe = onSnapshot(collection(db, "users", user.id, "charts", id, "meals"), async (snapshot) => {
-            const data: DetailsMeals[] = [];
-            let _protein = 0;
-            let _fat = 0;
-            let _carbohydrate = 0;
-            for (let j = 0; j < snapshot.docs.length; j++) {
-                const item = snapshot.docs[j];
-                const dataItem = item.data() as Omit<Meals, "id">;
-                let protein = 0;
-                let fat = 0;
-                let carbohydrate = 0;
-                const foodItems: { food: FoodItem; qty: number }[] = [];
-                for (let i = 0; i < dataItem.foods.length; i++) {
-                    const element = dataItem.foods[i];
-                    const foodDoc = await getDoc(doc(db, "foodItems", element.foodId));
-                    const foodData = foodDoc.data() as Omit<FoodItem, "id">;
-                    foodData.protein = calcAmount(foodData.protein, element.qty, foodData.metric);
-                    protein += foodData.protein;
-                    foodData.fat = calcAmount(foodData.fat, element.qty, foodData.metric);
-                    fat += foodData.fat;
-                    foodData.carbohydrate = calcAmount(foodData.carbohydrate, element.qty, foodData.metric);
-                    carbohydrate += foodData.carbohydrate;
-                    foodItems.push({ food: { id: foodDoc.id, ...foodData }, qty: element.qty });
+        const unsubscribe = onSnapshot(
+            query(collection(db, "users", user.id, "charts", id, "meals"), orderBy("createdAt")),
+            async (snapshot) => {
+                const data: DetailsMeals[] = [];
+                let _protein = 0;
+                let _fat = 0;
+                let _carbohydrate = 0;
+                for (let j = 0; j < snapshot.docs.length; j++) {
+                    const item = snapshot.docs[j];
+                    const dataItem = item.data() as Omit<Meals, "id">;
+                    let protein = 0;
+                    let fat = 0;
+                    let carbohydrate = 0;
+                    const foodItems: { food: FoodItem; qty: number }[] = [];
+                    for (let i = 0; i < dataItem.foods.length; i++) {
+                        const element = dataItem.foods[i];
+                        const foodDoc = await getDoc(doc(db, "foodItems", element.foodId));
+                        const foodData = foodDoc.data() as Omit<FoodItem, "id">;
+                        foodData.protein = calcAmount(foodData.protein, element.qty, foodData.metric);
+                        protein += foodData.protein;
+                        foodData.fat = calcAmount(foodData.fat, element.qty, foodData.metric);
+                        fat += foodData.fat;
+                        foodData.carbohydrate = calcAmount(foodData.carbohydrate, element.qty, foodData.metric);
+                        carbohydrate += foodData.carbohydrate;
+                        foodItems.push({ food: { id: foodDoc.id, ...foodData }, qty: element.qty });
+                    }
+                    _protein += protein;
+                    _carbohydrate += carbohydrate;
+                    _fat += fat;
+                    data.push({ id: item.id, name: dataItem.name, foods: foodItems, protein, carbohydrate, fat });
                 }
-                _protein += protein;
-                _carbohydrate += carbohydrate;
-                _fat += fat;
-                data.push({ id: item.id, name: dataItem.name, foods: foodItems, protein, carbohydrate, fat });
-            }
-            setTotalMacros({
-                protein: Number(_protein.toFixed(1)),
-                carbohydrate: Number(_carbohydrate.toFixed(1)),
-                fat: Number(_fat.toFixed(1)),
-            });
+                setTotalMacros({
+                    protein: Number(_protein.toFixed(1)),
+                    carbohydrate: Number(_carbohydrate.toFixed(1)),
+                    fat: Number(_fat.toFixed(1)),
+                });
 
-            setData(data);
-            setLoading(false);
-        });
+                setData(data);
+                setLoading(false);
+            }
+        );
         const unsubscribeFoodItems = onSnapshot(collection(db, "foodItems"), (snapshot) => {
             const data = snapshot.docs.map((item) => {
                 const dataItem = item.data();

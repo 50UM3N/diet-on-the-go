@@ -1,7 +1,7 @@
 import { db } from "@/firebase";
 import { Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
@@ -30,7 +30,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
         if (!id) return;
         if (isEditing && editingItem)
             await updateDoc(doc(db, "users", user.id, "charts", id, "meals", editingItem.id), { name: values.name });
-        else await addDoc(collection(db, "users", user.id, "charts", id, "meals"), { ...values, foods: [] });
+        else await addDoc(collection(db, "users", user.id, "charts", id, "meals"), { ...values, createdAt:serverTimestamp(), foods: [] });
         setIsSaving(false);
         onAddSuccessful && onAddSuccessful();
         onClose && onClose();
