@@ -1,60 +1,22 @@
 import Table from "@/components/Table";
 import { METRIC } from "@/data/constant";
 import { db } from "@/firebase";
-import { Select, Title } from "@mantine/core";
+import { Modal, Title } from "@mantine/core";
 import { Col } from "@mantine/core";
-import { TextInput } from "@mantine/core";
-import { NumberInput } from "@mantine/core";
-import { Group } from "@mantine/core";
-import { Button } from "@mantine/core";
 import { ActionIcon } from "@mantine/core";
 import { Menu } from "@mantine/core";
-import { Divider } from "@mantine/core";
-import { SimpleGrid } from "@mantine/core";
 import { Grid } from "@mantine/core";
 import { Paper } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { IconEdit, IconSettings } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/table-core";
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import FoodItemsForm from "./FoodItemsForm";
 
 const FoodItems = () => {
-    const [isSaving, setIsSaving] = useState(false);
     const [list, setList] = useState<any>([]);
-    const form = useForm({
-        initialValues: {
-            name: "",
-            protein: 0,
-            fat: 0,
-            carbohydrate: 0,
-            metric: "",
-        },
-
-        validate: {
-            name: (value) => (value ? null : "Required"),
-            protein: (value) => (value || value >= 0 ? null : "Required"),
-            fat: (value) => (value || value >= 0 ? null : "Required"),
-            carbohydrate: (value) => (value || value >= 0 ? null : "Required"),
-            metric: (value) => (value ? null : "Required"),
-        },
-    });
-    const formSubmit = async (values: any) => {
-        setIsSaving(true);
-        await addDoc(collection(db, "foodItems"), values);
-        setIsSaving(false);
-        form.reset();
-    };
-
+    const [editingItem, setEditingItem] = useState<FoodItem>();
     useEffect(() => {
-        (async () => {
-            const querySnapshot = await getDocs(collection(db, "foodItems"));
-            const localList: any = [];
-            querySnapshot.forEach((doc) => {
-                localList.push({ id: doc.id, ...doc.data() });
-            });
-            setList(localList);
-        })();
         const unsubscribe = onSnapshot(collection(db, "foodItems"), (snapshot) => {
             const localList: any = [];
             snapshot.forEach((doc) => {
@@ -75,7 +37,7 @@ const FoodItems = () => {
                 accessorKey: "id",
                 header: "No",
                 cell(props) {
-                    return props.row.index+1;
+                    return props.row.index + 1;
                 },
             },
             {
@@ -122,7 +84,9 @@ const FoodItems = () => {
                             <Menu.Dropdown>
                                 <Menu.Label>Application</Menu.Label>
 
-                                <Menu.Item icon={<IconEdit size={14} />}>Edit</Menu.Item>
+                                <Menu.Item icon={<IconEdit size={14} />} onClick={() => setEditingItem(props.row.original)}>
+                                    Edit
+                                </Menu.Item>
                                 <Menu.Divider />
                                 <Menu.Label>Danger zone</Menu.Label>
                                 <Menu.Item color="red" onClick={() => handleDelete(id)}>
@@ -141,78 +105,7 @@ const FoodItems = () => {
             <Grid gutter="xs">
                 <Col md={6}>
                     <Paper>
-                        <Title order={4}>Food Items Form (100g Basis)</Title>
-                        <Divider my="xs" />
-                        <form onSubmit={form.onSubmit(formSubmit)}>
-                            <Grid gutter="xs" mb="xs">
-                                <Col md={10}>
-                                    <TextInput
-                                        size="xs"
-                                        placeholder="eg. Chicken"
-                                        label="Name"
-                                        withAsterisk
-                                        {...form.getInputProps("name")}
-                                    />
-                                </Col>
-                                <Col md={2}>
-                                    <Select
-                                        withAsterisk
-                                        size="xs"
-                                        label="Metric"
-                                        placeholder="Pick one"
-                                        data={[
-                                            { value: "PER_100_G", label: "/100g" },
-                                            { value: "PER_PC", label: "/pc" },
-                                        ]}
-                                        {...form.getInputProps("metric")}
-                                    />
-                                </Col>
-                            </Grid>
-                            <SimpleGrid
-                                cols={3}
-                                breakpoints={[
-                                    { maxWidth: 980, cols: 3, spacing: "xs" },
-                                    { maxWidth: 755, cols: 2, spacing: "xs" },
-                                    { maxWidth: 600, cols: 1, spacing: "xs" },
-                                ]}
-                            >
-                                <NumberInput
-                                    step={0.05}
-                                    precision={2}
-                                    size="xs"
-                                    placeholder="eg. 10"
-                                    label="Protein (g)"
-                                    withAsterisk
-                                    min={0}
-                                    {...form.getInputProps("protein")}
-                                />
-                                <NumberInput
-                                    step={0.05}
-                                    precision={2}
-                                    size="xs"
-                                    placeholder="eg. 4"
-                                    label="Fat (g)"
-                                    withAsterisk
-                                    min={0}
-                                    {...form.getInputProps("fat")}
-                                />
-                                <NumberInput
-                                    step={0.05}
-                                    precision={2}
-                                    size="xs"
-                                    placeholder="eg. 10"
-                                    label="Carbohydrate (g)"
-                                    min={0}
-                                    withAsterisk
-                                    {...form.getInputProps("carbohydrate")}
-                                />
-                            </SimpleGrid>
-                            <Group position="right" mt="md">
-                                <Button size="xs" type="submit" loading={isSaving}>
-                                    Save
-                                </Button>
-                            </Group>
-                        </form>
+                        <FoodItemsForm />
                     </Paper>
                 </Col>
                 <Col md={6}>
@@ -223,6 +116,9 @@ const FoodItems = () => {
                     </Paper>
                 </Col>
             </Grid>
+            <Modal opened={editingItem ? true : false} size="lg" onClose={() => setEditingItem(undefined)} title="Edit Food Item">
+                <FoodItemsForm isEditing={editingItem ? true : false} editingItem={editingItem} onClose={() => setEditingItem(undefined)} />
+            </Modal>
         </>
     );
 };
