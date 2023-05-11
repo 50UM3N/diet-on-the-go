@@ -22,9 +22,11 @@ export const calculateBMR: CalculateBMR = (params) => {
     let bmr = 0;
     const heightInCm = (params.height.feet * 12 + params.height.inches) * 2.54;
     if (params.gender === "male") {
-        bmr = 66.47 + 13.75 * params.weight + (5.003 + heightInCm) - 6.755 * params.age;
+        // bmr = 66.47 + 13.75 * params.weight + (5.003 + heightInCm) - 6.755 * params.age;
+        bmr = 10 * params.weight + 6.25 * heightInCm - 5 * params.age + 5;
     } else {
-        bmr = 655.1 + 9.563 * params.weight + (1.85 + heightInCm) - 4.676 * params.age;
+        // bmr = 655.1 + 9.563 * params.weight + (1.85 + heightInCm) - 4.676 * params.age;
+        bmr = 10 * params.weight + 6.25 * heightInCm - 5 * params.age - 161;
     }
     return bmr;
 };
