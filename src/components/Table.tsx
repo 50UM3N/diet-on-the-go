@@ -51,7 +51,7 @@ const Table = (props: Props) => {
         <>
             <GlobalFilter setGlobalFilter={setGlobalFilter} />
             <div style={{ overflow: "auto" }}>
-                <MTable className={classes.table} fontSize="xs" mt="md" mb="xs">
+                <MTable className={classes.table} mt="md" mb="xs">
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
@@ -84,7 +84,7 @@ const Table = (props: Props) => {
                 </Text>
                 <Pagination
                     total={table.getPageCount()}
-                    page={table.getState().pagination.pageIndex + 1}
+                    value={table.getState().pagination.pageIndex + 1}
                     onChange={(page) => table.setPageIndex(page - 1)}
                     size="sm"
                 />

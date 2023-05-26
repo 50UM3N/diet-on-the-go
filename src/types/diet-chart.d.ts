@@ -17,8 +17,6 @@ interface DietChartData {
     protein_intake: number;
     fat_intake: number;
     carbohydrate_intake: number;
-    step: number;
-    finish: boolean;
 }
 
 type METRIC = "PER_100_G" | "PER_PC";

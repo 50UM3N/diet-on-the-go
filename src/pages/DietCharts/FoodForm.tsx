@@ -5,7 +5,7 @@ import { useForm } from "@mantine/form";
 import { doc, updateDoc } from "firebase/firestore";
 import { forwardRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useMealChart } from "./MealChartContext";
 
 type ItemProps = React.ComponentPropsWithoutRef<"div"> & FoodItemSelect;
@@ -19,8 +19,7 @@ const FoodForm: React.FC<{
 }> = ({ onAddSuccessful, onClose, meal, isEditing, editingFoodId }) => {
     const ctx = useMealChart();
     const user = useSelector<RootState, User | null>((state) => state.user.user);
-    const [searchParams] = useSearchParams();
-    const chartId = searchParams.get("chart");
+    const { chartId } = useParams();
     const [isSaving, setIsSaving] = useState(false);
     const form = useForm<{ food: string; foodDetails: FoodItemSelect | null | undefined; qty: number }>({
         initialValues: {
@@ -87,10 +86,9 @@ const FoodForm: React.FC<{
     SelectItem.displayName = "SelectItem";
     return (
         <>
-            <Text mb="xs">{isEditing ? "Update your food" : "Add new meal"}</Text>
-            <form onSubmit={form.onSubmit(formSubmit)}>
+            <form onSubmit={form.onSubmit(formSubmit)} style={{ marginTop: 8 }}>
                 <Grid gutter="xs">
-                    <Col span={8}>
+                    <Col xs={8}>
                         <Select
                             label="Choose your food item"
                             placeholder="Pick one"
@@ -108,7 +106,7 @@ const FoodForm: React.FC<{
                             }}
                         />
                     </Col>
-                    <Col span={4}>
+                    <Col xs={4}>
                         <NumberInput
                             min={1}
                             precision={form.values.foodDetails?.metric === "PER_100_G" ? 1 : 0}

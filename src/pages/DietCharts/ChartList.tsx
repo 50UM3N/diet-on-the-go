@@ -1,7 +1,8 @@
 import Table from "@/components/Table";
 import { db } from "@/firebase";
-import { ActionIcon, LoadingOverlay, Menu, Paper, Title } from "@mantine/core";
-import { IconEdit, IconSettings } from "@tabler/icons-react";
+import { ActionIcon, Divider, Group, LoadingOverlay, Paper, Text, Title } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/table-core";
 import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -38,25 +39,38 @@ const ChartList = () => {
                 cell(props) {
                     const id = props.getValue();
                     return (
-                        <Menu shadow="md" width={200}>
-                            <Menu.Target>
-                                <ActionIcon variant="filled" color="blue">
-                                    <IconSettings size={16} />
-                                </ActionIcon>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Label>Application</Menu.Label>
-
-                                <Menu.Item icon={<IconEdit size={14} />} component={Link} to={`?chart=${id}`}>
-                                    Edit
-                                </Menu.Item>
-                                <Menu.Divider />
-                                <Menu.Label>Danger zone</Menu.Label>
-                                <Menu.Item color="red" onClick={() => handleDelete(id)}>
-                                    Delete
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
+                        <Group spacing="xs">
+                            <ActionIcon variant="filled" color="blue" component={Link} to={`/chart/${id}`}>
+                                <IconEdit size={16} />
+                            </ActionIcon>{" "}
+                            <ActionIcon
+                                variant="filled"
+                                color="red"
+                                onClick={() => {
+                                    openConfirmModal({
+                                        title: "Caution Required",
+                                        centered: true,
+                                        children: <Text size="sm">Are you sure you want to delete this item?</Text>,
+                                        labels: { confirm: "Delete", cancel: "Cancel" },
+                                        confirmProps: { color: "red" },
+                                        onConfirm: () => {
+                                            handleDelete(id);
+                                        },
+                                    });
+                                }}
+                            >
+                                <IconTrash size={16} />
+                            </ActionIcon>
+                            {/* <ActionIcon
+                                variant="filled"
+                                color="teal"
+                                onClick={() => {
+                                    //
+                                }}
+                            >
+                                <IconCopy size={16} />
+                            </ActionIcon> */}
+                        </Group>
                     );
                 },
             },
@@ -84,6 +98,7 @@ const ChartList = () => {
     return (
         <Paper style={{ position: "relative" }}>
             <Title order={4}>Chart List</Title>
+            <Divider my="xs" />
             <LoadingOverlay visible={isLoading} overlayBlur={2} />
             <Table columns={columns} data={list} />
         </Paper>

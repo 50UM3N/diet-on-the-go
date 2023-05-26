@@ -17,7 +17,6 @@ const GlobalFilter = ({
     return (
         <TextInput
             icon={<IconSearch size={16} />}
-            size="xs"
             label="Search your data"
             placeholder="Global Search "
             value={value}

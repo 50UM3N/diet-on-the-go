@@ -8,7 +8,8 @@ import firebaseApp, { db } from "./firebase";
 import { useDispatch } from "react-redux";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { setUser } from "./store/slices/userSlice";
-import DietCharts from "./pages/DietCharts";
+import InfoForm from "./pages/DietCharts/InfoForm";
+import ChartList from "./pages/DietCharts/ChartList";
 
 const router = createHashRouter([
     {
@@ -18,7 +19,9 @@ const router = createHashRouter([
     {
         element: <AuthProvider />,
         children: [
-            { path: "/", element: <DietCharts /> },
+            { path: "/", element: <ChartList /> },
+            { path: "/create", element: <InfoForm /> },
+            { path: "/chart/:chartId", element: <InfoForm /> },
             { path: "/food-items", element: <FoodItems /> },
         ],
     },
@@ -31,7 +34,7 @@ const App = () => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 let userData = userDoc.data();
-                if (userData) userData.dob = userData?.dob?.toDate().toLocaleDateString()
+                if (userData) userData.dob = userData?.dob?.toDate().toLocaleDateString();
                 if (!userDoc.exists()) {
                     userData = {
                         id: user.uid,

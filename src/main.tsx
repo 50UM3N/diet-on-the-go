@@ -5,7 +5,8 @@ import { Provider } from "react-redux";
 import App from "./App";
 import store from "./store";
 import "@/style/app.scss";
-import { NotificationsProvider } from "@mantine/notifications";
+
+import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -14,12 +15,27 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             <MantineProvider
                 withGlobalStyles
                 withNormalizeCSS
-                theme={{ loader: "dots", components: { Paper: { defaultProps: { radius: "md", withBorder: true, p: "md" } } } }}
+                theme={{
+                    loader: "dots",
+                    components: {
+                        Paper: { defaultProps: { radius: "lg", withBorder: true, p: { sm: "md", base: "sm" } } },
+                        Button: { defaultProps: { radius: "md" } },
+                        Modal: {
+                            defaultProps: {
+                                styles: {
+                                    root: {
+                                        "& .mantine-Paper-root": { padding: 0 },
+                                    },
+                                },
+                                padding: 16,
+                            },
+                        },
+                    },
+                }}
             >
                 <ModalsProvider>
-                    <NotificationsProvider>
-                        <App />
-                    </NotificationsProvider>
+                    <Notifications />
+                    <App />
                 </ModalsProvider>
             </MantineProvider>
         </Provider>

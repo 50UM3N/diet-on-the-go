@@ -11,19 +11,26 @@ body,
     min-height: 100%;
 }
 
-.height-input-group{
+.height-input-group {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: center;
-    & > div{
+    & > div {
         width: 100%;
     }
-    & > div:first-child input{
+    & > div:first-child input {
         border-bottom-right-radius: 0px;
         border-top-right-radius: 0px;
     }
-    & > div:last-child input{
+    & > div:nth-child(2) input {
         border-bottom-left-radius: 0px;
         border-top-left-radius: 0px;
+    }
+}
+
+@media print {
+    [data-no-print] {
+        display: none;
     }
 }

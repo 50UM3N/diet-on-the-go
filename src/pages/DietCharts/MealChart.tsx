@@ -1,10 +1,10 @@
 import { db } from "@/firebase";
-import { Button, Group, LoadingOverlay, Paper, Popover, Stack, Title } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
+import { Button, Divider, Group, LoadingOverlay, Modal, Paper, Stack, Title } from "@mantine/core";
+import { IconFile, IconPlus } from "@tabler/icons-react";
 import { collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { calcAmount } from "@/utils";
 import useStyles from "./style";
 import { MealChartProvider } from "./MealChartContext";
@@ -15,9 +15,8 @@ import MacrosBadge from "@/components/MacrosBadge";
 const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
     const { cx, classes } = useStyles();
     const user = useSelector<RootState, User | null>((state) => state.user.user);
-    const [searchParams] = useSearchParams();
-    const id = searchParams.get("chart");
-    const [loading, setLoading] = useState(id ? true : false);
+    const { chartId } = useParams();
+    const [loading, setLoading] = useState(chartId ? true : false);
     const [foodItems, setFoodItems] = useState<FoodItemSelect[]>([]);
     const [_data, setData] = useState<DetailsMeals[]>();
     const [overlay, setOverlay] = useState(false);
@@ -33,10 +32,10 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
 
     useEffect(() => {
         if (!user) return;
-        if (!id) return;
+        if (!chartId) return;
         setLoading(true);
         const unsubscribe = onSnapshot(
-            query(collection(db, "users", user.id, "charts", id, "meals"), orderBy("createdAt")),
+            query(collection(db, "users", user.id, "charts", chartId, "meals"), orderBy("createdAt")),
             async (snapshot) => {
                 const data: DetailsMeals[] = [];
                 let _protein = 0;
@@ -87,7 +86,7 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
             unsubscribe();
             unsubscribeFoodItems();
         };
-    }, [id]);
+    }, [chartId]);
     return (
         <MealChartProvider
             value={{
@@ -97,55 +96,71 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
                 macros: totalMacros,
             }}
         >
-            <Popover
-                position="bottom-end"
-                width={300}
-                opened={mealPopper}
-                shadow="xl"
-                styles={{
-                    dropdown: { boxShadow: "0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%)", border: "0px" },
-                }}
-            >
-                <Paper style={{ position: "relative" }} mt="md">
-                    <LoadingOverlay visible={loading} overlayBlur={2} />
-                    <Group position="apart" mb="md" className={cx({ [classes.overlay]: overlay })}>
-                        <Title order={4}>Create Your Meal</Title>
-                        <Group spacing="xs">
-                            <MacrosBadge {...totalMacros} color="blue" size="lg" />
-                            <Popover.Target>
-                                <Button
-                                    disabled={overlay}
-                                    leftIcon={<IconPlus size={14} />}
-                                    size="xs"
-                                    onClick={() => {
-                                        setMealPopper(true);
-                                        setOverlay(true);
-                                    }}
-                                >
-                                    Add Meal
-                                </Button>
-                            </Popover.Target>
-                        </Group>
+            <Paper style={{ position: "relative" }} mt="md">
+                <LoadingOverlay visible={loading} overlayBlur={2} />
+                <Group position="apart" mb="xs" className={cx({ [classes.overlay]: overlay })}>
+                    <Title order={4}>Meal List</Title>
+                    <Group spacing="xs">
+                        <Button
+                            disabled={overlay}
+                            leftIcon={<IconPlus size={14} />}
+                            size="xs"
+                            onClick={() => {
+                                setMealPopper(true);
+                                setOverlay(true);
+                            }}
+                            data-no-print
+                        >
+                            Add Meal
+                        </Button>
+                        <Button
+                            disabled={overlay}
+                            leftIcon={<IconFile size={14} />}
+                            size="xs"
+                            onClick={() => {
+                                window.print();
+                            }}
+                            data-no-print
+                        >
+                            Export
+                        </Button>
                     </Group>
-                    <Stack spacing="xs">
-                        {_data?.map((item) => (
-                            <Meal data={item} key={item.id} onEdit={() => handleMealEditing(item)} />
-                        ))}
-                    </Stack>
-                </Paper>
+                </Group>
+                <Divider my="xs" />
+                <MacrosBadge style={{ flex: 1 }} wrapper={{ mb: "sm" }} {...totalMacros} color="blue" size="lg" />
+                <Stack spacing="xs">
+                    {_data?.map((item) => (
+                        <Meal data={item} key={item.id} onEdit={() => handleMealEditing(item)} />
+                    ))}
+                </Stack>
+            </Paper>
 
-                <Popover.Dropdown>
-                    <MealForm
-                        isEditing={editingMealItem ? true : false}
-                        editingItem={editingMealItem}
-                        onClose={() => {
-                            setEditingMealItem(undefined);
-                            setMealPopper(false);
-                            setOverlay(false);
-                        }}
-                    />
-                </Popover.Dropdown>
-            </Popover>
+            <Modal
+                styles={{
+                    root: {
+                        "& .mantine-Paper-root": { padding: 16 },
+                    },
+                }}
+                centered
+                padding={0}
+                opened={mealPopper}
+                onClose={() => {
+                    setEditingMealItem(undefined);
+                    setMealPopper(false);
+                    setOverlay(false);
+                }}
+                title={editingMealItem ? "Update Your Meal" : "Add New Meal"}
+            >
+                <MealForm
+                    isEditing={editingMealItem ? true : false}
+                    editingItem={editingMealItem}
+                    onClose={() => {
+                        setEditingMealItem(undefined);
+                        setMealPopper(false);
+                        setOverlay(false);
+                    }}
+                />
+            </Modal>
         </MealChartProvider>
     );
 };

@@ -1,10 +1,10 @@
 import { db } from "@/firebase";
-import { Button, Group, Text, TextInput } from "@mantine/core";
+import { Button, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; isEditing?: boolean; editingItem?: DetailsMeals }> = ({
     onAddSuccessful,
@@ -13,8 +13,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
     editingItem,
 }) => {
     const user = useSelector<RootState, User | null>((state) => state.user.user);
-    const [searchParams] = useSearchParams();
-    const id = searchParams.get("chart");
+    const { chartId } = useParams();
     const [isSaving, setIsSaving] = useState(false);
     const form = useForm({
         initialValues: {
@@ -27,10 +26,10 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
     const formSubmit = async (values: any) => {
         setIsSaving(true);
         if (!user) return;
-        if (!id) return;
+        if (!chartId) return;
         if (isEditing && editingItem)
-            await updateDoc(doc(db, "users", user.id, "charts", id, "meals", editingItem.id), { name: values.name });
-        else await addDoc(collection(db, "users", user.id, "charts", id, "meals"), { ...values, createdAt:serverTimestamp(), foods: [] });
+            await updateDoc(doc(db, "users", user.id, "charts", chartId, "meals", editingItem.id), { name: values.name });
+        else await addDoc(collection(db, "users", user.id, "charts", chartId, "meals"), { ...values, createdAt: serverTimestamp(), foods: [] });
         setIsSaving(false);
         onAddSuccessful && onAddSuccessful();
         onClose && onClose();
@@ -42,8 +41,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
 
     return (
         <>
-            <Text mb="xs">{isEditing ? "Update Your Meal" : "Add New Meal"}</Text>
-            <form onSubmit={form.onSubmit(formSubmit)}>
+            <form onSubmit={form.onSubmit(formSubmit)} style={{marginTop:8}}>
                 <TextInput mb="xs" placeholder="eg. Breakfast" label="Name" withAsterisk {...form.getInputProps("name")} />
                 <Group position="right" mt="md">
                     <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>

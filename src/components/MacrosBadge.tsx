@@ -7,6 +7,7 @@ const MacrosBadge: React.FC<BadgeProps & Macros & { wrapper?: GroupProps }> = ({
     fat,
     radius = "lg",
     wrapper,
+    style,
     ...rest
 }) => {
     return (
@@ -14,23 +15,29 @@ const MacrosBadge: React.FC<BadgeProps & Macros & { wrapper?: GroupProps }> = ({
             <Badge
                 color="dark"
                 radius={radius}
-                style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, textTransform: "unset" }}
+                style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, textTransform: "unset", ...style }}
                 variant="outline"
                 {...rest}
             >
-                {protein}g P
+                {protein.toFixed(1)}g P
             </Badge>
-            <Badge color="dark" style={{ borderLeft: 0, borderRight: 0, textTransform: "unset" }} radius={0} variant="outline" {...rest}>
-                {fat}g F
+            <Badge
+                color="dark"
+                style={{ borderLeft: 0, borderRight: 0, textTransform: "unset", ...style }}
+                radius={0}
+                variant="outline"
+                {...rest}
+            >
+                {fat.toFixed(1)}g F
             </Badge>
             <Badge
                 color="dark"
                 radius={radius}
-                style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, textTransform: "unset" }}
+                style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, textTransform: "unset", ...style }}
                 variant="outline"
                 {...rest}
             >
-                {carbohydrate}g C
+                {carbohydrate.toFixed(1)}g C
             </Badge>
         </Group>
     );
