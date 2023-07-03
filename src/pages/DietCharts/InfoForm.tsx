@@ -60,6 +60,7 @@ const InfoForm = () => {
     const [isSaving, setIsSaving] = useState(false);
     const { classes } = useStyles();
     const [showResult, setShowResult] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     useEffect(() => {
         if (!user) return;
         if (!chartId) {
@@ -75,8 +76,15 @@ const InfoForm = () => {
             setLoading(false);
         });
 
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleResize);
+
         return () => {
             unsubscribe();
+            window.removeEventListener("resize", handleResize);
         };
     }, [chartId]);
     const form = useForm({
@@ -185,294 +193,379 @@ const InfoForm = () => {
 
     return (
         <>
-            <Tabs defaultValue="chartInfo">
-                <Tabs.List grow position="center" data-no-print>
-                    <Tabs.Tab value="chartInfo">Chart Info</Tabs.Tab>
-                    <Tabs.Tab disabled={!data} value="mealInfo">
-                        Meal Info
-                    </Tabs.Tab>
-                </Tabs.List>
-                <Tabs.Panel value="chartInfo">
-                    <form onSubmit={form.onSubmit(formSubmit)} style={{ marginTop: 16 }}>
-                        <Paper style={{ position: "relative" }}>
-                            <LoadingOverlay visible={loading} overlayBlur={2} />
-                            <Title order={4}>Chart Info</Title>
-                            <Divider my="xs" />
+            {windowWidth < 768 ? (
+                <Tabs defaultValue="chartInfo">
+                    <Tabs.List grow position="center" data-no-print>
+                        <Tabs.Tab value="chartInfo">Chart Info</Tabs.Tab>
+                        <Tabs.Tab disabled={!data} value="mealInfo">
+                            Meal Info
+                        </Tabs.Tab>
+                    </Tabs.List>
+                    <Tabs.Panel value="chartInfo">
+                        <form onSubmit={form.onSubmit(formSubmit)} style={{ marginTop: 16 }}>
+                            <Paper style={{ position: "relative" }}>
+                                <LoadingOverlay visible={loading} overlayBlur={2} />
+                                <Title order={4}>Chart Info</Title>
+                                <Divider my="xs" />
 
-                            <TextInput mb="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
-                            <Textarea mb="xs" placeholder="eg. something" label="Description" {...form.getInputProps("description")} />
-                            <Grid gutter="xs" mb="xs">
-                                <Col sm={3}>
-                                    <NumberInput
-                                        step={0.5}
-                                        precision={1}
-                                        placeholder="eg. 10"
-                                        label="Weight (kg)"
-                                        withAsterisk
-                                        min={0}
-                                        {...form.getInputProps("weight")}
-                                        onChange={(e) => {
-                                            resetBMRAndMC();
-                                            form.getInputProps("weight").onChange(e);
-                                        }}
-                                    />
-                                </Col>
-                                <Col sm={3}>
-                                    <Select
-                                        withAsterisk
-                                        label="Gender"
-                                        placeholder="Pick one"
-                                        data={[
-                                            { value: "male", label: "Male" },
-                                            { value: "female", label: "Female" },
-                                        ]}
-                                        {...form.getInputProps("gender")}
-                                        onChange={(e) => {
-                                            resetBMRAndMC();
-                                            form.getInputProps("gender").onChange(e);
-                                        }}
-                                    />
-                                </Col>
-                                <Col sm={3}>
-                                    <div className="height-input-group">
+                                <TextInput mb="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
+                                <Textarea mb="xs" placeholder="eg. something" label="Description" {...form.getInputProps("description")} />
+                                <Grid gutter="xs" mb="xs">
+                                    <Col sm={3}>
                                         <NumberInput
-                                            step={1}
+                                            step={0.5}
+                                            precision={1}
                                             placeholder="eg. 10"
-                                            label="Height (feet)"
+                                            label="Weight (kg)"
                                             withAsterisk
-                                            min={2}
-                                            hideControls
-                                            {...form.getInputProps("height.feet")}
+                                            min={0}
+                                            {...form.getInputProps("weight")}
                                             onChange={(e) => {
                                                 resetBMRAndMC();
-                                                form.getInputProps("height.feet").onChange(e);
+                                                form.getInputProps("weight").onChange(e);
                                             }}
                                         />
-
-                                        <NumberInput
-                                            step={1}
-                                            placeholder="eg. 10"
-                                            label="inches"
+                                    </Col>
+                                    <Col sm={3}>
+                                        <Select
                                             withAsterisk
-                                            max={10}
-                                            min={0}
-                                            hideControls
-                                            {...form.getInputProps("height.inches")}
+                                            label="Gender"
+                                            placeholder="Pick one"
+                                            data={[
+                                                { value: "male", label: "Male" },
+                                                { value: "female", label: "Female" },
+                                            ]}
+                                            {...form.getInputProps("gender")}
                                             onChange={(e) => {
                                                 resetBMRAndMC();
-                                                form.getInputProps("height.inches").onChange(e);
+                                                form.getInputProps("gender").onChange(e);
                                             }}
                                         />
-                                    </div>
-                                </Col>
+                                    </Col>
+                                    <Col sm={3}>
+                                        <div className="height-input-group">
+                                            <NumberInput
+                                                step={1}
+                                                placeholder="eg. 10"
+                                                label="Height (feet)"
+                                                withAsterisk
+                                                min={2}
+                                                hideControls
+                                                {...form.getInputProps("height.feet")}
+                                                onChange={(e) => {
+                                                    resetBMRAndMC();
+                                                    form.getInputProps("height.feet").onChange(e);
+                                                }}
+                                            />
 
-                                <Col sm={3}>
-                                    <NumberInput
-                                        placeholder="eg. 10"
-                                        label="Age (years)"
-                                        withAsterisk
-                                        min={0}
-                                        {...form.getInputProps("age")}
-                                        onChange={(e) => {
-                                            resetBMRAndMC();
-                                            form.getInputProps("age").onChange(e);
-                                        }}
-                                    />
-                                </Col>
+                                            <NumberInput
+                                                step={1}
+                                                placeholder="eg. 10"
+                                                label="inches"
+                                                withAsterisk
+                                                max={10}
+                                                min={0}
+                                                hideControls
+                                                {...form.getInputProps("height.inches")}
+                                                onChange={(e) => {
+                                                    resetBMRAndMC();
+                                                    form.getInputProps("height.inches").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
 
-                                <Col sm={6}>
-                                    <Select
-                                        label="Activity"
-                                        placeholder="Pick one"
-                                        data={Object.entries(ACTIVITY_LEVEL).map((item) => ({ value: item[0], label: item[1].label }))}
-                                        {...form.getInputProps("activity")}
-                                        onChange={(e) => {
-                                            resetBMRAndMC();
-                                            form.getInputProps("activity").onChange(e);
-                                        }}
-                                    />
-                                </Col>
-                                <Col sm={6}>
-                                    <div className="height-input-group">
+                                    <Col sm={3}>
                                         <NumberInput
-                                            disabled
                                             placeholder="eg. 10"
-                                            label="BMR"
+                                            label="Age (years)"
                                             withAsterisk
                                             min={0}
-                                            {...form.getInputProps("bmr")}
+                                            {...form.getInputProps("age")}
+                                            onChange={(e) => {
+                                                resetBMRAndMC();
+                                                form.getInputProps("age").onChange(e);
+                                            }}
                                         />
-                                        <NumberInput
-                                            disabled
-                                            placeholder="eg. 10"
-                                            label="Maintenances Calorie"
-                                            withAsterisk
-                                            min={0}
-                                            {...form.getInputProps("maintenances_calorie")}
-                                        />
-                                        <ActionIcon
-                                            style={{ position: "absolute", right: 4, top: 29 }}
-                                            type="button"
-                                            onClick={calculateBMRAndMC}
-                                            hidden={form.values.bmr ? true : false}
-                                            color="blue"
-                                            variant="filled"
-                                        >
-                                            <IconCalculator size="1.125rem" />
-                                        </ActionIcon>
-                                    </div>
-                                </Col>
-                                <Col sm={4}>
-                                    <NumberInput
-                                        placeholder="eg. 10"
-                                        label="Calorie Deficit/Surplus amount"
-                                        withAsterisk
-                                        min={0}
-                                        step={50}
-                                        {...form.getInputProps("calorie_deficit_surplus_amount")}
-                                        onChange={(e) => {
-                                            resetCalorieIntake();
-                                            form.getInputProps("calorie_deficit_surplus_amount").onChange(e);
-                                        }}
-                                    />
-                                </Col>
-                                <Col sm={2}>
-                                    <Select
-                                        label="Type"
-                                        placeholder="Pick one"
-                                        data={[
-                                            { value: "deficit", label: "Deficit" },
-                                            { value: "surplus", label: "Surplus" },
-                                        ]}
-                                        {...form.getInputProps("calorie_deficit_surplus_type")}
-                                        onChange={(e) => {
-                                            resetCalorieIntake();
-                                            form.getInputProps("calorie_deficit_surplus_type").onChange(e);
-                                        }}
-                                    />
-                                </Col>
-                                <Col sm={6}>
-                                    <div style={{ position: "relative" }}>
-                                        <NumberInput
-                                            disabled
-                                            placeholder="eg. 10"
-                                            label="Intake Calorie"
-                                            withAsterisk
-                                            min={0}
-                                            {...form.getInputProps("calorie_intake")}
-                                        />
-                                        <ActionIcon
-                                            style={{ position: "absolute", right: 4, top: 29 }}
-                                            type="button"
-                                            onClick={calculateIntake}
-                                            hidden={form.values.bmr ? true : false}
-                                            color="blue"
-                                            variant="filled"
-                                        >
-                                            <IconCalculator size="1.125rem" />
-                                        </ActionIcon>
-                                    </div>
-                                </Col>
+                                    </Col>
 
-                                <Col sm={4}>
-                                    <div className={classes.wrapper}>
+                                    <Col sm={6}>
+                                        <Select
+                                            label="Activity"
+                                            placeholder="Pick one"
+                                            data={Object.entries(ACTIVITY_LEVEL).map((item) => ({
+                                                value: item[0],
+                                                label: item[1].label,
+                                            }))}
+                                            {...form.getInputProps("activity")}
+                                            onChange={(e) => {
+                                                resetBMRAndMC();
+                                                form.getInputProps("activity").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col sm={6}>
+                                        <div className="height-input-group">
+                                            <NumberInput
+                                                disabled
+                                                placeholder="eg. 10"
+                                                label="BMR"
+                                                withAsterisk
+                                                min={0}
+                                                {...form.getInputProps("bmr")}
+                                            />
+                                            <NumberInput
+                                                disabled
+                                                placeholder="eg. 10"
+                                                label="Maintenances Calorie"
+                                                withAsterisk
+                                                min={0}
+                                                {...form.getInputProps("maintenances_calorie")}
+                                            />
+                                            <ActionIcon
+                                                style={{ position: "absolute", right: 4, top: 29 }}
+                                                type="button"
+                                                onClick={calculateBMRAndMC}
+                                                hidden={form.values.bmr ? true : false}
+                                                color="blue"
+                                                variant="filled"
+                                            >
+                                                <IconCalculator size="1.125rem" />
+                                            </ActionIcon>
+                                        </div>
+                                    </Col>
+                                    <Col sm={4}>
                                         <NumberInput
-                                            label="Your daily protein intake (%)"
-                                            step={1}
-                                            min={1}
-                                            max={100}
-                                            hideControls
-                                            classNames={{ input: classes.input, label: classes.label }}
-                                            {...form.getInputProps("protein_intake")}
+                                            placeholder="eg. 10"
+                                            label="Calorie Deficit/Surplus amount"
+                                            withAsterisk
+                                            min={0}
+                                            step={50}
+                                            {...form.getInputProps("calorie_deficit_surplus_amount")}
                                             onChange={(e) => {
-                                                setShowResult(false);
-                                                form.getInputProps("protein_intake").onChange(e);
+                                                resetCalorieIntake();
+                                                form.getInputProps("calorie_deficit_surplus_amount").onChange(e);
                                             }}
                                         />
-                                        <Slider
-                                            step={1}
-                                            min={1}
-                                            max={100}
-                                            label={null}
-                                            radius={0}
-                                            size={4}
-                                            className={classes.slider}
-                                            classNames={{ thumb: classes.thumb, track: classes.track }}
-                                            {...form.getInputProps("protein_intake")}
+                                    </Col>
+                                    <Col sm={2}>
+                                        <Select
+                                            label="Type"
+                                            placeholder="Pick one"
+                                            data={[
+                                                { value: "deficit", label: "Deficit" },
+                                                { value: "surplus", label: "Surplus" },
+                                            ]}
+                                            {...form.getInputProps("calorie_deficit_surplus_type")}
                                             onChange={(e) => {
-                                                setShowResult(false);
-                                                form.getInputProps("protein_intake").onChange(e);
+                                                resetCalorieIntake();
+                                                form.getInputProps("calorie_deficit_surplus_type").onChange(e);
                                             }}
                                         />
-                                    </div>
-                                </Col>
-                                <Col sm={4}>
-                                    <div className={classes.wrapper}>
-                                        <NumberInput
-                                            label="Your daily fat intake (%)"
-                                            step={1}
-                                            min={1}
-                                            max={100}
-                                            hideControls
-                                            classNames={{ input: classes.input, label: classes.label }}
-                                            {...form.getInputProps("fat_intake")}
-                                            onChange={(e) => {
-                                                setShowResult(false);
-                                                form.getInputProps("fat_intake").onChange(e);
-                                            }}
-                                        />
-                                        <Slider
-                                            step={1}
-                                            min={1}
-                                            max={100}
-                                            label={null}
-                                            size={4}
-                                            radius={0}
-                                            className={classes.slider}
-                                            classNames={{ thumb: classes.thumb, track: classes.track }}
-                                            {...form.getInputProps("fat_intake")}
-                                            onChange={(e) => {
-                                                setShowResult(false);
-                                                form.getInputProps("fat_intake").onChange(e);
-                                            }}
-                                        />
-                                    </div>
-                                </Col>
-                                <Col sm={4}>
-                                    <div className={classes.wrapper}>
-                                        <NumberInput
-                                            label="Your daily carbohydrate intake (%)"
-                                            step={1}
-                                            min={1}
-                                            max={100}
-                                            hideControls
-                                            classNames={{ input: classes.input, label: classes.label }}
-                                            {...form.getInputProps("carbohydrate_intake")}
-                                            onChange={(e) => {
-                                                setShowResult(false);
-                                                form.getInputProps("carbohydrate_intake").onChange(e);
-                                            }}
-                                        />
-                                        <Slider
-                                            step={1}
-                                            min={1}
-                                            max={100}
-                                            label={null}
-                                            size={4}
-                                            radius={0}
-                                            className={classes.slider}
-                                            classNames={{ thumb: classes.thumb, track: classes.track }}
-                                            {...form.getInputProps("carbohydrate_intake")}
-                                            onChange={(e) => {
-                                                setShowResult(false);
-                                                form.getInputProps("carbohydrate_intake").onChange(e);
-                                            }}
-                                        />
-                                    </div>
-                                </Col>
-                            </Grid>
-                            {data && showResult && (
-                                <Grid grow gutter="xs">
+                                    </Col>
+                                    <Col sm={6}>
+                                        <div style={{ position: "relative" }}>
+                                            <NumberInput
+                                                disabled
+                                                placeholder="eg. 10"
+                                                label="Intake Calorie"
+                                                withAsterisk
+                                                min={0}
+                                                {...form.getInputProps("calorie_intake")}
+                                            />
+                                            <ActionIcon
+                                                style={{ position: "absolute", right: 4, top: 29 }}
+                                                type="button"
+                                                onClick={calculateIntake}
+                                                hidden={form.values.bmr ? true : false}
+                                                color="blue"
+                                                variant="filled"
+                                            >
+                                                <IconCalculator size="1.125rem" />
+                                            </ActionIcon>
+                                        </div>
+                                    </Col>
+
+                                    <Col sm={4}>
+                                        <div className={classes.wrapper}>
+                                            <NumberInput
+                                                label="Your daily protein intake (%)"
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                hideControls
+                                                classNames={{ input: classes.input, label: classes.label }}
+                                                {...form.getInputProps("protein_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("protein_intake").onChange(e);
+                                                }}
+                                            />
+                                            <Slider
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                label={null}
+                                                radius={0}
+                                                size={4}
+                                                className={classes.slider}
+                                                classNames={{ thumb: classes.thumb, track: classes.track }}
+                                                {...form.getInputProps("protein_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("protein_intake").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <div className={classes.wrapper}>
+                                            <NumberInput
+                                                label="Your daily fat intake (%)"
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                hideControls
+                                                classNames={{ input: classes.input, label: classes.label }}
+                                                {...form.getInputProps("fat_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("fat_intake").onChange(e);
+                                                }}
+                                            />
+                                            <Slider
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                label={null}
+                                                size={4}
+                                                radius={0}
+                                                className={classes.slider}
+                                                classNames={{ thumb: classes.thumb, track: classes.track }}
+                                                {...form.getInputProps("fat_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("fat_intake").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <div className={classes.wrapper}>
+                                            <NumberInput
+                                                label="Your daily carbohydrate intake (%)"
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                hideControls
+                                                classNames={{ input: classes.input, label: classes.label }}
+                                                {...form.getInputProps("carbohydrate_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("carbohydrate_intake").onChange(e);
+                                                }}
+                                            />
+                                            <Slider
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                label={null}
+                                                size={4}
+                                                radius={0}
+                                                className={classes.slider}
+                                                classNames={{ thumb: classes.thumb, track: classes.track }}
+                                                {...form.getInputProps("carbohydrate_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("carbohydrate_intake").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+                                </Grid>
+                                {data && showResult && (
+                                    <Grid grow gutter="xs">
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Calories
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" variant="filled">
+                                                        100%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {form.values.calorie_intake}
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Protein
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" color="cyan" variant="filled">
+                                                        {form.values.protein_intake}%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {calToGm(calcPercentage(data.calorie_intake, form.values.protein_intake), "protein")}g
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Fat
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" color="orange" variant="filled">
+                                                        {form.values.fat_intake}%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {calToGm(calcPercentage(data.calorie_intake, form.values.fat_intake), "fat")}g
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Carb
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" color="green" variant="filled">
+                                                        {form.values.carbohydrate_intake}%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {calToGm(
+                                                        calcPercentage(data.calorie_intake, form.values.carbohydrate_intake),
+                                                        "carbohydrates"
+                                                    )}
+                                                    g
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                    </Grid>
+                                )}
+                                <Group position="right" mt="md">
+                                    <Button variant="light" type="button" onClick={calculateAll}>
+                                        Calculate
+                                    </Button>
+                                    <Button type="submit" loading={isSaving}>
+                                        Save
+                                    </Button>
+                                </Group>
+                            </Paper>
+                        </form>
+                    </Tabs.Panel>
+                    <Tabs.Panel value="mealInfo">
+                        {data && (
+                            <>
+                                <Grid grow gutter="xs" mt="sm">
                                     <Col span={3}>
                                         <Paper bg="gray.0" p={6}>
                                             <Title order={6} mb={4} align="center">
@@ -538,89 +631,449 @@ const InfoForm = () => {
                                         </Paper>
                                     </Col>
                                 </Grid>
-                            )}
-                            <Group position="right" mt="md">
-                                <Button variant="light" type="button" onClick={calculateAll}>
-                                    Calculate
-                                </Button>
-                                <Button type="submit" loading={isSaving}>
-                                    Save
-                                </Button>
-                            </Group>
-                        </Paper>
-                    </form>
-                </Tabs.Panel>
-                <Tabs.Panel value="mealInfo">
-                    {data && (
-                        <>
-                            <Grid grow gutter="xs" mt="sm">
-                                <Col span={3}>
-                                    <Paper bg="gray.0" p={6}>
-                                        <Title order={6} mb={4} align="center">
-                                            Calories
-                                        </Title>
-                                        <Center>
-                                            <Badge size="xs" variant="filled">
-                                                100%
-                                            </Badge>
-                                        </Center>
-                                        <Text size="xs" align="center" mt={4}>
-                                            {form.values.calorie_intake}
-                                        </Text>
-                                    </Paper>
-                                </Col>
-                                <Col span={3}>
-                                    <Paper bg="gray.0" p={6}>
-                                        <Title order={6} mb={4} align="center">
-                                            Protein
-                                        </Title>
-                                        <Center>
-                                            <Badge size="xs" color="cyan" variant="filled">
-                                                {form.values.protein_intake}%
-                                            </Badge>
-                                        </Center>
-                                        <Text size="xs" align="center" mt={4}>
-                                            {calToGm(calcPercentage(data.calorie_intake, form.values.protein_intake), "protein")}g
-                                        </Text>
-                                    </Paper>
-                                </Col>
-                                <Col span={3}>
-                                    <Paper bg="gray.0" p={6}>
-                                        <Title order={6} mb={4} align="center">
-                                            Fat
-                                        </Title>
-                                        <Center>
-                                            <Badge size="xs" color="orange" variant="filled">
-                                                {form.values.fat_intake}%
-                                            </Badge>
-                                        </Center>
-                                        <Text size="xs" align="center" mt={4}>
-                                            {calToGm(calcPercentage(data.calorie_intake, form.values.fat_intake), "fat")}g
-                                        </Text>
-                                    </Paper>
-                                </Col>
-                                <Col span={3}>
-                                    <Paper bg="gray.0" p={6}>
-                                        <Title order={6} mb={4} align="center">
-                                            Carb
-                                        </Title>
-                                        <Center>
-                                            <Badge size="xs" color="green" variant="filled">
-                                                {form.values.carbohydrate_intake}%
-                                            </Badge>
-                                        </Center>
-                                        <Text size="xs" align="center" mt={4}>
-                                            {calToGm(calcPercentage(data.calorie_intake, form.values.carbohydrate_intake), "carbohydrates")}
-                                            g
-                                        </Text>
-                                    </Paper>
-                                </Col>
-                            </Grid>
-                            <MealChart data={data} />
-                        </>
-                    )}
-                </Tabs.Panel>
-            </Tabs>
+                                <MealChart data={data} />
+                            </>
+                        )}
+                    </Tabs.Panel>
+                </Tabs>
+            ) : (
+                <Grid>
+                    <Grid.Col md={6}>
+                        <form onSubmit={form.onSubmit(formSubmit)} style={{ marginTop: 16 }}>
+                            <Paper style={{ position: "relative" }}>
+                                <LoadingOverlay visible={loading} overlayBlur={2} />
+                                <Title order={4}>Chart Info</Title>
+                                <Divider my="xs" />
+
+                                <TextInput mb="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
+                                <Textarea mb="xs" placeholder="eg. something" label="Description" {...form.getInputProps("description")} />
+                                <Grid gutter="xs" mb="xs">
+                                    <Col sm={3}>
+                                        <NumberInput
+                                            step={0.5}
+                                            precision={1}
+                                            placeholder="eg. 10"
+                                            label="Weight (kg)"
+                                            withAsterisk
+                                            min={0}
+                                            {...form.getInputProps("weight")}
+                                            onChange={(e) => {
+                                                resetBMRAndMC();
+                                                form.getInputProps("weight").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col sm={3}>
+                                        <Select
+                                            withAsterisk
+                                            label="Gender"
+                                            placeholder="Pick one"
+                                            data={[
+                                                { value: "male", label: "Male" },
+                                                { value: "female", label: "Female" },
+                                            ]}
+                                            {...form.getInputProps("gender")}
+                                            onChange={(e) => {
+                                                resetBMRAndMC();
+                                                form.getInputProps("gender").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col sm={3}>
+                                        <div className="height-input-group">
+                                            <NumberInput
+                                                step={1}
+                                                placeholder="eg. 10"
+                                                label="Height (feet)"
+                                                withAsterisk
+                                                min={2}
+                                                hideControls
+                                                {...form.getInputProps("height.feet")}
+                                                onChange={(e) => {
+                                                    resetBMRAndMC();
+                                                    form.getInputProps("height.feet").onChange(e);
+                                                }}
+                                            />
+
+                                            <NumberInput
+                                                step={1}
+                                                placeholder="eg. 10"
+                                                label="inches"
+                                                withAsterisk
+                                                max={10}
+                                                min={0}
+                                                hideControls
+                                                {...form.getInputProps("height.inches")}
+                                                onChange={(e) => {
+                                                    resetBMRAndMC();
+                                                    form.getInputProps("height.inches").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+
+                                    <Col sm={3}>
+                                        <NumberInput
+                                            placeholder="eg. 10"
+                                            label="Age (years)"
+                                            withAsterisk
+                                            min={0}
+                                            {...form.getInputProps("age")}
+                                            onChange={(e) => {
+                                                resetBMRAndMC();
+                                                form.getInputProps("age").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+
+                                    <Col sm={6}>
+                                        <Select
+                                            label="Activity"
+                                            placeholder="Pick one"
+                                            data={Object.entries(ACTIVITY_LEVEL).map((item) => ({
+                                                value: item[0],
+                                                label: item[1].label,
+                                            }))}
+                                            {...form.getInputProps("activity")}
+                                            onChange={(e) => {
+                                                resetBMRAndMC();
+                                                form.getInputProps("activity").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col sm={6}>
+                                        <div className="height-input-group">
+                                            <NumberInput
+                                                disabled
+                                                placeholder="eg. 10"
+                                                label="BMR"
+                                                withAsterisk
+                                                min={0}
+                                                {...form.getInputProps("bmr")}
+                                            />
+                                            <NumberInput
+                                                disabled
+                                                placeholder="eg. 10"
+                                                label="Maintenances Calorie"
+                                                withAsterisk
+                                                min={0}
+                                                {...form.getInputProps("maintenances_calorie")}
+                                            />
+                                            <ActionIcon
+                                                style={{ position: "absolute", right: 4, top: 29 }}
+                                                type="button"
+                                                onClick={calculateBMRAndMC}
+                                                hidden={form.values.bmr ? true : false}
+                                                color="blue"
+                                                variant="filled"
+                                            >
+                                                <IconCalculator size="1.125rem" />
+                                            </ActionIcon>
+                                        </div>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <NumberInput
+                                            placeholder="eg. 10"
+                                            label="Calorie Deficit/Surplus amount"
+                                            withAsterisk
+                                            min={0}
+                                            step={50}
+                                            {...form.getInputProps("calorie_deficit_surplus_amount")}
+                                            onChange={(e) => {
+                                                resetCalorieIntake();
+                                                form.getInputProps("calorie_deficit_surplus_amount").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col sm={2}>
+                                        <Select
+                                            label="Type"
+                                            placeholder="Pick one"
+                                            data={[
+                                                { value: "deficit", label: "Deficit" },
+                                                { value: "surplus", label: "Surplus" },
+                                            ]}
+                                            {...form.getInputProps("calorie_deficit_surplus_type")}
+                                            onChange={(e) => {
+                                                resetCalorieIntake();
+                                                form.getInputProps("calorie_deficit_surplus_type").onChange(e);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col sm={6}>
+                                        <div style={{ position: "relative" }}>
+                                            <NumberInput
+                                                disabled
+                                                placeholder="eg. 10"
+                                                label="Intake Calorie"
+                                                withAsterisk
+                                                min={0}
+                                                {...form.getInputProps("calorie_intake")}
+                                            />
+                                            <ActionIcon
+                                                style={{ position: "absolute", right: 4, top: 29 }}
+                                                type="button"
+                                                onClick={calculateIntake}
+                                                hidden={form.values.bmr ? true : false}
+                                                color="blue"
+                                                variant="filled"
+                                            >
+                                                <IconCalculator size="1.125rem" />
+                                            </ActionIcon>
+                                        </div>
+                                    </Col>
+
+                                    <Col sm={4}>
+                                        <div className={classes.wrapper}>
+                                            <NumberInput
+                                                label="Your daily protein intake (%)"
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                hideControls
+                                                classNames={{ input: classes.input, label: classes.label }}
+                                                {...form.getInputProps("protein_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("protein_intake").onChange(e);
+                                                }}
+                                            />
+                                            <Slider
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                label={null}
+                                                radius={0}
+                                                size={4}
+                                                className={classes.slider}
+                                                classNames={{ thumb: classes.thumb, track: classes.track }}
+                                                {...form.getInputProps("protein_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("protein_intake").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <div className={classes.wrapper}>
+                                            <NumberInput
+                                                label="Your daily fat intake (%)"
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                hideControls
+                                                classNames={{ input: classes.input, label: classes.label }}
+                                                {...form.getInputProps("fat_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("fat_intake").onChange(e);
+                                                }}
+                                            />
+                                            <Slider
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                label={null}
+                                                size={4}
+                                                radius={0}
+                                                className={classes.slider}
+                                                classNames={{ thumb: classes.thumb, track: classes.track }}
+                                                {...form.getInputProps("fat_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("fat_intake").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <div className={classes.wrapper}>
+                                            <NumberInput
+                                                label="Your daily carbohydrate intake (%)"
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                hideControls
+                                                classNames={{ input: classes.input, label: classes.label }}
+                                                {...form.getInputProps("carbohydrate_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("carbohydrate_intake").onChange(e);
+                                                }}
+                                            />
+                                            <Slider
+                                                step={1}
+                                                min={1}
+                                                max={100}
+                                                label={null}
+                                                size={4}
+                                                radius={0}
+                                                className={classes.slider}
+                                                classNames={{ thumb: classes.thumb, track: classes.track }}
+                                                {...form.getInputProps("carbohydrate_intake")}
+                                                onChange={(e) => {
+                                                    setShowResult(false);
+                                                    form.getInputProps("carbohydrate_intake").onChange(e);
+                                                }}
+                                            />
+                                        </div>
+                                    </Col>
+                                </Grid>
+                                {data && showResult && (
+                                    <Grid grow gutter="xs">
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Calories
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" variant="filled">
+                                                        100%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {form.values.calorie_intake}
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Protein
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" color="cyan" variant="filled">
+                                                        {form.values.protein_intake}%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {calToGm(calcPercentage(data.calorie_intake, form.values.protein_intake), "protein")}g
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Fat
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" color="orange" variant="filled">
+                                                        {form.values.fat_intake}%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {calToGm(calcPercentage(data.calorie_intake, form.values.fat_intake), "fat")}g
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                        <Col span={3}>
+                                            <Paper bg="gray.0" p={6}>
+                                                <Title order={6} mb={4} align="center">
+                                                    Carb
+                                                </Title>
+                                                <Center>
+                                                    <Badge size="xs" color="green" variant="filled">
+                                                        {form.values.carbohydrate_intake}%
+                                                    </Badge>
+                                                </Center>
+                                                <Text size="xs" align="center" mt={4}>
+                                                    {calToGm(
+                                                        calcPercentage(data.calorie_intake, form.values.carbohydrate_intake),
+                                                        "carbohydrates"
+                                                    )}
+                                                    g
+                                                </Text>
+                                            </Paper>
+                                        </Col>
+                                    </Grid>
+                                )}
+                                <Group position="right" mt="md">
+                                    <Button variant="light" type="button" onClick={calculateAll}>
+                                        Calculate
+                                    </Button>
+                                    <Button type="submit" loading={isSaving}>
+                                        Save
+                                    </Button>
+                                </Group>
+                            </Paper>
+                        </form>
+                    </Grid.Col>
+                    <Grid.Col md={6}>
+                        {data && (
+                            <>
+                                <Grid grow gutter="xs" mt="sm">
+                                    <Col span={3}>
+                                        <Paper bg="gray.0" p={6}>
+                                            <Title order={6} mb={4} align="center">
+                                                Calories
+                                            </Title>
+                                            <Center>
+                                                <Badge size="xs" variant="filled">
+                                                    100%
+                                                </Badge>
+                                            </Center>
+                                            <Text size="xs" align="center" mt={4}>
+                                                {form.values.calorie_intake}
+                                            </Text>
+                                        </Paper>
+                                    </Col>
+                                    <Col span={3}>
+                                        <Paper bg="gray.0" p={6}>
+                                            <Title order={6} mb={4} align="center">
+                                                Protein
+                                            </Title>
+                                            <Center>
+                                                <Badge size="xs" color="cyan" variant="filled">
+                                                    {form.values.protein_intake}%
+                                                </Badge>
+                                            </Center>
+                                            <Text size="xs" align="center" mt={4}>
+                                                {calToGm(calcPercentage(data.calorie_intake, form.values.protein_intake), "protein")}g
+                                            </Text>
+                                        </Paper>
+                                    </Col>
+                                    <Col span={3}>
+                                        <Paper bg="gray.0" p={6}>
+                                            <Title order={6} mb={4} align="center">
+                                                Fat
+                                            </Title>
+                                            <Center>
+                                                <Badge size="xs" color="orange" variant="filled">
+                                                    {form.values.fat_intake}%
+                                                </Badge>
+                                            </Center>
+                                            <Text size="xs" align="center" mt={4}>
+                                                {calToGm(calcPercentage(data.calorie_intake, form.values.fat_intake), "fat")}g
+                                            </Text>
+                                        </Paper>
+                                    </Col>
+                                    <Col span={3}>
+                                        <Paper bg="gray.0" p={6}>
+                                            <Title order={6} mb={4} align="center">
+                                                Carb
+                                            </Title>
+                                            <Center>
+                                                <Badge size="xs" color="green" variant="filled">
+                                                    {form.values.carbohydrate_intake}%
+                                                </Badge>
+                                            </Center>
+                                            <Text size="xs" align="center" mt={4}>
+                                                {calToGm(
+                                                    calcPercentage(data.calorie_intake, form.values.carbohydrate_intake),
+                                                    "carbohydrates"
+                                                )}
+                                                g
+                                            </Text>
+                                        </Paper>
+                                    </Col>
+                                </Grid>
+                                <MealChart data={data} />
+                            </>
+                        )}
+                    </Grid.Col>
+                </Grid>
+            )}
         </>
     );
 };
