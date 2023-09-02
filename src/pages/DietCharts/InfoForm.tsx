@@ -52,7 +52,6 @@ const defaultValue = {
 
 const InfoForm = () => {
     const { chartId } = useParams();
-    console.log(chartId);
     const navigate = useNavigate();
     const [data, setData] = useState<DietChartData>();
     const user = useSelector<RootState, User | null>((state) => state.user.user);
@@ -190,7 +189,6 @@ const InfoForm = () => {
         setIsSaving(false);
         navigate("/chart/" + documentId);
     };
-
     return (
         <>
             {windowWidth < 768 ? (
@@ -254,7 +252,7 @@ const InfoForm = () => {
                                                 {...form.getInputProps("height.feet")}
                                                 onChange={(e) => {
                                                     resetBMRAndMC();
-                                                    form.getInputProps("height.feet").onChange(e);
+                                                    form.setFieldValue("height", { feet: e as any, inches: form.values.height.inches });
                                                 }}
                                             />
 
@@ -263,13 +261,13 @@ const InfoForm = () => {
                                                 placeholder="eg. 10"
                                                 label="inches"
                                                 withAsterisk
-                                                max={10}
+                                                max={11}
                                                 min={0}
                                                 hideControls
                                                 {...form.getInputProps("height.inches")}
                                                 onChange={(e) => {
                                                     resetBMRAndMC();
-                                                    form.getInputProps("height.inches").onChange(e);
+                                                    form.setFieldValue("height", { feet: form.values.height.feet, inches: e as any });
                                                 }}
                                             />
                                         </div>
@@ -691,7 +689,7 @@ const InfoForm = () => {
                                                 {...form.getInputProps("height.feet")}
                                                 onChange={(e) => {
                                                     resetBMRAndMC();
-                                                    form.getInputProps("height.feet").onChange(e);
+                                                    form.setFieldValue("height", { feet: e as any, inches: form.values.height.inches });
                                                 }}
                                             />
 
@@ -706,7 +704,7 @@ const InfoForm = () => {
                                                 {...form.getInputProps("height.inches")}
                                                 onChange={(e) => {
                                                     resetBMRAndMC();
-                                                    form.getInputProps("height.inches").onChange(e);
+                                                    form.setFieldValue("height", { feet: form.values.height.feet, inches: e as any });
                                                 }}
                                             />
                                         </div>
