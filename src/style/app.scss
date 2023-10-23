@@ -34,3 +34,20 @@ body,
         display: none;
     }
 }
+
+.test-table, .test-table th, .test-table td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.test-table th, .test-table td{
+  padding: 0px 4px ;
+  font-size: 12px;
+}
+.t-head *{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.t-meal-head * {
+  font-weight: bold;
+}
