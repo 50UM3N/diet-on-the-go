@@ -1,8 +1,8 @@
 import { db } from "@/firebase";
 import { Button, Divider, Group, LoadingOverlay, Modal, Paper, Stack, Title } from "@mantine/core";
-import { IconFile, IconPlus } from "@tabler/icons-react";
+import { IconFile, IconPlus, IconSalad } from "@tabler/icons-react";
 import { collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { calcAmount } from "@/utils";
@@ -23,7 +23,6 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
     const [mealPopper, setMealPopper] = useState(false);
     const [editingMealItem, setEditingMealItem] = useState<DetailsMeals>();
     const [totalMacros, setTotalMacros] = useState<Macros>({ protein: 0, carbohydrate: 0, fat: 0 });
-
     const handleMealEditing = (item: DetailsMeals) => {
         setEditingMealItem(item);
         setMealPopper(true);
@@ -128,6 +127,46 @@ const MealChart: React.FC<{ data: DietChartData }> = ({ data }) => {
                 </Group>
                 <Divider my="xs" />
                 <MacrosBadge style={{ flex: 1 }} wrapper={{ mb: "sm" }} {...totalMacros} color="blue" size="lg" />
+                <table className="test-table" style={{ width: "100%" }}>
+                    <tbody>
+                        <tr className="t-head">
+                            <td style={{}}>Name</td>
+                            <td style={{ width: "12%" }}>Amount</td>
+                            <td style={{ width: "12%" }}>Protein</td>
+                            <td style={{ width: "12%" }}>Carbohydrate </td>
+                            <td style={{ width: "12%" }}>Fat</td>
+                        </tr>
+                        {_data?.map((item) => (
+                            <Fragment key={item.id}>
+                                <tr className="t-meal-head">
+                                    <td colSpan={2}>{item.name}</td>
+                                    <td>{item.protein}</td>
+                                    <td>{item.carbohydrate}</td>
+                                    <td>{item.fat}</td>
+                                </tr>
+
+                                {item.foods.map((food) => {
+                                    return (
+                                        <tr key={food.food.id}>
+                                            <td>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 4, paddingLeft: 8 }}>
+                                                    <IconSalad size={14} />
+                                                    {food.food.name}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {food.qty} {food.food.metric === "PER_100_G" ? "g" : "pc "}
+                                            </td>
+                                            <td>{food.food.protein}</td>
+                                            <td>{food.food.carbohydrate}</td>
+                                            <td>{food.food.fat}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </Fragment>
+                        ))}
+                    </tbody>
+                </table>
                 <Stack spacing="xs">
                     {_data?.map((item) => (
                         <Meal data={item} key={item.id} onEdit={() => handleMealEditing(item)} />
