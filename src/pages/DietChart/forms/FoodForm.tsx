@@ -6,7 +6,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { forwardRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useMealChart } from "./MealChartContext";
+import { useMeal } from "../MealContext";
 
 type ItemProps = React.ComponentPropsWithoutRef<"div"> & FoodItemSelect;
 
@@ -17,7 +17,7 @@ const FoodForm: React.FC<{
     isEditing?: boolean;
     editingFoodId?: string;
 }> = ({ onAddSuccessful, onClose, meal, isEditing, editingFoodId }) => {
-    const ctx = useMealChart();
+    const ctx = useMeal();
     const user = useSelector<RootState, User | null>((state) => state.user.user);
     const { chartId } = useParams();
     const [isSaving, setIsSaving] = useState(false);
