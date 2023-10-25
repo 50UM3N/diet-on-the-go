@@ -8,8 +8,10 @@ import firebaseApp, { db } from "./firebase";
 import { useDispatch } from "react-redux";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { setUser } from "./store/slices/userSlice";
-import InfoForm from "./pages/DietCharts/InfoForm";
-import ChartList from "./pages/DietCharts/ChartList";
+
+import CreateDietChartPage from "./pages/DietChart/Create";
+import UpdateDietChartPage from "./pages/DietChart/Update";
+import DietChartListPage from "./pages/DietChart/List";
 
 const router = createHashRouter([
     {
@@ -19,9 +21,9 @@ const router = createHashRouter([
     {
         element: <AuthProvider />,
         children: [
-            { path: "/", element: <ChartList /> },
-            { path: "/create", element: <InfoForm /> },
-            { path: "/chart/:chartId", element: <InfoForm /> },
+            { path: "/", element: <DietChartListPage /> },
+            { path: "/create", element: <CreateDietChartPage /> },
+            { path: "/chart/:chartId", element: <UpdateDietChartPage /> },
             { path: "/food-items", element: <FoodItems /> },
         ],
     },
