@@ -1,26 +1,61 @@
+# Diet on the Go Documentation
 
-# Diet on the Go
+## Introduction
 
-Diet on the Go is a web application built with React.js using Vite as the build tool and Mantine framework for the UI components. The application focuses on helping users manage their diet effectively by calculating maintenance calories based on daily activity levels, adjusting calories for surplus or deficit, and planning macronutrients accordingly.
+Diet on the Go is an application designed to help users create personalized diet plans based on their body type and fitness goals. With this application, users can calculate their Basal Metabolic Rate (BMR) and maintenance calories, set dietary goals, and track their macronutrient intake. This documentation provides an overview of the application's functionalities and technologies used.
 
-## Features
+## How It Works
 
-- **Calculate Maintenance Calories:** Determine maintenance calorie levels based on daily activity.
-- **Adjust Caloric Intake:** Modify calorie intake to achieve surplus or deficit calories.
-- **Macro Nutrient Calculation:** Calculate protein, carbohydrates, and fat based on user's dietary requirements.
-- **Meal Planning:** Add food to a meal list to achieve target calorie goals through an intuitive UI.
-- **Progress Tracking:** Store and track progress data in the database.
-- **Export and Import Data:** Export and import progress data in a specific format.
+### 1. **Basic Data Input**
+
+- Users provide their weight (in kg), height (in feet and inches), and age.
+
+### 2. **Calculating BMR**
+
+- BMR (Basal Metabolic Rate) is calculated using the **Harris-Benedict formula**.
+\[ BMR = 88.362 + (13.397 \times \text{{weight in kg}}) + (4.799 \times \text{{height in cm}}) - (5.677 \times \text{{age in years}}) \]
+  
+### 3. **Determining Maintenance Calories**
+
+- Maintenance calories are calculated based on the user's activity level, using the Physical Activity Level (PAL) factors.
+
+| Activity Level          | PAL Value |
+|-------------------------|-----------|
+| Sedentary               | 1.2       |
+| Lightly active          | 1.375     |
+| Moderately active       | 1.55      |
+| Active                  | 1.725     |
+| Very active             | 1.9       |
+
+\[ \text{{Maintenance Calories}} = \text{{BMR}} \times \text{{PAL Value}} \]
+
+### 4. **Setting Caloric Goals**
+
+- Users can choose to create a calorie deficit or surplus based on their goals.
+
+### 5. **Macronutrient Division**
+
+- Users can select the percentage division for macronutrients: protein, fat, and carbohydrates.
+- Caloric values for macronutrients: 1g carb = 4 calories, 1g protein = 4 calories, 1g fat = 9 calories.
+
+### 6. **Adding Food Items**
+
+- Users can add food items to their diet plan, each with its own macronutrient division.
+- Total macronutrient intake is calculated and displayed to the user.
+
+## Technologies Used
+
+- **Frontend**: React.js, Mantine UI
+- **Database**: Firebase Firestore
+- **Authentication**: Firebase OAuth
+- **Hosting**: Vercel
 
 ## Firebase Configuration
 
-To set up Firebase for authentication and data storage, create a `firebase.ts` file in your project with the following configuration:
+The application uses Firebase Firestore for data storage and Firebase OAuth for user authentication. The Firebase configuration is stored in the `firebase.ts` file.
 
 ```typescript
-// firebase.ts
-
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+...
 
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
@@ -31,24 +66,18 @@ const firebaseConfig = {
     appId: "YOUR_APP_ID",
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
+...
 
-export default firebaseApp;
-export const db = getFirestore(firebaseApp);
 ```
 
-Replace the placeholders (`YOUR_API_KEY`, `YOUR_AUTH_DOMAIN`, `YOUR_PROJECT_ID`, `YOUR_STORAGE_BUCKET`, `YOUR_MESSAGING_SENDER_ID`, `YOUR_APP_ID`) with your Firebase project details.
+Replace the placeholders (`YOUR_API_KEY`, `YOUR_AUTH_DOMAIN`, etc.) with your actual Firebase project credentials.
 
-## Getting Started
+## Preview
 
-Follow these steps to get the project up and running locally:
+![Preview](preview/preview.png)
 
-1. Clone this repository.
-2. Install dependencies using `npm install` or `yarn install`.
-3. Run the development server using `npm run dev` or `yarn dev`.
+Live link https://dotheg.vercel.app/
 
-## Usage
+---
 
-1. Set up Firebase by following the Firebase Configuration steps.
-2. Navigate to the application and authenticate using Google OAuth2.
-3. Utilize the application features to manage your diet effectively.
+This documentation provides an overview of the Diet on the Go application, explaining its functionalities and the technologies used. If you need further assistance or have specific questions, feel free to reach out.
