@@ -1,9 +1,5 @@
 import { db } from "@/firebase";
-<<<<<<< Updated upstream
-import { ActionIcon, Badge, Button, Center, Col, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Stack, Text, Title } from "@mantine/core";
-=======
-import { ActionIcon, Badge, Button, Center, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Text, Title } from "@mantine/core";
->>>>>>> Stashed changes
+import { ActionIcon, Badge, Button, Center, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Stack, Text, Title } from "@mantine/core";
 import { IconDotsVertical, IconFile, IconPencil, IconPlus, IconSalad, IconTrash } from "@tabler/icons-react";
 import { collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import React, { Fragment, useEffect, useState } from "react";
