@@ -46,8 +46,8 @@ const UpdateDietChartPage = () => {
   return (
     <>
       {windowWidth < 992 ? (
-        <Tabs defaultValue="chartInfo">
-          <Tabs.List grow position="center" data-no-print>
+        <Tabs defaultValue="chartInfo" variant="pills">
+          <Tabs.List grow justify="center" data-no-print>
             <Tabs.Tab value="chartInfo">Chart Info</Tabs.Tab>
             <Tabs.Tab disabled={!data} value="mealInfo">
               Meal Info
@@ -55,7 +55,7 @@ const UpdateDietChartPage = () => {
           </Tabs.List>
           <Tabs.Panel value="chartInfo">
             <Paper style={{ position: "relative" }}>
-              <LoadingOverlay visible={loading} overlayBlur={2} />
+              <LoadingOverlay visible={loading} overlayProps={{ radius: "sm", blur: 2 }} />
               <Form data={data} />
             </Paper>
           </Tabs.Panel>
@@ -65,13 +65,13 @@ const UpdateDietChartPage = () => {
         </Tabs>
       ) : (
         <Grid>
-          <Grid.Col md={6}>
+          <Grid.Col span={{ md: 6 }}>
             <Paper style={{ position: "relative" }}>
-              <LoadingOverlay visible={loading} overlayBlur={2} />
+              <LoadingOverlay visible={loading} overlayProps={{ radius: "sm", blur: 2 }} />
               <Form data={data} />
             </Paper>
           </Grid.Col>
-          <Grid.Col md={6}>
+          <Grid.Col span={{ md: 6 }}>
             <Paper style={{ position: "relative" }}>{data && <Data data={data} />}</Paper>
           </Grid.Col>
         </Grid>

@@ -38,7 +38,7 @@ const DietChartListPage = () => {
         cell(props) {
           const id = props.getValue();
           return (
-            <Group spacing="xs">
+            <Group gap="xs">
               <ActionIcon variant="filled" color="blue" component={Link} to={`/chart/${id}`}>
                 <IconEdit size={16} />
               </ActionIcon>{" "}
@@ -98,7 +98,7 @@ const DietChartListPage = () => {
     <Paper style={{ position: "relative" }}>
       <Title order={4}>Chart List</Title>
       <Divider my="xs" />
-      <LoadingOverlay visible={isLoading} overlayBlur={2} />
+      <LoadingOverlay visible={isLoading} overlayProps={{ radius: "sm", blur: 2 }} />
       <Table columns={columns} data={list} />
     </Paper>
   );

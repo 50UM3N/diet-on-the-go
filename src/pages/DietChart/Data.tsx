@@ -1,5 +1,9 @@
 import { db } from "@/firebase";
+<<<<<<< Updated upstream
 import { ActionIcon, Badge, Button, Center, Col, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Stack, Text, Title } from "@mantine/core";
+=======
+import { ActionIcon, Badge, Button, Center, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Text, Title } from "@mantine/core";
+>>>>>>> Stashed changes
 import { IconDotsVertical, IconFile, IconPencil, IconPlus, IconSalad, IconTrash } from "@tabler/icons-react";
 import { collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import React, { Fragment, useEffect, useState } from "react";
@@ -129,11 +133,11 @@ const Data = ({ data }: { data: DietChartData }) => {
         macros: totalMacros,
       }}
     >
-      <LoadingOverlay visible={loading} overlayBlur={2} />
+      <LoadingOverlay visible={loading} overlayProps={{ radius: "sm", blur: 2 }} />
       <Grid grow gutter="xs">
-        <Col span={3}>
+        <Grid.Col span={3}>
           <Paper bg="gray.0" p={6}>
-            <Title order={6} mb={4} align="center">
+            <Title order={6} mb={4} ta="center">
               Calories
             </Title>
             <Center>
@@ -141,14 +145,14 @@ const Data = ({ data }: { data: DietChartData }) => {
                 100%
               </Badge>
             </Center>
-            <Text size="xs" align="center" mt={4}>
+            <Text size="xs" ta="center" mt={4}>
               {data.calorie_intake}
             </Text>
           </Paper>
-        </Col>
-        <Col span={3}>
+        </Grid.Col>
+        <Grid.Col span={3}>
           <Paper bg="gray.0" p={6}>
-            <Title order={6} mb={4} align="center">
+            <Title order={6} mb={4} ta="center">
               Protein
             </Title>
             <Center>
@@ -156,14 +160,14 @@ const Data = ({ data }: { data: DietChartData }) => {
                 {data.protein_intake}%
               </Badge>
             </Center>
-            <Text size="xs" align="center" mt={4}>
+            <Text size="xs" ta="center" mt={4}>
               {calToGm(calcPercentage(data.calorie_intake, data.protein_intake), "protein")}g
             </Text>
           </Paper>
-        </Col>
-        <Col span={3}>
+        </Grid.Col>
+        <Grid.Col span={3}>
           <Paper bg="gray.0" p={6}>
-            <Title order={6} mb={4} align="center">
+            <Title order={6} mb={4} ta="center">
               Fat
             </Title>
             <Center>
@@ -171,14 +175,14 @@ const Data = ({ data }: { data: DietChartData }) => {
                 {data.fat_intake}%
               </Badge>
             </Center>
-            <Text size="xs" align="center" mt={4}>
+            <Text size="xs" ta="center" mt={4}>
               {calToGm(calcPercentage(data.calorie_intake, data.fat_intake), "fat")}g
             </Text>
           </Paper>
-        </Col>
-        <Col span={3}>
+        </Grid.Col>
+        <Grid.Col span={3}>
           <Paper bg="gray.0" p={6}>
-            <Title order={6} mb={4} align="center">
+            <Title order={6} mb={4} ta="center">
               Carb
             </Title>
             <Center>
@@ -186,19 +190,19 @@ const Data = ({ data }: { data: DietChartData }) => {
                 {data.carbohydrate_intake}%
               </Badge>
             </Center>
-            <Text size="xs" align="center" mt={4}>
+            <Text size="xs" ta="center" mt={4}>
               {calToGm(calcPercentage(data.calorie_intake, data.carbohydrate_intake), "carbohydrates")}g
             </Text>
           </Paper>
-        </Col>
+        </Grid.Col>
       </Grid>
       <Divider my="xs" />
 
-      <Group position="apart" mb="xs">
+      <Group justify="apart" mb="xs">
         <Title order={4}>Meal List</Title>
-        <Group spacing="xs">
+        <Group gap="xs">
           <Button
-            leftIcon={<IconPlus size={14} />}
+            leftSection={<IconPlus size={14} />}
             size="xs"
             onClick={() => {
               setMealModal({
@@ -211,7 +215,7 @@ const Data = ({ data }: { data: DietChartData }) => {
             Add Meal
           </Button>
           <Button
-            leftIcon={<IconFile size={14} />}
+            leftSection={<IconFile size={14} />}
             size="xs"
             onClick={() => {
               window.print();
@@ -243,7 +247,7 @@ const Data = ({ data }: { data: DietChartData }) => {
                 <td>{item.carbohydrate.toFixed(2)} g</td>
                 <td>{item.fat.toFixed(2)} g</td>
                 <td>
-                  <Group spacing="xs">
+                  <Group gap="xs">
                     <ActionIcon
                       size={14}
                       data-no-print
@@ -267,12 +271,12 @@ const Data = ({ data }: { data: DietChartData }) => {
                       </Menu.Target>
 
                       <Menu.Dropdown>
-                        <Menu.Item icon={<IconPencil size={14} />} onClick={() => setMealModal({ open: true, isEditing: true, data: item })}>
+                        <Menu.Item leftSection={<IconPencil size={14} />} onClick={() => setMealModal({ open: true, isEditing: true, data: item })}>
                           Edit
                         </Menu.Item>
                         <Menu.Item
                           color="red"
-                          icon={<IconTrash size={14} />}
+                          leftSection={<IconTrash size={14} />}
                           onClick={() =>
                             setDeleteMealModal({
                               open: true,
@@ -304,7 +308,7 @@ const Data = ({ data }: { data: DietChartData }) => {
                     <td>{food.food.carbohydrate} g</td>
                     <td>{food.food.fat} g</td>
                     <td>
-                      <Group spacing="xs" data-no-print>
+                      <Group gap="xs" data-no-print>
                         <ActionIcon size={14} onClick={() => setFoodModal({ open: true, meal: item, isEditing: true, foodId: food.food.id })}>
                           <IconPencil size="12px" />
                         </ActionIcon>
@@ -336,11 +340,11 @@ const Data = ({ data }: { data: DietChartData }) => {
 
       {/* meal modal */}
       <Modal
-        styles={{
-          root: {
-            "& .mantine-Paper-root": { padding: 16 },
-          },
-        }}
+        // styles={{
+        //   root: {
+        //     padding: 16,
+        //   },
+        // }}
         centered
         padding={0}
         opened={mealModal.open}
@@ -373,7 +377,7 @@ const Data = ({ data }: { data: DietChartData }) => {
         <Text size="sm" mb="xl">
           Are you sure want to delete your meal?
         </Text>
-        <Group position="right">
+        <Group justify="right">
           <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })} variant="outline" disabled={deleteMealModal.isDeleting}>
             Cancel
           </Button>
@@ -386,12 +390,12 @@ const Data = ({ data }: { data: DietChartData }) => {
 
       {/* FoodItem Add Modal */}
       <Modal
-        styles={{
-          root: {
-            "& .mantine-Paper-root": { padding: 16, overflowY: "unset" },
-            "& .mantine-Modal-header": { zIndex: 0 },
-          },
-        }}
+        // styles={{
+        //   // root: {
+        //   //   "& .mantine-Paper-root": { padding: 16, overflowY: "unset" },
+        //   //   "& .mantine-Modal-header": { zIndex: 0 },
+        //   // },
+        // }}
         centered
         padding={0}
         opened={foodModal.open}
@@ -440,7 +444,7 @@ const Data = ({ data }: { data: DietChartData }) => {
         <Text size="sm" mb="xl">
           Are you sure want to delete your meal?
         </Text>
-        <Group position="right">
+        <Group justify="right">
           <Button
             size="xs"
             onClick={() =>

@@ -24,7 +24,7 @@ const Login = () => {
         <Center style={{ height: "100vh", width: "100%" }}>
             <Button
                 loading={user.isLoading}
-                leftIcon={<IconBrandGoogle size={14} />}
+                leftSection={<IconBrandGoogle size={14} />}
                 onClick={handleAuth}
             >
                 Connect to Google
