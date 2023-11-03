@@ -1,60 +1,75 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-    height: 100%;
-    min-height: 100%;
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
 }
 
 .height-input-group {
-    position: relative;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  & > div {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    & > div {
-        width: 100%;
-    }
-    & > div:first-child input {
-        border-bottom-right-radius: 0px;
-        border-top-right-radius: 0px;
-    }
-    & > div:nth-child(2) input {
-        border-bottom-left-radius: 0px;
-        border-top-left-radius: 0px;
-    }
+  }
+  & > div:first-child input {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+  & > div:nth-child(2) input {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+  }
 }
 
 @media print {
-    [data-no-print] {
-        display: none;
-    }
+  [data-no-print] {
+    display: none;
+  }
 }
-
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-collapse: collapse;
+}
 .test-table,
 .test-table th,
 .test-table td {
-    border: 1px solid #dee2e6;
-    border-collapse: collapse;
+  border: 1px solid #dee2e6;
+  border-collapse: collapse;
+  white-space: nowrap;
 }
 .test-table th,
 .test-table td {
-    padding: 4px 8px;
-    font-size: 12px;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
 }
 .t-head * {
-    font-size: 14px;
-    font-weight: bold;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .t-meal-head * {
-    font-weight: bold;
+  font-weight: bold;
 }
 .t-meal-head {
-    background-color: #e0f2ff;
+  background-color: #e0f2ff;
+}
+
+.header {
+  .burger {
+    @media (max-width: 992px) {
+      display: none;
+    }
+  }
 }

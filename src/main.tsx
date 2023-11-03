@@ -8,36 +8,19 @@ import "@/style/app.scss";
 
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
+import { appTheme } from "./theme";
+import '@mantine/core/styles.css';
+
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <MantineProvider
-                withGlobalStyles
-                withNormalizeCSS
-                theme={{
-                    loader: "dots",
-                    components: {
-                        Paper: { defaultProps: { radius: "lg", withBorder: true, p: { sm: "md", base: "sm" } } },
-                        Button: { defaultProps: { radius: "md" } },
-                        Modal: {
-                            defaultProps: {
-                                styles: {
-                                    root: {
-                                        "& .mantine-Paper-root": { padding: 0 },
-                                    },
-                                },
-                                padding: 16,
-                            },
-                        },
-                    },
-                }}
-            >
-                <ModalsProvider>
-                    <Notifications />
-                    <App />
-                </ModalsProvider>
-            </MantineProvider>
-        </Provider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <Provider store={store}>
+      <MantineProvider theme={appTheme}>
+        <ModalsProvider>
+          <Notifications />
+          <App />
+        </ModalsProvider>
+      </MantineProvider>
+    </Provider>
+  </React.StrictMode>
 );

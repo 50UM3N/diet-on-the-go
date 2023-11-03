@@ -1,23 +1,5 @@
 import { db } from "@/firebase";
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Center,
-  Col,
-  Divider,
-  Grid,
-  Group,
-  NumberInput,
-  Paper,
-  Select,
-  Slider,
-  Text,
-  TextInput,
-  Textarea,
-  Title,
-  createStyles,
-} from "@mantine/core";
+import { ActionIcon, Badge, Button, Center, Divider, Grid, Group, NumberInput, Paper, Select, Slider, Text, TextInput, Textarea, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -28,7 +10,8 @@ import { ACTIVITY_LEVEL } from "@/data/constant";
 import { calToGm, calcPercentage, calculateAMR, calculateBMR } from "@/utils";
 import { IconCalculator } from "@tabler/icons-react";
 import { showNotification } from "@mantine/notifications";
-const useStyles = createStyles((theme) => ({
+import { appTheme } from "@/theme";
+const style: any = {
   wrapper: {
     position: "relative",
   },
@@ -44,8 +27,8 @@ const useStyles = createStyles((theme) => ({
   label: {
     position: "absolute",
     pointerEvents: "none",
-    paddingLeft: theme.spacing.sm,
-    paddingTop: (theme.spacing.sm as any) / 2,
+    paddingLeft: appTheme.spacing?.sm,
+    paddingTop: (appTheme.spacing?.sm as any) / 2,
     zIndex: 1,
   },
 
@@ -61,9 +44,9 @@ const useStyles = createStyles((theme) => ({
   },
 
   track: {
-    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[3] : theme.colors.gray[4],
+    backgroundColor: appTheme.colors?.gray?.[4],
   },
-}));
+};
 
 const defaultValue = {
   name: "",
@@ -102,8 +85,6 @@ const Form = ({ data }: { data?: DietChartData }) => {
       calorie_intake: (value) => (value || value > 0 ? null : "Required"),
     },
   });
-
-  const { classes } = useStyles();
 
   const { chartId } = useParams();
   const user = useSelector<RootState, User | null>((state) => state.user.user);
@@ -205,17 +186,17 @@ const Form = ({ data }: { data?: DietChartData }) => {
   };
 
   return (
-    <form onSubmit={form.onSubmit(formSubmit)} >
+    <form onSubmit={form.onSubmit(formSubmit)}>
       <Title order={4}>Chart Info</Title>
       <Divider my="xs" />
       <TextInput size="xs" mb="xs" placeholder="eg. Bulk Chart" label="Name" withAsterisk {...form.getInputProps("name")} />
       <Textarea size="xs" mb="xs" placeholder="eg. something" label="Description" {...form.getInputProps("description")} />
       <Grid gutter="xs">
-        <Col sm={6}>
+        <Grid.Col span={{ sm: 6 }}>
           <NumberInput
+            hideControls
             size="xs"
             step={0.5}
-            precision={1}
             placeholder="eg. 10"
             label="Weight (kg)"
             withAsterisk
@@ -226,8 +207,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
               form.getInputProps("weight").onChange(e);
             }}
           />
-        </Col>
-        <Col sm={6}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 6 }}>
           <Select
             size="xs"
             withAsterisk
@@ -243,8 +224,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
               form.getInputProps("gender").onChange(e);
             }}
           />
-        </Col>
-        <Col sm={6}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 6 }}>
           <div className="height-input-group">
             <NumberInput
               size="xs"
@@ -253,7 +234,6 @@ const Form = ({ data }: { data?: DietChartData }) => {
               label="Height (feet)"
               withAsterisk
               min={2}
-              hideControls
               {...form.getInputProps("height.feet")}
               onChange={(e) => {
                 resetBMRAndMC();
@@ -269,7 +249,6 @@ const Form = ({ data }: { data?: DietChartData }) => {
               withAsterisk
               max={10}
               min={0}
-              hideControls
               {...form.getInputProps("height.inches")}
               onChange={(e) => {
                 resetBMRAndMC();
@@ -277,9 +256,9 @@ const Form = ({ data }: { data?: DietChartData }) => {
               }}
             />
           </div>
-        </Col>
+        </Grid.Col>
 
-        <Col sm={6}>
+        <Grid.Col span={{ sm: 6 }}>
           <NumberInput
             size="xs"
             placeholder="eg. 10"
@@ -292,9 +271,9 @@ const Form = ({ data }: { data?: DietChartData }) => {
               form.getInputProps("age").onChange(e);
             }}
           />
-        </Col>
+        </Grid.Col>
 
-        <Col sm={6}>
+        <Grid.Col span={{ sm: 6 }}>
           <Select
             size="xs"
             label="Activity"
@@ -309,33 +288,17 @@ const Form = ({ data }: { data?: DietChartData }) => {
               form.getInputProps("activity").onChange(e);
             }}
           />
-        </Col>
-        <Col sm={6}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 6 }}>
           <div className="height-input-group">
-            <NumberInput size="xs" disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
-            <NumberInput
-              size="xs"
-              disabled
-              placeholder="eg. 10"
-              label="Maintenances Calorie"
-              withAsterisk
-              min={0}
-              {...form.getInputProps("maintenances_calorie")}
-            />
-            <ActionIcon
-              size="sm"
-              style={{ position: "absolute", right: 4, top: 29 }}
-              type="button"
-              onClick={calculateBMRAndMC}
-              hidden={form.values.bmr ? true : false}
-              color="blue"
-              variant="filled"
-            >
+            <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
+            <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="Maintenances Calorie" withAsterisk min={0} {...form.getInputProps("maintenances_calorie")} />
+            <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateBMRAndMC} hidden={form.values.bmr ? true : false} color="blue" variant="filled">
               <IconCalculator size="1.125rem" />
             </ActionIcon>
           </div>
-        </Col>
-        <Col sm={4}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 4 }}>
           <NumberInput
             size="xs"
             placeholder="eg. 10"
@@ -349,8 +312,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
               form.getInputProps("calorie_deficit_surplus_amount").onChange(e);
             }}
           />
-        </Col>
-        <Col sm={2}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 2 }}>
           <Select
             size="xs"
             label="Type"
@@ -365,34 +328,18 @@ const Form = ({ data }: { data?: DietChartData }) => {
               form.getInputProps("calorie_deficit_surplus_type").onChange(e);
             }}
           />
-        </Col>
-        <Col sm={6}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 6 }}>
           <div style={{ position: "relative" }}>
-            <NumberInput
-              size="xs"
-              disabled
-              placeholder="eg. 10"
-              label="Intake Calorie"
-              withAsterisk
-              min={0}
-              {...form.getInputProps("calorie_intake")}
-            />
-            <ActionIcon
-              size="sm"
-              style={{ position: "absolute", right: 4, top: 29 }}
-              type="button"
-              onClick={calculateIntake}
-              hidden={form.values.bmr ? true : false}
-              color="blue"
-              variant="filled"
-            >
+            <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="Intake Calorie" withAsterisk min={0} {...form.getInputProps("calorie_intake")} />
+            <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateIntake} hidden={form.values.bmr ? true : false} color="blue" variant="filled">
               <IconCalculator size="1.125rem" />
             </ActionIcon>
           </div>
-        </Col>
+        </Grid.Col>
 
-        <Col sm={4}>
-          <div className={classes.wrapper}>
+        <Grid.Col span={{ sm: 4 }}>
+          <div className={style.wrapper}>
             <NumberInput
               size="xs"
               label="Protein (%)"
@@ -400,7 +347,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
               min={1}
               max={100}
               hideControls
-              classNames={{ input: classes.input, label: classes.label }}
+              classNames={{ input: style.input, label: style.label }}
               {...form.getInputProps("protein_intake")}
               onChange={(e) => {
                 setShowResult(false);
@@ -414,8 +361,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
               label={null}
               radius={0}
               size={4}
-              className={classes.slider}
-              classNames={{ thumb: classes.thumb, track: classes.track }}
+              className={style.slider}
+              classNames={{ thumb: style.thumb, track: style.track }}
               {...form.getInputProps("protein_intake")}
               onChange={(e) => {
                 setShowResult(false);
@@ -423,9 +370,9 @@ const Form = ({ data }: { data?: DietChartData }) => {
               }}
             />
           </div>
-        </Col>
-        <Col sm={4}>
-          <div className={classes.wrapper}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 4 }}>
+          <div className={style.wrapper}>
             <NumberInput
               size="xs"
               label="Fat (%)"
@@ -433,7 +380,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
               min={1}
               max={100}
               hideControls
-              classNames={{ input: classes.input, label: classes.label }}
+              classNames={{ input: style.input, label: style.label }}
               {...form.getInputProps("fat_intake")}
               onChange={(e) => {
                 setShowResult(false);
@@ -447,8 +394,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
               label={null}
               size={4}
               radius={0}
-              className={classes.slider}
-              classNames={{ thumb: classes.thumb, track: classes.track }}
+              className={style.slider}
+              classNames={{ thumb: style.thumb, track: style.track }}
               {...form.getInputProps("fat_intake")}
               onChange={(e) => {
                 setShowResult(false);
@@ -456,9 +403,9 @@ const Form = ({ data }: { data?: DietChartData }) => {
               }}
             />
           </div>
-        </Col>
-        <Col sm={4}>
-          <div className={classes.wrapper}>
+        </Grid.Col>
+        <Grid.Col span={{ sm: 4 }}>
+          <div className={style.wrapper}>
             <NumberInput
               size="xs"
               label="Carbohydrate (%)"
@@ -466,7 +413,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
               min={1}
               max={100}
               hideControls
-              classNames={{ input: classes.input, label: classes.label }}
+              classNames={{ input: style.input, label: style.label }}
               {...form.getInputProps("carbohydrate_intake")}
               onChange={(e) => {
                 setShowResult(false);
@@ -480,8 +427,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
               label={null}
               size={4}
               radius={0}
-              className={classes.slider}
-              classNames={{ thumb: classes.thumb, track: classes.track }}
+              className={style.slider}
+              classNames={{ thumb: style.thumb, track: style.track }}
               {...form.getInputProps("carbohydrate_intake")}
               onChange={(e) => {
                 setShowResult(false);
@@ -489,13 +436,13 @@ const Form = ({ data }: { data?: DietChartData }) => {
               }}
             />
           </div>
-        </Col>
+        </Grid.Col>
       </Grid>
       {data && showResult && (
         <Grid grow gutter="xs" mt="sm">
-          <Col span={3}>
+          <Grid.Col span={3}>
             <Paper bg="gray.0" p={6}>
-              <Title order={6} mb={4} align="center">
+              <Title order={6} mb={4} ta="center">
                 Calories
               </Title>
               <Center>
@@ -503,14 +450,14 @@ const Form = ({ data }: { data?: DietChartData }) => {
                   100%
                 </Badge>
               </Center>
-              <Text size="xs" align="center" mt={4}>
+              <Text size="xs" ta="center" mt={4}>
                 {form.values.calorie_intake}
               </Text>
             </Paper>
-          </Col>
-          <Col span={3}>
+          </Grid.Col>
+          <Grid.Col span={3}>
             <Paper bg="gray.0" p={6}>
-              <Title order={6} mb={4} align="center">
+              <Title order={6} mb={4} ta="center">
                 Protein
               </Title>
               <Center>
@@ -518,14 +465,14 @@ const Form = ({ data }: { data?: DietChartData }) => {
                   {form.values.protein_intake}%
                 </Badge>
               </Center>
-              <Text size="xs" align="center" mt={4}>
+              <Text size="xs" ta="center" mt={4}>
                 {calToGm(calcPercentage(data.calorie_intake, form.values.protein_intake), "protein")}g
               </Text>
             </Paper>
-          </Col>
-          <Col span={3}>
+          </Grid.Col>
+          <Grid.Col span={3}>
             <Paper bg="gray.0" p={6}>
-              <Title order={6} mb={4} align="center">
+              <Title order={6} mb={4} ta="center">
                 Fat
               </Title>
               <Center>
@@ -533,14 +480,14 @@ const Form = ({ data }: { data?: DietChartData }) => {
                   {form.values.fat_intake}%
                 </Badge>
               </Center>
-              <Text size="xs" align="center" mt={4}>
+              <Text size="xs" ta="center" mt={4}>
                 {calToGm(calcPercentage(data.calorie_intake, form.values.fat_intake), "fat")}g
               </Text>
             </Paper>
-          </Col>
-          <Col span={3}>
+          </Grid.Col>
+          <Grid.Col span={3}>
             <Paper bg="gray.0" p={6}>
-              <Title order={6} mb={4} align="center">
+              <Title order={6} mb={4} ta="center">
                 Carb
               </Title>
               <Center>
@@ -548,14 +495,14 @@ const Form = ({ data }: { data?: DietChartData }) => {
                   {form.values.carbohydrate_intake}%
                 </Badge>
               </Center>
-              <Text size="xs" align="center" mt={4}>
+              <Text size="xs" ta="center" mt={4}>
                 {calToGm(calcPercentage(data.calorie_intake, form.values.carbohydrate_intake), "carbohydrates")}g
               </Text>
             </Paper>
-          </Col>
+          </Grid.Col>
         </Grid>
       )}
-      <Group position="right" mt="md">
+      <Group justify="flex-end" mt="md">
         <Button variant="light" type="button" onClick={calculateAll}>
           Calculate
         </Button>
