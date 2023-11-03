@@ -369,7 +369,7 @@ const Data = ({ data }: { data: DietChartData }) => {
           Are you sure want to delete your meal?
         </Text>
         <Group justify="right">
-          <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })}  variant="outline" color="blue" disabled={deleteMealModal.isDeleting}>
+          <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })} variant="outline" color="blue" disabled={deleteMealModal.isDeleting}>
             Cancel
           </Button>
           <Button size="xs" onClick={handleDeleteMeal} color="red" loading={deleteMealModal.isDeleting}>
@@ -440,7 +440,8 @@ const Data = ({ data }: { data: DietChartData }) => {
                 meal: undefined,
               })
             }
-            variant="outline" color="blue"
+            variant="outline"
+            color="blue"
             disabled={deleteFoodModal.isDeleting}
           >
             Cancel
