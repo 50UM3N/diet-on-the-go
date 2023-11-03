@@ -19,8 +19,6 @@ const Data = ({ data }: { data: DietChartData }) => {
   const [totalMacros, setTotalMacros] = useState<Macros>({ protein: 0, carbohydrate: 0, fat: 0 });
   const [foodItems, setFoodItems] = useState<FoodItemSelect[]>([]);
   const [list, setList] = useState<DetailsMeals[]>();
-  console.log(list);
-
   const [mealModal, setMealModal] = useState<{
     open: boolean;
     isEditing: boolean;
@@ -194,11 +192,11 @@ const Data = ({ data }: { data: DietChartData }) => {
       </Grid>
       <Divider my="xs" />
 
-      <Group justify="apart" mb="xs">
+      <Group justify="space-between" mb="xs">
         <Title order={4}>Meal List</Title>
         <Group gap="xs">
           <Button
-            leftSection={<IconPlus size={14} />}
+            leftSection={<IconPlus size={16} />}
             size="xs"
             onClick={() => {
               setMealModal({
@@ -211,7 +209,7 @@ const Data = ({ data }: { data: DietChartData }) => {
             Add Meal
           </Button>
           <Button
-            leftSection={<IconFile size={14} />}
+            leftSection={<IconFile size={16} />}
             size="xs"
             onClick={() => {
               window.print();
@@ -225,122 +223,119 @@ const Data = ({ data }: { data: DietChartData }) => {
       <Divider my="xs" />
       <MacrosBadge style={{ flex: 1 }} wrapper={{ mb: "sm" }} {...totalMacros} color="blue" size="lg" />
 
-      <table className="test-table" style={{ width: "100%" }}>
-        <tbody>
-          <tr className="t-head">
-            <td style={{}}>Name</td>
-            <td style={{ width: "12%" }}>Amount</td>
-            <td style={{ width: "12%" }}>Protein</td>
-            <td style={{ width: "12%" }}>Carbohydrate </td>
-            <td style={{ width: "12%" }}>Fat</td>
-            <td style={{ width: "80px" }}>Action</td>
-          </tr>
-          {list?.map((item) => (
-            <Fragment key={item.id}>
-              <tr className="t-meal-head">
-                <td colSpan={2}>{item.name}</td>
-                <td>{item.protein.toFixed(2)} g</td>
-                <td>{item.carbohydrate.toFixed(2)} g</td>
-                <td>{item.fat.toFixed(2)} g</td>
-                <td>
-                  <Group gap="xs">
-                    <ActionIcon
-                      size={14}
-                      data-no-print
-                      variant="light"
-                      color="blue"
-                      onClick={() => {
-                        setFoodModal({
-                          open: true,
-                          meal: item,
-                          isEditing: false,
-                        });
-                      }}
-                    >
-                      <IconPlus size={12} />
-                    </ActionIcon>
-                    <Menu shadow="md" width={100} position="bottom-end">
-                      <Menu.Target>
-                        <ActionIcon size={14} variant="light" data-no-print>
-                          <IconDotsVertical size={12} />
-                        </ActionIcon>
-                      </Menu.Target>
+      <div className="table-wrapper">
+        <table className="test-table" style={{ width: "100%" }}>
+          <tbody>
+            <tr className="t-head">
+              <td style={{}}>Name</td>
+              <td style={{ width: "12%" }}>Amount</td>
+              <td style={{ width: "12%" }}>Protein</td>
+              <td style={{ width: "12%" }}>Carbohydrate </td>
+              <td style={{ width: "12%" }}>Fat</td>
+              <td style={{ width: "80px" }}>Action</td>
+            </tr>
+            {list?.map((item) => (
+              <Fragment key={item.id}>
+                <tr className="t-meal-head">
+                  <td colSpan={2}>{item.name}</td>
+                  <td>{item.protein.toFixed(2)} g</td>
+                  <td>{item.carbohydrate.toFixed(2)} g</td>
+                  <td>{item.fat.toFixed(2)} g</td>
+                  <td>
+                    <Group gap="xs">
+                      <ActionIcon
+                        size={16}
+                        data-no-print
+                        variant="light"
+                        color="blue"
+                        onClick={() => {
+                          setFoodModal({
+                            open: true,
+                            meal: item,
+                            isEditing: false,
+                          });
+                        }}
+                      >
+                        <IconPlus size={12} />
+                      </ActionIcon>
+                      <Menu shadow="md" width={100} position="bottom-end">
+                        <Menu.Target>
+                          <ActionIcon size={16} variant="light" data-no-print>
+                            <IconDotsVertical size={16} />
+                          </ActionIcon>
+                        </Menu.Target>
 
-                      <Menu.Dropdown>
-                        <Menu.Item leftSection={<IconPencil size={14} />} onClick={() => setMealModal({ open: true, isEditing: true, data: item })}>
-                          Edit
-                        </Menu.Item>
-                        <Menu.Item
-                          color="red"
-                          leftSection={<IconTrash size={14} />}
-                          onClick={() =>
-                            setDeleteMealModal({
-                              open: true,
-                              isDeleting: false,
-                              mealId: item.id,
-                            })
-                          }
-                        >
-                          Delete
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </Group>
-                </td>
-              </tr>
-              {item.foods.map((food) => {
-                return (
-                  <tr key={food.food.id}>
-                    <td>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, paddingLeft: 8 }}>
-                        <IconSalad size={14} />
-                        {food.food.name}
-                      </div>
-                    </td>
-                    <td>
-                      {food.qty} {food.food.metric === "PER_100_G" ? "g" : "pc "}
-                    </td>
-                    <td>{food.food.protein} g</td>
-                    <td>{food.food.carbohydrate} g</td>
-                    <td>{food.food.fat} g</td>
-                    <td>
-                      <Group gap="xs" data-no-print>
-                        <ActionIcon size={14} onClick={() => setFoodModal({ open: true, meal: item, isEditing: true, foodId: food.food.id })}>
-                          <IconPencil size="12px" />
-                        </ActionIcon>
-                        <ActionIcon
-                          size={14}
-                          color="red"
-                          onClick={() =>
-                            setDeleteFoodModal({
-                              open: true,
-                              isDeleting: false,
-                              foodId: food.food.id,
-                              meal: item,
-                            })
-                          }
-                        >
-                          <IconTrash size="12px" />
-                        </ActionIcon>
-                      </Group>
-                    </td>
-                  </tr>
-                );
-              })}
-            </Fragment>
-          ))}
-        </tbody>
-      </table>
+                        <Menu.Dropdown>
+                          <Menu.Item leftSection={<IconPencil size={16} />} onClick={() => setMealModal({ open: true, isEditing: true, data: item })}>
+                            Edit
+                          </Menu.Item>
+                          <Menu.Item
+                            color="red"
+                            leftSection={<IconTrash size={16} />}
+                            onClick={() =>
+                              setDeleteMealModal({
+                                open: true,
+                                isDeleting: false,
+                                mealId: item.id,
+                              })
+                            }
+                          >
+                            Delete
+                          </Menu.Item>
+                        </Menu.Dropdown>
+                      </Menu>
+                    </Group>
+                  </td>
+                </tr>
+                {item.foods.map((food) => {
+                  return (
+                    <tr key={food.food.id}>
+                      <td>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, paddingLeft: 8 }}>
+                          <IconSalad size={16} />
+                          {food.food.name}
+                        </div>
+                      </td>
+                      <td>
+                        {food.qty} {food.food.metric === "PER_100_G" ? "g" : "pc "}
+                      </td>
+                      <td>{food.food.protein} g</td>
+                      <td>{food.food.carbohydrate} g</td>
+                      <td>{food.food.fat} g</td>
+                      <td>
+                        <Group gap="xs" wrap="nowrap" data-no-print>
+                          <ActionIcon size={16} onClick={() => setFoodModal({ open: true, meal: item, isEditing: true, foodId: food.food.id })}>
+                            <IconPencil size="12px" />
+                          </ActionIcon>
+                          <ActionIcon
+                            size={16}
+                            color="red"
+                            onClick={() =>
+                              setDeleteFoodModal({
+                                open: true,
+                                isDeleting: false,
+                                foodId: food.food.id,
+                                meal: item,
+                              })
+                            }
+                          >
+                            <IconTrash size="12px" />
+                          </ActionIcon>
+                        </Group>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* modals */}
 
       {/* meal modal */}
       <Modal
-        // styles={{
-        //   root: {
-        //     padding: 16,
-        //   },
-        // }}
         centered
         padding={0}
         opened={mealModal.open}
@@ -374,7 +369,7 @@ const Data = ({ data }: { data: DietChartData }) => {
           Are you sure want to delete your meal?
         </Text>
         <Group justify="right">
-          <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })} variant="outline" disabled={deleteMealModal.isDeleting}>
+          <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })}  variant="outline" color="blue" disabled={deleteMealModal.isDeleting}>
             Cancel
           </Button>
           <Button size="xs" onClick={handleDeleteMeal} color="red" loading={deleteMealModal.isDeleting}>
@@ -386,12 +381,6 @@ const Data = ({ data }: { data: DietChartData }) => {
 
       {/* FoodItem Add Modal */}
       <Modal
-        // styles={{
-        //   // root: {
-        //   //   "& .mantine-Paper-root": { padding: 16, overflowY: "unset" },
-        //   //   "& .mantine-Modal-header": { zIndex: 0 },
-        //   // },
-        // }}
         centered
         padding={0}
         opened={foodModal.open}
@@ -451,7 +440,7 @@ const Data = ({ data }: { data: DietChartData }) => {
                 meal: undefined,
               })
             }
-            variant="outline"
+            variant="outline" color="blue"
             disabled={deleteFoodModal.isDeleting}
           >
             Cancel

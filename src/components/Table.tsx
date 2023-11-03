@@ -34,31 +34,31 @@ const Table = (props: Props) => {
     <>
       <GlobalFilter setGlobalFilter={setGlobalFilter} />
       <div style={{ overflow: "auto" }}>
-        <MTable striped highlightOnHover withTableBorder withColumnBorders mt="md" mb="xs">
-          <thead>
+        <MTable highlightOnHover withTableBorder withColumnBorders mt="md" mb="xs">
+          <MTable.Thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <MTable.Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <MTable.Th key={header.id} colSpan={header.colSpan} style={{ width: header.getSize() }}>
                       {header?.column?.columnDef?.header as "string"}
-                    </th>
+                    </MTable.Th>
                   );
                 })}
-              </tr>
+              </MTable.Tr>
             ))}
-          </thead>
-          <tbody>
+          </MTable.Thead>
+          <MTable.Tbody>
             {table.getRowModel().rows.map((row) => {
               return (
-                <tr key={row.id}>
+                <MTable.Tr key={row.id}>
                   {row.getVisibleCells().map((cell) => {
-                    return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
+                    return <MTable.Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</MTable.Td>;
                   })}
-                </tr>
+                </MTable.Tr>
               );
             })}
-          </tbody>
+          </MTable.Tbody>
         </MTable>
       </div>
       <Group justify="apart">

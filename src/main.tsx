@@ -8,14 +8,14 @@ import "@/style/app.scss";
 
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
-import { theme } from "./theme";
+import { appTheme } from "./theme";
 import '@mantine/core/styles.css';
 
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={appTheme}>
         <ModalsProvider>
           <Notifications />
           <App />

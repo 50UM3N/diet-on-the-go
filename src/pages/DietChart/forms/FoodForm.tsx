@@ -1,6 +1,6 @@
 import { METRIC } from "@/data/constant";
 import { db } from "@/firebase";
-import { Badge, Button, Grid, Group, NumberInput, Select, Text } from "@mantine/core";
+import { Badge, Button, Combobox, Grid, Group, Input, InputBase, NumberInput, Select, Text, useCombobox } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { doc, updateDoc } from "firebase/firestore";
 import { forwardRef, useEffect, useState } from "react";
@@ -54,7 +54,9 @@ const FoodForm: React.FC<{
       form.setValues({ food: foodItem.food.id, foodDetails: selectedFoodItem, qty: foodItem.qty });
     }
   }, [isEditing, editingFoodId]);
-
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  });
   const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ label, protein, fat, carbohydrate, metric, ...others }: ItemProps, ref) => (
     <div ref={ref} {...others}>
       <Group grow align="center">
@@ -84,6 +86,27 @@ const FoodForm: React.FC<{
       <form onSubmit={form.onSubmit(formSubmit)} style={{ marginTop: 8 }}>
         <Grid gutter="xs">
           <Grid.Col span={{ xs: 8 }}>
+            {/* <Combobox
+              store={combobox}
+              onOptionSubmit={(val) => {
+                form.getInputProps("food").onChange(val);
+                combobox.closeDropdown();
+              }}
+            >
+              <Combobox.Target>
+                <InputBase  component="button" pointer rightSection={<Combobox.Chevron />} onClick={() => combobox.toggleDropdown()}>
+                  {form.getInputProps("food").value || <Input.Placeholder>Pick value</Input.Placeholder>}
+                </InputBase>
+              </Combobox.Target>
+
+              <Combobox.Dropdown>
+                <Combobox.Options>
+                  {(ctx?.foodItems || []).map((item) => (
+                    <SelectItem key={item.value} {...item} />
+                  ))}
+                </Combobox.Options>
+              </Combobox.Dropdown>
+            </Combobox> */}
             <Select
               label="Choose your food item"
               placeholder="Pick one"
@@ -107,7 +130,7 @@ const FoodForm: React.FC<{
           </Grid.Col>
         </Grid>
         <Group justify="right" mt="md">
-          <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>
+          <Button variant="outline" color="blue" type="button" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button type="submit" loading={isSaving}>

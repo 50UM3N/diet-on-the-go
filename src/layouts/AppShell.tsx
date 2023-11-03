@@ -8,6 +8,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TopNav from "./TopNav";
+import { theme } from "@/theme";
 
 const AppShell: React.FC<any> = ({ children, footer = true }) => {
   const user = useSelector<RootState, User | null>((state) => state.user.user);
@@ -70,8 +71,8 @@ const AppShell: React.FC<any> = ({ children, footer = true }) => {
   return (
     <>
       <TopNav />
-      <main>
-        <Container fluid m={0} px="xs" pb="xs">
+      <main style={{ height: `calc(100% - 44px - ${theme.spacing.xs})`, overflow: "auto" }}>
+        <Container fluid m={0} px="xs" py="xs">
           {children}
           <Modal opened={openModal} onClose={closeModal} title={`Hi ${user?.name}. Fill your basic information`}>
             <form onSubmit={form.onSubmit(formSubmit)}>

@@ -10,7 +10,7 @@ import { ACTIVITY_LEVEL } from "@/data/constant";
 import { calToGm, calcPercentage, calculateAMR, calculateBMR } from "@/utils";
 import { IconCalculator } from "@tabler/icons-react";
 import { showNotification } from "@mantine/notifications";
-import { theme } from "@/theme";
+import { appTheme } from "@/theme";
 const style: any = {
   wrapper: {
     position: "relative",
@@ -27,8 +27,8 @@ const style: any = {
   label: {
     position: "absolute",
     pointerEvents: "none",
-    paddingLeft: theme.spacing?.sm,
-    paddingTop: (theme.spacing?.sm as any) / 2,
+    paddingLeft: appTheme.spacing?.sm,
+    paddingTop: (appTheme.spacing?.sm as any) / 2,
     zIndex: 1,
   },
 
@@ -44,7 +44,7 @@ const style: any = {
   },
 
   track: {
-    backgroundColor: theme.colors?.gray?.[4],
+    backgroundColor: appTheme.colors?.gray?.[4],
   },
 };
 
@@ -194,6 +194,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
       <Grid gutter="xs">
         <Grid.Col span={{ sm: 6 }}>
           <NumberInput
+            hideControls
             size="xs"
             step={0.5}
             placeholder="eg. 10"
@@ -233,7 +234,6 @@ const Form = ({ data }: { data?: DietChartData }) => {
               label="Height (feet)"
               withAsterisk
               min={2}
-              hideControls
               {...form.getInputProps("height.feet")}
               onChange={(e) => {
                 resetBMRAndMC();
@@ -249,7 +249,6 @@ const Form = ({ data }: { data?: DietChartData }) => {
               withAsterisk
               max={10}
               min={0}
-              hideControls
               {...form.getInputProps("height.inches")}
               onChange={(e) => {
                 resetBMRAndMC();
@@ -292,8 +291,8 @@ const Form = ({ data }: { data?: DietChartData }) => {
         </Grid.Col>
         <Grid.Col span={{ sm: 6 }}>
           <div className="height-input-group">
-            <NumberInput size="xs" disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
-            <NumberInput size="xs" disabled placeholder="eg. 10" label="Maintenances Calorie" withAsterisk min={0} {...form.getInputProps("maintenances_calorie")} />
+            <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
+            <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="Maintenances Calorie" withAsterisk min={0} {...form.getInputProps("maintenances_calorie")} />
             <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateBMRAndMC} hidden={form.values.bmr ? true : false} color="blue" variant="filled">
               <IconCalculator size="1.125rem" />
             </ActionIcon>
@@ -332,7 +331,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
         </Grid.Col>
         <Grid.Col span={{ sm: 6 }}>
           <div style={{ position: "relative" }}>
-            <NumberInput size="xs" disabled placeholder="eg. 10" label="Intake Calorie" withAsterisk min={0} {...form.getInputProps("calorie_intake")} />
+            <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="Intake Calorie" withAsterisk min={0} {...form.getInputProps("calorie_intake")} />
             <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateIntake} hidden={form.values.bmr ? true : false} color="blue" variant="filled">
               <IconCalculator size="1.125rem" />
             </ActionIcon>
