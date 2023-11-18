@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "dsznajder.es7-react-js-snippets",
+    "formulahendry.auto-rename-tag",
+    "aaron-bond.better-comments",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "burkeholland.simple-react-snippets",
+    "streetsidesoftware.code-spell-checker",
+    "Prisma.prisma",
+    "qwtel.sqlite-viewer"
+  ]
+}
