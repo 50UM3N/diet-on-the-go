@@ -6,6 +6,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { JWT_SECRET } from "./constants";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UserModule } from "./modules/user/user.module";
+import { FoodItemModule } from "./modules/foodItem/foodItem.module";
 import { PrismaModule } from "./db/prisma.module";
 
 @Module({
@@ -18,6 +19,7 @@ import { PrismaModule } from "./db/prisma.module";
     PrismaModule,
     AuthModule,
     UserModule,
+    FoodItemModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggerInterceptor }],
