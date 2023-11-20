@@ -7,6 +7,7 @@ import { JWT_SECRET } from "./constants";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UserModule } from "./modules/user/user.module";
 import { FoodItemModule } from "./modules/food-item/food-item.module";
+import { ChartModule } from "./modules/chart/chart.module";
 import { PrismaModule } from "./db/prisma.module";
 
 @Module({
@@ -20,6 +21,7 @@ import { PrismaModule } from "./db/prisma.module";
     AuthModule,
     UserModule,
     FoodItemModule,
+    ChartModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggerInterceptor }],
