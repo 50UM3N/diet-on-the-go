@@ -18,7 +18,7 @@ model User {
   weight    Float?
   age       Int?
   createdAt DateTime  @default(now())
-  updatedAt DateTime
+  updatedAt DateTime  @updatedAt
 }
 
 model FoodItem {
@@ -29,31 +29,31 @@ model FoodItem {
   fat        Float
   carb       Float
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime  @updatedAt
   MealList   MealList? @relation(fields: [mealListId], references: [id])
   mealListId String?
 }
 
 model Chart {
-  id                   String     @id @default(uuid())
-  name                 String
-  description          String
-  weight               Float
-  gender               String
-  height               Float
-  age                  Int
-  activityLevel        Int
-  bmr                  Int
-  maintainanceCalories Int
-  adjustAmount         Int
-  adjustType           String
-  intakeCalories       Int
-  protein              Int
-  fat                  Int
-  carb                 Int
-  mealList             MealList[]
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime
+  id                  String     @id @default(uuid())
+  name                String
+  description         String
+  weight              Float
+  gender              String
+  height              Float
+  age                 Int
+  activityLevel       Int
+  bmr                 Int
+  maintenanceCalories Int
+  adjustAmount        Int
+  adjustType          String
+  intakeCalories      Int
+  protein             Int
+  fat                 Int
+  carb                Int
+  mealList            MealList[]
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
 }
 
 model MealList {
@@ -61,7 +61,7 @@ model MealList {
   name      String
   foodItem  FoodItem[]
   createdAt DateTime   @default(now())
-  updatedAt DateTime
+  updatedAt DateTime   @updatedAt
   Chart     Chart?     @relation(fields: [chartId], references: [id])
   chartId   String?
 }
