@@ -6,11 +6,17 @@ import {
   Post,
   Patch,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { ChartService } from "./chart.service";
 import { ChartDTO } from "./chart.dto";
+import { AuthGuard } from "../auth/auth.guard";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-@Controller("food-item")
+@ApiTags("chart")
+@ApiBearerAuth("JWT-token")
+@Controller("chart")
+@UseGuards(AuthGuard)
 export class ChartController {
   constructor(private chartService: ChartService) {}
 

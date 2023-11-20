@@ -6,11 +6,17 @@ import {
   Post,
   Patch,
   Delete,
+  UseGuards,
 } from "@nestjs/common";
 import { FoodItemService } from "./food-item.service";
 import { FoodItemDTO } from "./food-item.dto";
+import { AuthGuard } from "../auth/auth.guard";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("food-item")
+@ApiBearerAuth("JWT-token")
 @Controller("food-item")
+@UseGuards(AuthGuard)
 export class FoodItemController {
   constructor(private foodItemService: FoodItemService) {}
 
