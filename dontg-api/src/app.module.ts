@@ -9,6 +9,7 @@ import { UserModule } from "./modules/user/user.module";
 import { FoodItemModule } from "./modules/food-item/food-item.module";
 import { ChartModule } from "./modules/chart/chart.module";
 import { PrismaModule } from "./db/prisma.module";
+import { MealListModule } from "./modules/meal-list/meal-list.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PrismaModule } from "./db/prisma.module";
     UserModule,
     FoodItemModule,
     ChartModule,
+    MealListModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: LoggerInterceptor }],

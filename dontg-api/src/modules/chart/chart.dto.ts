@@ -36,7 +36,7 @@ export class ChartDTO {
 
   @IsNumber()
   @ApiProperty()
-  maintainanceCalories: number;
+  maintenanceCalories: number;
 
   @IsNumber()
   @ApiProperty()
