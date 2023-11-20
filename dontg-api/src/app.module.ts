@@ -6,7 +6,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { JWT_SECRET } from "./constants";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UserModule } from "./modules/user/user.module";
-import { FoodItemModule } from "./modules/foodItem/foodItem.module";
+import { FoodItemModule } from "./modules/food-item/food-item.module";
 import { PrismaModule } from "./db/prisma.module";
 
 @Module({

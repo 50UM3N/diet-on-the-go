@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["Pressable"],
+  "cSpell.words": ["carb", "Pressable"],
   "editor.formatOnSave": true, // format code when you hit save
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,22 +8,60 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   name      String
   mobile    String?
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  dob       DateTime?
+  height    Float?
+  weight    Float?
+  age       Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
 }
 
 model FoodItem {
-  id        String   @id @default(uuid())
+  id         String    @id @default(uuid())
+  name       String
+  metric     String
+  protein    Float
+  fat        Float
+  carb       Float
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  MealList   MealList? @relation(fields: [mealListId], references: [id])
+  mealListId String?
+}
+
+model Chart {
+  id                   String     @id @default(uuid())
+  name                 String
+  description          String
+  weight               Float
+  gender               String
+  height               Float
+  age                  Int
+  activityLevel        Int
+  bmr                  Int
+  maintainanceCalories Int
+  adjustAmount         Int
+  adjustType           String
+  intakeCalories       Int
+  protein              Int
+  fat                  Int
+  carb                 Int
+  mealList             MealList[]
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime
+}
+
+model MealList {
+  id        String     @id @default(uuid())
   name      String
-  metric    String
-  protein   String
-  fat       String
-  carb      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  foodItem  FoodItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  Chart     Chart?     @relation(fields: [chartId], references: [id])
+  chartId   String?
 }

@@ -13,12 +13,22 @@ export class UserService {
   }
 
   async update(id: string, userDto: UpdateUserDTO) {
+    if (userDto.dob) {
+      const birthDate = new Date(userDto.dob);
+      const currentDate = new Date();
+      const age = currentDate.getFullYear() - birthDate.getFullYear();
+      userDto.age = age;
+    }
     return await this.prismaService.user.update({
       where: { id },
       data: {
         name: userDto.name,
         email: userDto.email,
         mobile: userDto.mobile,
+        dob: userDto.dob,
+        height: userDto.height,
+        weight: userDto.weight,
+        age: userDto.age,
       },
     });
   }
