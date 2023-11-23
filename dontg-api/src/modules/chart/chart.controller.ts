@@ -12,6 +12,8 @@ import { ChartService } from "./chart.service";
 import { ChartDTO } from "./chart.dto";
 import { AuthGuard } from "../auth/auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { User } from "src/decorators/user.decorator";
+import { userDTO } from "../user/user.dto";
 
 @ApiTags("chart")
 @ApiBearerAuth("JWT-token")
@@ -26,8 +28,8 @@ export class ChartController {
   }
 
   @Post()
-  async create(@Body() body: ChartDTO) {
-    return await this.chartService.create(body);
+  async create(@Body() body: ChartDTO, @User() user: userDTO) {
+    return await this.chartService.create(body, user.id);
   }
   @Patch(":id")
   async update(@Param("id") id: string, @Body() body: ChartDTO) {

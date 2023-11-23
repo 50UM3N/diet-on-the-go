@@ -19,6 +19,7 @@ model User {
   age       Int?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  Chart     Chart[]
 }
 
 model FoodItem {
@@ -30,7 +31,7 @@ model FoodItem {
   carb       Float
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  MealList   MealList? @relation(fields: [mealListId], references: [id])
+  MealList   MealList? @relation(fields: [mealListId], references: [id], onDelete: Cascade)
   mealListId String?
 }
 
@@ -51,9 +52,11 @@ model Chart {
   protein             Int
   fat                 Int
   carb                Int
+  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   mealList            MealList[]
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
+  userId              String
 }
 
 model MealList {
@@ -62,6 +65,6 @@ model MealList {
   foodItem  FoodItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  Chart     Chart?     @relation(fields: [chartId], references: [id])
+  Chart     Chart?     @relation(fields: [chartId], references: [id], onDelete: Cascade)
   chartId   String?
 }

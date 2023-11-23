@@ -17,9 +17,10 @@ export class ChartService {
     });
   }
 
-  async create(body: ChartDTO) {
+  async create(body: ChartDTO, userId: string) {
     return await this.prismaService.chart.create({
       data: {
+        userId,
         name: body.name,
         description: body.description,
         weight: body.weight,

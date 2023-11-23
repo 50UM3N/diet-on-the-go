@@ -24,5 +24,12 @@
   },
   "typescript.updateImportsOnFileMove.enabled": "always",
   "git.mergeEditor": false,
-  "thunder-client.saveToWorkspace": true
+  "thunder-client.saveToWorkspace": true,
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/esm/index.css"
+  ]
 }
