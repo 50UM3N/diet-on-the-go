@@ -6,7 +6,9 @@ import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import store from "./store/index.ts";
-import { Provider } from "react-redux";
+import { Provider } from "react-redux"; // core styles are required for all packages
+import "@mantine/core/styles.css";
+import "./styles/app.scss";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

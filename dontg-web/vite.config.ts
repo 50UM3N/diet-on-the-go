@@ -12,4 +12,11 @@ export default defineConfig({
   server: {
     host: true,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./src/_mantine";`,
+      },
+    },
+  },
 });
