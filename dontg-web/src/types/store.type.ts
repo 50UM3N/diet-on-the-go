@@ -1,6 +1,6 @@
-import { User } from "./index.type";
+import { UserInfo } from "./index.type";
 
-export type UserState = { user: User | null; isLoading: boolean; error: string | null | undefined };
+export type UserState = { user: UserInfo | null; isLoading: boolean; error: string | null | undefined };
 
 export type RootState = import("../store").RootState;
 

@@ -1,4 +1,5 @@
-import { useForm } from "@mantine/form";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import {
   TextInput,
   PasswordInput,
@@ -15,20 +16,26 @@ import {
 } from "@mantine/core";
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
+import { LoginDTO } from "@/types/auth.type";
+import { useLogin } from "@/hooks/api/auth.hook";
+
+const loginSchema = yup.object().shape({
+  email: yup.string().required("Email is required").email("Enter your email"),
+  password: yup.string().required("Password is required"),
+});
+
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
-  const form = useForm({
+  const { loading, userLogin } = useLogin();
+  const form = useFormik<LoginDTO>({
     initialValues: {
       email: "",
-      name: "",
       password: "",
-      terms: true,
     },
-
-    validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      password: (val) => (val.length <= 6 ? "Password should include at least 6 characters" : null),
+    onSubmit: async (values) => {
+      userLogin(values);
     },
+    validationSchema: loginSchema,
   });
 
   return (
@@ -47,15 +54,16 @@ export function Login(props: PaperProps) {
             Enter your email address and password to access admin panel.
           </Text>
 
-          <form onSubmit={form.onSubmit(() => {})}>
+          <form onSubmit={form.handleSubmit}>
             <Stack>
               <TextInput
                 required
                 label="Email"
                 placeholder="hello@test.dev"
+                onBlur={form.handleBlur("email")}
+                onChange={(e) => form.handleChange("email")(e.currentTarget.value)}
                 value={form.values.email}
-                onChange={(event) => form.setFieldValue("email", event.currentTarget.value)}
-                error={form.errors.email && "Invalid email"}
+                error={form.touched.email && form.errors.email}
                 radius="md"
               />
 
@@ -63,9 +71,10 @@ export function Login(props: PaperProps) {
                 required
                 label="Password"
                 placeholder="Your password"
+                onBlur={form.handleBlur("password")}
+                onChange={(e) => form.handleChange("password")(e.currentTarget.value)}
                 value={form.values.password}
-                onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
-                error={form.errors.password && "Password should include at least 6 characters"}
+                error={form.touched.password && form.errors.password}
                 radius="md"
               />
             </Stack>
@@ -74,7 +83,7 @@ export function Login(props: PaperProps) {
               <Anchor component={Link} to={"/register"} type="button" c="dimmed" size="xs">
                 Don't have an account? Register
               </Anchor>
-              <Button type="submit" radius="xl">
+              <Button type="submit" radius="xl" loading={loading}>
                 Login
               </Button>
             </Group>

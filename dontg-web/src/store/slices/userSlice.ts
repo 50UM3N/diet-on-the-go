@@ -4,28 +4,28 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    isLoading: true,
-    error: null,
     user: null,
   } as UserState,
   reducers: {
-    setUser(state, action) {
-      // state e previous data and action e user data
-      const user = action.payload;
-      state.user = user;
-      state.isLoading = false;
+    logout(state) {
+      localStorage.removeItem("token");
+      state.user = null;
     },
-    loadingUser(state, action) {
-      state.isLoading = action.payload;
+    login(state, action) {
+      const user = action.payload;
+      state.user = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      };
     },
     updateUser(state, action) {
       const userData = action.payload;
       state.user = { ...state.user, ...userData };
-      state.isLoading = false;
     },
   },
 });
 
-export const { setUser, loadingUser, updateUser } = userSlice.actions;
+export const { updateUser, login, logout } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -22,7 +22,7 @@ import { userDTO } from "../user/user.dto";
 export class ChartController {
   constructor(private chartService: ChartService) {}
 
-  @Get("/:id")
+  @Get("by-id/:id")
   async getById(@Param("id") id: string) {
     return await this.chartService.getById(id);
   }

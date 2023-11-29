@@ -1,4 +1,27 @@
 body,
 html {
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6)) !important;
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6)) !important;
+}
+#root {
+  height: 100%;
+}
+main {
+  height: 100%;
+}
+
+.nav-open {
+  margin-left: 250px;
+  .side-bar-wrapper {
+    left: 0;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.nav-close {
+  margin-left: 0px;
+  .side-bar-wrapper {
+    left: -250px;
+    opacity: 0;
+    visibility: hidden;
+  }
 }

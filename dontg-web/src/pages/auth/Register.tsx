@@ -1,4 +1,3 @@
-import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
@@ -14,19 +13,35 @@ import {
 } from "@mantine/core";
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { SignUpDTO } from "@/types/auth.type";
+import { useSignUp } from "@/hooks/api/auth.hook";
+
+const signupSchema = yup.object().shape({
+  name: yup.string().required("Name is Required"),
+  email: yup.string().required("Email is required").email("Enter your email"),
+  password: yup.string().required("Password is required"),
+  conformPassword: yup
+    .string()
+    .required("Please retype your password.")
+    .oneOf([yup.ref("password")], "Your passwords do not match."),
+});
 export function Register() {
   const { colorScheme } = useMantineColorScheme();
-  const form = useForm({
+
+  const { loading, userSignUp } = useSignUp();
+  const form = useFormik<SignUpDTO>({
     initialValues: {
-      email: "",
       name: "",
+      email: "",
+      conformPassword: "",
       password: "",
-      terms: true,
     },
-    validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      password: (val) => (val.length <= 6 ? "Password should include at least 6 characters" : null),
+    onSubmit: async (values) => {
+      userSignUp(values);
     },
+    validationSchema: signupSchema,
   });
 
   return (
@@ -44,23 +59,26 @@ export function Register() {
           <Text ta="center" size="sm" mb="lg">
             Don't have an account? Create your account, it takes less than a minute.
           </Text>
-          <form onSubmit={form.onSubmit(() => {})}>
+          <form onSubmit={form.handleSubmit}>
             <Stack>
               <TextInput
                 required
                 label="Name"
                 placeholder="Your name"
+                onBlur={form.handleBlur("name")}
+                onChange={(e) => form.handleChange("name")(e.currentTarget.value)}
                 value={form.values.name}
-                onChange={(event) => form.setFieldValue("name", event.currentTarget.value)}
+                error={form.touched.name && form.errors.name}
                 radius="md"
               />
               <TextInput
                 required
                 label="Email"
                 placeholder="hello@test.dev"
+                onBlur={form.handleBlur("email")}
+                onChange={(e) => form.handleChange("email")(e.currentTarget.value)}
                 value={form.values.email}
-                onChange={(event) => form.setFieldValue("email", event.currentTarget.value)}
-                error={form.errors.email && "Invalid email"}
+                error={form.touched.email && form.errors.email}
                 radius="md"
               />
 
@@ -68,9 +86,21 @@ export function Register() {
                 required
                 label="Password"
                 placeholder="Your password"
+                onBlur={form.handleBlur("password")}
+                onChange={(e) => form.handleChange("password")(e.currentTarget.value)}
                 value={form.values.password}
-                onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
-                error={form.errors.password && "Password should include at least 6 characters"}
+                error={form.touched.password && form.errors.password}
+                radius="md"
+              />
+
+              <PasswordInput
+                required
+                label="Confirm Password"
+                placeholder="Confirm Your password"
+                onBlur={form.handleBlur("conformPassword")}
+                onChange={(e) => form.handleChange("conformPassword")(e.currentTarget.value)}
+                value={form.values.conformPassword}
+                error={form.touched.conformPassword && form.errors.conformPassword}
                 radius="md"
               />
             </Stack>
@@ -79,7 +109,7 @@ export function Register() {
               <Anchor component={Link} to={"/login"} type="button" c="dimmed" size="xs">
                 Already have an account? Login
               </Anchor>
-              <Button type="submit" radius="xl">
+              <Button type="submit" radius="xl" loading={loading}>
                 Register
               </Button>
             </Group>

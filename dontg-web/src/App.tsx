@@ -4,6 +4,10 @@ import Index from "./pages/Index";
 import { Login } from "./pages/auth/Login";
 import { Button, useMantineColorScheme } from "@mantine/core";
 import { Register } from "./pages/auth/Register";
+import Dash from "./pages/dash/Dash";
+import { AuthProvider, NonAuthProvider } from "./provider/AuthProvider";
+import { DashLayout } from "./layouts/DashLayout";
+import FoodItems from "./pages/dash/FoodItems";
 
 const router = createBrowserRouter([
   {
@@ -11,16 +15,39 @@ const router = createBrowserRouter([
     errorElement: <p>error</p>,
     children: [
       {
-        path: "/",
-        element: <Index />,
+        element: <NonAuthProvider />,
+        children: [
+          {
+            path: "/",
+            element: <Index />,
+          },
+          {
+            path: "/login",
+            element: <Login />,
+          },
+          {
+            path: "/register",
+            element: <Register />,
+          },
+        ],
       },
       {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
+        element: <AuthProvider />,
+        children: [
+          {
+            element: <DashLayout />,
+            children: [
+              {
+                path: "/dash",
+                element: <Dash />,
+              },
+              {
+                path: "/food-items",
+                element: <FoodItems />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },

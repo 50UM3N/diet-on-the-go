@@ -1,5 +1,23 @@
 import { createTheme } from "@mantine/core";
 
 export const theme = createTheme({
-  /** Put your mantine theme override here */
+  components: {
+    Button: { defaultProps: { radius: "md" } },
+    TextInput: {
+      defaultProps: {
+        radius: "md",
+        size: "sm",
+      },
+    },
+    Modal: {
+      defaultProps: {
+        radius: "md",
+      },
+    },
+    Menu: {
+      defaultProps: {
+        radius: "lg",
+      },
+    },
+  },
 });

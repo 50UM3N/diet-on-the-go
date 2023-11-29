@@ -25,7 +25,7 @@ export class MealListController {
     return await this.mealListService.get();
   }
 
-  @Get(":id")
+  @Get("by-id/:id")
   async getById(@Param("id") id: string) {
     return await this.mealListService.getById(id);
   }

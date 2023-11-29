@@ -12,6 +12,7 @@ export default defineConfig({
   server: {
     host: true,
   },
+  envPrefix: ["APP_"],
   css: {
     preprocessorOptions: {
       scss: {
