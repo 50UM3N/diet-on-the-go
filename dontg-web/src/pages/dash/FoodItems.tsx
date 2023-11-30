@@ -1,5 +1,4 @@
 import Table from "@/components/Table";
-import { METRIC } from "@/data/constant";
 import { useCreateFoodItem, useDeleteFoodItem, useGetFoodItem, useUpdateFoodItem } from "@/hooks/api/foodItem.hook";
 import { foodItemSchema } from "@/schema";
 import { FoodItemDTO, FoodItemInfo } from "@/types/index.type";

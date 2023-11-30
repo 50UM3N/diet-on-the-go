@@ -14,19 +14,10 @@ import {
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import * as yup from "yup";
 import { SignUpDTO } from "@/types/auth.type";
 import { useSignUp } from "@/hooks/api/auth.hook";
+import {signupSchema} from "@/schema";
 
-const signupSchema = yup.object().shape({
-  name: yup.string().required("Name is Required"),
-  email: yup.string().required("Email is required").email("Enter your email"),
-  password: yup.string().required("Password is required"),
-  conformPassword: yup
-    .string()
-    .required("Please retype your password.")
-    .oneOf([yup.ref("password")], "Your passwords do not match."),
-});
 export function Register() {
   const { colorScheme } = useMantineColorScheme();
 

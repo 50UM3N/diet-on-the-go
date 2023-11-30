@@ -18,11 +18,7 @@ import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { LoginDTO } from "@/types/auth.type";
 import { useLogin } from "@/hooks/api/auth.hook";
-
-const loginSchema = yup.object().shape({
-  email: yup.string().required("Email is required").email("Enter your email"),
-  password: yup.string().required("Password is required"),
-});
+import {loginSchema} from "@/schema";
 
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
