@@ -1,23 +1,10 @@
 import { useFormik } from "formik";
-import {
-  TextInput,
-  PasswordInput,
-  Text,
-  Paper,
-  Group,
-  PaperProps,
-  Button,
-  Anchor,
-  Stack,
-  Container,
-  Title,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { TextInput, PasswordInput, Text, Paper, Group, PaperProps, Button, Anchor, Stack, Container, Title, useMantineColorScheme } from "@mantine/core";
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { LoginDTO } from "@/types/auth.type";
 import { useLogin } from "@/hooks/api/auth.hook";
-import {loginSchema} from "@/schema";
+import { loginSchema } from "@/schema";
 
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
@@ -35,8 +22,8 @@ export function Login(props: PaperProps) {
 
   return (
     <Container size={420}>
-      <Paper radius="md" withBorder shadow="xs" style={{ overflow: "hidden" }} {...props}>
-        <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "blue.9", "blue")} radius={0}>
+      <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }} {...props}>
+        <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">
             Diet On The Go
           </Title>

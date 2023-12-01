@@ -8,15 +8,40 @@ export const theme = createTheme({
       defaultProps: {
         radius: "md",
       },
+      styles: {
+        input: {
+          borderWidth: 2,
+        },
+      },
     },
     Textarea: {
       defaultProps: {
         radius: "md",
+        styles: {
+          input: {
+            borderWidth: 2,
+          },
+        },
+      },
+    },
+    PasswordInput: {
+      defaultProps: {
+        radius: "md",
+        styles: {
+          input: {
+            borderWidth: 2,
+          },
+        },
       },
     },
     NumberInput: {
       defaultProps: {
         radius: "md",
+        styles: {
+          input: {
+            borderWidth: 2,
+          },
+        },
       },
     },
     Select: {
@@ -24,6 +49,11 @@ export const theme = createTheme({
         radius: "md",
         comboboxProps: {
           radius: "md",
+        },
+        styles: {
+          input: {
+            borderWidth: 2,
+          },
         },
       },
     },

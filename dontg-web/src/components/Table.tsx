@@ -45,7 +45,7 @@ const Table = (props: Props) => {
       </Group>
 
       <Paper mt="md" mb="xs" radius="md" withBorder style={{ overflow: "auto" }}>
-        <MTable bg="white" striped highlightOnHover withColumnBorders>
+        <MTable className="global-table" striped highlightOnHover withColumnBorders>
           <MTable.Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <MTable.Tr key={headerGroup.id}>

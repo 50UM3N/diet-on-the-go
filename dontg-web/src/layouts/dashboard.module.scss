@@ -8,7 +8,7 @@
 }
 .inner {
   border: 1px solid;
-  border-color: var(--mantine-color-gray-3);
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   border-radius: var(--mantine-radius-lg);
   padding-left: var(--mantine-spacing-xs);
   padding-right: var(--mantine-spacing-xs);
@@ -16,7 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-body));
 }
 .user {
   color: var(--mantine-color-white);
@@ -38,9 +38,9 @@
 
 .sideNav {
   border: 1px solid;
-  border-color: var(--mantine-color-gray-3);
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   border-radius: var(--mantine-radius-lg);
-  background-color: white;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-body));
   height: 100%;
   width: 100%;
 }

@@ -1,8 +1,9 @@
-import { Badge, Center, DefaultMantineColor, Paper, PaperProps, Text, Title } from "@mantine/core";
+import { Badge, Center, DefaultMantineColor, Paper, PaperProps, Text, Title, useMantineColorScheme } from "@mantine/core";
 
 const MacroCard = ({ type, amount, total, color, ...rest }: { type: string; amount: string | number; total: number; color?: DefaultMantineColor } & PaperProps) => {
+  const { colorScheme } = useMantineColorScheme();
   return (
-    <Paper bg={`${color}.0`} p={6} {...rest}>
+    <Paper bg={colorScheme !== "dark" ? `${color}.0` : `${color}.9`} p={6} {...rest}>
       <Title order={6} mb={4} ta="center">
         {type}
       </Title>

@@ -3,7 +3,6 @@ import Root from "./layouts/Root";
 import Index from "./pages/Index";
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
-import Dash from "./pages/dash/Dash";
 import { AuthProvider, NonAuthProvider } from "./provider/AuthProvider";
 import { DashLayout } from "./layouts/DashLayout";
 import FoodItems from "./pages/dash/FoodItems";
@@ -36,7 +35,7 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "/",
-                element: <>asdasd</>,
+                element: <Index />,
               },
               {
                 path: "/food-items",

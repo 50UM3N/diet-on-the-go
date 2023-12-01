@@ -1,7 +1,7 @@
 import { RootState } from "@/store";
 import { login } from "@/store/slices/userSlice";
 import { LoginDTO, SignUpDTO } from "@/types/auth.type";
-import { AppError, UserInfo } from "@/types/index.type";
+import { UserInfo } from "@/types/index.type";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

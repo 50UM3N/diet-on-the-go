@@ -1,22 +1,10 @@
-import {
-  TextInput,
-  PasswordInput,
-  Text,
-  Paper,
-  Group,
-  Button,
-  Anchor,
-  Stack,
-  Container,
-  Title,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { TextInput, PasswordInput, Text, Paper, Group, Button, Anchor, Stack, Container, Title, useMantineColorScheme } from "@mantine/core";
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { SignUpDTO } from "@/types/auth.type";
 import { useSignUp } from "@/hooks/api/auth.hook";
-import {signupSchema} from "@/schema";
+import { signupSchema } from "@/schema";
 
 export function Register() {
   const { colorScheme } = useMantineColorScheme();
@@ -37,8 +25,8 @@ export function Register() {
 
   return (
     <Container size={420}>
-      <Paper radius="md" withBorder shadow="xs" style={{ overflow: "hidden" }}>
-        <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "blue.9", "blue")} radius={0}>
+      <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }}>
+        <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">
             Diet On The Go
           </Title>
