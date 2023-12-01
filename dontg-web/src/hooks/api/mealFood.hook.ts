@@ -1,22 +1,17 @@
 import { EntryBase } from "@/data/constant";
-import { AppError, FoodItemDTO, FoodItemInfo } from "@/types/index.type";
+import { AppError, CreateMealFoodDto, MealFoodInfo, UpdateMealFoodDto } from "@/types/index.type";
 import { toUrl } from "@/utils";
 import { fetcher, updater } from "@/utils/fetch";
 import { UseMutationResult, UseQueryResult, useMutation, useQuery } from "react-query";
 
-const base = EntryBase.FOOD_ITEM;
+const base = EntryBase.MEAL_FOOD;
 
-export const useGetFoodItem = (): [UseQueryResult<FoodItemInfo[], Error>, string[]] => {
+export const useGetMealFood = (): [UseQueryResult<MealFoodInfo[], AppError>, string[]] => {
   const key = [base];
   return [useQuery(key, () => fetcher(toUrl(key))), key];
 };
 
-export const useGetFoodItemById = (id: string): [UseQueryResult<FoodItemInfo, Error>, string[]] => {
-  const key = [base, "by-id", id];
-  return [useQuery(key, () => fetcher(toUrl(key))), key];
-};
-
-export const useCreateFoodItem = (): [UseMutationResult<FoodItemInfo, AppError, FoodItemDTO, unknown>, string[]] => {
+export const useCreateMealFood = (): [UseMutationResult<MealFoodInfo, AppError, CreateMealFoodDto, unknown>, string[]] => {
   const key = [base];
   return [
     useMutation((data) =>
@@ -29,13 +24,13 @@ export const useCreateFoodItem = (): [UseMutationResult<FoodItemInfo, AppError, 
   ];
 };
 
-export const useUpdateFoodItem = (): [
+export const useUpdateMealFood = (): [
   UseMutationResult<
-    FoodItemInfo,
+    MealFoodInfo,
     AppError,
     {
       id: string;
-      data: FoodItemDTO;
+      data: UpdateMealFoodDto;
     },
     unknown
   >,
@@ -53,7 +48,7 @@ export const useUpdateFoodItem = (): [
   ];
 };
 
-export const useDeleteFoodItem = (): [UseMutationResult<FoodItemInfo, AppError, string, unknown>, string[]] => {
+export const useDeleteMealFood = (): [UseMutationResult<MealFoodInfo, AppError, string, unknown>, string[]] => {
   const key = [base];
   return [
     useMutation((id) =>

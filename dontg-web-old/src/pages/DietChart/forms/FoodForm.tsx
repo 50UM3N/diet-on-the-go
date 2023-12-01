@@ -130,7 +130,7 @@ const FoodForm: React.FC<{
           </Grid.Col>
         </Grid>
         <Group justify="right" mt="md">
-          <Button variant="outline" color="blue" type="button" onClick={onClose} disabled={isSaving}>
+          <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button type="submit" loading={isSaving}>

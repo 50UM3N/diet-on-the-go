@@ -38,7 +38,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
       <form onSubmit={form.onSubmit(formSubmit)} style={{ marginTop: 8 }}>
         <TextInput mb="xs" placeholder="eg. Breakfast" label="Name" withAsterisk {...form.getInputProps("name")} />
         <Group justify="right" mt="md">
-          <Button variant="outline" color="blue" type="button" onClick={onClose} disabled={isSaving}>
+          <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
           <Button type="submit" loading={isSaving}>

@@ -41,7 +41,7 @@ const DietChartListPage = () => {
           const id = props.getValue();
           return (
             <Group gap="xs" wrap="nowrap">
-              <ActionIcon variant="filled" color="blue" component={Link} to={`/chart/${id}`}>
+              <ActionIcon variant="filled" component={Link} to={`/chart/${id}`}>
                 <IconEdit size={16} />
               </ActionIcon>{" "}
               <ActionIcon

@@ -15,8 +15,8 @@ const MACRO_UNITS = {
   fat: 9,
   carbohydrates: 4,
 };
-type CalculateBMR = (params: { age: number; height: { inches: number; feet: number }; weight: number; gender: Gender }) => number;
-type CalculateAMR = (params: { bmr: number; activityLevel: keyof typeof ACTIVITY_LEVEL }) => number;
+type CalculateBMR = (params: { age: number; height: number; weight: number; gender: Gender }) => number;
+type CalculateAMR = (params: { bmr: number; activityLevel: number }) => number;
 
 export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -28,19 +28,18 @@ export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 
 export const calculateBMR: CalculateBMR = (params) => {
   let bmr = 0;
-  const heightInCm = (params.height.feet * 12 + params.height.inches) * 2.54;
   if (params.gender === "male") {
-    // bmr = 66.47 + 13.75 * params.weight + (5.003 + heightInCm) - 6.755 * params.age;
-    bmr = 10 * params.weight + 6.25 * heightInCm - 5 * params.age + 5;
+    // bmr = 66.47 + 13.75 * params.weight + (5.003 + params.height) - 6.755 * params.age;
+    bmr = 10 * params.weight + 6.25 * params.height - 5 * params.age + 5;
   } else {
-    // bmr = 655.1 + 9.563 * params.weight + (1.85 + heightInCm) - 4.676 * params.age;
-    bmr = 10 * params.weight + 6.25 * heightInCm - 5 * params.age - 161;
+    // bmr = 655.1 + 9.563 * params.weight + (1.85 + params.height) - 4.676 * params.age;
+    bmr = 10 * params.weight + 6.25 * params.height - 5 * params.age - 161;
   }
   return bmr;
 };
 
 export const calculateAMR: CalculateAMR = ({ bmr, activityLevel }) => {
-  return bmr * ACTIVITY_LEVEL[activityLevel].value;
+  return bmr * activityLevel;
 };
 
 export const calToGm = (cal: number, type: keyof typeof MACRO_UNITS) => {
@@ -64,4 +63,15 @@ type CalcAmount = (unit: number, toBeCalc: number, metric: any) => number;
 export const calcAmount: CalcAmount = (unit, toBeCalc, metric) => {
   if (metric === "PER_100_G") return calcByGm(unit, toBeCalc);
   else return calcByPC(unit, toBeCalc);
+};
+
+export const inchFeetToCm = (inch: number, feet: number) => {
+  return (inch + feet * 12) * 2.54;
+};
+
+export const cmToInchFeet = (cm: number) => {
+  return {
+    feet: Math.floor(cm / 30.48),
+    inch: Math.floor((cm % 30.48) / 2.54),
+  };
 };

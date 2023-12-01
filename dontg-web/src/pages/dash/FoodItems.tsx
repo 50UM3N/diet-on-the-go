@@ -1,9 +1,9 @@
+import Loader from "@/components/Loader";
 import Table from "@/components/Table";
-import { METRIC } from "@/data/constant";
 import { useCreateFoodItem, useDeleteFoodItem, useGetFoodItem, useUpdateFoodItem } from "@/hooks/api/foodItem.hook";
 import { foodItemSchema } from "@/schema";
 import { FoodItemDTO, FoodItemInfo } from "@/types/index.type";
-import { ActionIcon, Button, Container, Grid, Group, Loader, Menu, Modal, NumberInput, Select, SimpleGrid, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Button, Container, Grid, Group, Menu, Modal, NumberInput, Select, SimpleGrid, Text, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconSettings } from "@tabler/icons-react";
@@ -23,7 +23,7 @@ const FoodItems = () => {
       title: "Action Required",
       children: <Text size="sm">Are you sure to delete this item?</Text>,
       labels: { confirm: "Confirm", cancel: "Cancel" },
-      confirmProps: { color: "red" },
+      confirmProps: { color: "red", loading: deleteFoodItem.isLoading },
       onConfirm: () => {
         deleteFoodItem.mutate(id, {
           onSuccess: () => {
@@ -46,7 +46,7 @@ const FoodItems = () => {
           return (
             <Menu shadow="md" width={200} position="bottom-start">
               <Menu.Target>
-                <ActionIcon size="sm" variant="filled" color="blue">
+                <ActionIcon size="sm" variant="filled">
                   <IconSettings size={16} />
                 </ActionIcon>
               </Menu.Target>
@@ -97,34 +97,33 @@ const FoodItems = () => {
         header: "Carbohydrate",
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  return (
-    <Container size="xl">
-      {data.isLoading && <Loader />}
-      {data.data && (
-        <>
-          <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
-          <Modal
-            opened={opened}
-            onClose={() => {
+  if (data.data)
+    return (
+      <Container size="xl">
+        <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
+        <Modal
+          opened={opened}
+          onClose={() => {
+            close();
+            setEditingItem(undefined);
+          }}
+          title={editingItem ? "Update Food Item" : "Add Food Item"}
+        >
+          <FoodItemsForm
+            onSave={() => {
               close();
               setEditingItem(undefined);
             }}
-            title={editingItem ? "Update Food Item" : "Add Food Item"}
-          >
-            <FoodItemsForm
-              onSave={() => {
-                close();
-                setEditingItem(undefined);
-              }}
-              editingItem={editingItem}
-            />
-          </Modal>
-        </>
-      )}
-    </Container>
-  );
+            editingItem={editingItem}
+          />
+        </Modal>
+      </Container>
+    );
+
+  return <Loader />;
 };
 
 export default FoodItems;
@@ -176,7 +175,7 @@ const FoodItemsForm: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo 
               placeholder="eg. Chicken"
               label="Name"
               withAsterisk
-              onBlur={form.handleBlur("email")}
+              onBlur={form.handleBlur("name")}
               onChange={(e) => form.handleChange("name")(e)}
               value={form.values.name}
               error={form.touched.name && form.errors.name}

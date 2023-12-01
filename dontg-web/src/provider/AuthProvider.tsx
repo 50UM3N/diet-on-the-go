@@ -12,6 +12,6 @@ export const AuthProvider = () => {
 export const NonAuthProvider = () => {
   const { loading, user } = useAuth(false);
   if (loading) return <Loader />;
-  else if (user) return <Navigate to="/dash" />;
+  else if (user) return <Navigate to="/" />;
   return <Outlet />;
 };

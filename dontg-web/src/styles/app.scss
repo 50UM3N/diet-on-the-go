@@ -25,3 +25,57 @@ main {
     visibility: hidden;
   }
 }
+
+@media print {
+  [data-no-print] {
+    display: none;
+  }
+}
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.test-table {
+  & {
+    border-collapse: collapse;
+    white-space: nowrap;
+  }
+  & td,
+  & th {
+    color: var(--mantine-color-gray-9);
+    border: 1px solid #dee2e6;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  }
+  & tr:first-child th {
+    border-top: 0;
+  }
+  & tr:first-child td {
+    border-top: 0;
+  }
+  & tr:last-child td {
+    border-bottom: 0;
+  }
+  & tr td:first-child,
+  & tr th:first-child {
+    border-left: 0;
+  }
+  & tr td:last-child,
+  & tr th:last-child {
+    border-right: 0;
+  }
+  .t-head * {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .t-meal-head * {
+    font-weight: bold;
+  }
+  .t-meal-head {
+    background-color: var(--mantine-color-cyan-0);
+  }
+}

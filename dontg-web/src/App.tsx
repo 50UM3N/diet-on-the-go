@@ -2,12 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./layouts/Root";
 import Index from "./pages/Index";
 import { Login } from "./pages/auth/Login";
-import { Button, useMantineColorScheme } from "@mantine/core";
 import { Register } from "./pages/auth/Register";
 import Dash from "./pages/dash/Dash";
 import { AuthProvider, NonAuthProvider } from "./provider/AuthProvider";
 import { DashLayout } from "./layouts/DashLayout";
 import FoodItems from "./pages/dash/FoodItems";
+import DietChart from "./pages/dash/DietChart/DietChart";
+import UpdateDietChart from "./pages/dash/DietChart/UpdateDietChart";
 
 const router = createBrowserRouter([
   {
@@ -17,10 +18,6 @@ const router = createBrowserRouter([
       {
         element: <NonAuthProvider />,
         children: [
-          {
-            path: "/",
-            element: <Index />,
-          },
           {
             path: "/login",
             element: <Login />,
@@ -38,12 +35,20 @@ const router = createBrowserRouter([
             element: <DashLayout />,
             children: [
               {
-                path: "/dash",
-                element: <Dash />,
+                path: "/",
+                element: <>asdasd</>,
               },
               {
                 path: "/food-items",
                 element: <FoodItems />,
+              },
+              {
+                path: "/diet-chart",
+                element: <DietChart />,
+              },
+              {
+                path: "/diet-chart/:id",
+                element: <UpdateDietChart />,
               },
             ],
           },
@@ -54,18 +59,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const { setColorScheme, colorScheme } = useMantineColorScheme();
-  return (
-    <>
-      <RouterProvider router={router} />
-      <Button
-        style={{ position: "fixed", bottom: 20, right: 20 }}
-        onClick={() => setColorScheme(colorScheme === "dark" ? "light" : "dark")}
-      >
-        {colorScheme}
-      </Button>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -7,11 +7,61 @@ export class MealListService {
   constructor(private prismaService: PrismaService) {}
 
   async get() {
-    return await this.prismaService.mealList.findMany({
+    return await this.prismaService.mealList.findMany();
+  }
+
+  async getByChartId(chartId: string) {
+    const data = await this.prismaService.mealList.findMany({
+      where: {
+        chartId,
+      },
       include: {
-        foodItem: true,
+        mealFood: {
+          include: {
+            foodItem: true,
+          },
+        },
       },
     });
+    let totalProtein = 0;
+    let totalCarb = 0;
+    let totalFat = 0;
+    const newMealList = [];
+    for (let i = 0; i < data.length; i++) {
+      const mealList = data[i];
+      let totalMealFoodProtein = 0;
+      let totalMealFoodCarb = 0;
+      let totalMealFoodFat = 0;
+      for (let i = 0; i < mealList.mealFood.length; i++) {
+        const mealFood = mealList.mealFood[i];
+        totalMealFoodProtein += Number(
+          (mealFood.foodItem.protein * mealFood.qty).toFixed(2),
+        );
+        totalMealFoodCarb += Number(
+          (mealFood.foodItem.carb * mealFood.qty).toFixed(2),
+        );
+        totalMealFoodFat += Number(
+          (mealFood.foodItem.fat * mealFood.qty).toFixed(2),
+        );
+      }
+      newMealList.push({
+        ...mealList,
+        protein: totalMealFoodProtein,
+        carb: totalMealFoodCarb,
+        fat: totalMealFoodFat,
+      });
+
+      totalProtein += totalMealFoodProtein;
+      totalCarb += totalMealFoodCarb;
+      totalFat += totalMealFoodFat;
+    }
+
+    return {
+      protein: totalProtein,
+      carb: totalCarb,
+      fat: totalFat,
+      mealList: newMealList,
+    };
   }
 
   async getById(id: string) {
@@ -20,35 +70,9 @@ export class MealListService {
         id,
       },
       include: {
-        foodItem: true,
-      },
-    });
-  }
-
-  async addFoodItem(id: string, foodItemId: string) {
-    return await this.prismaService.mealList.update({
-      where: {
-        id,
-      },
-      data: {
-        foodItem: {
-          connect: {
-            id: foodItemId,
-          },
-        },
-      },
-    });
-  }
-
-  async removeFoodItem(id: string, foodItemId: string) {
-    return await this.prismaService.mealList.update({
-      where: {
-        id,
-      },
-      data: {
-        foodItem: {
-          disconnect: {
-            id: foodItemId,
+        mealFood: {
+          include: {
+            foodItem: true,
           },
         },
       },

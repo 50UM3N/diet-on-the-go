@@ -1,7 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNumber } from "class-validator";
 
-export class ChartDTO {
+export class CreateChartDTO {
+  @IsString()
+  @ApiProperty()
+  name: string;
+
+  @IsString()
+  @ApiProperty()
+  description: string;
+}
+export class UpdateChartDTO {
   @IsString()
   @ApiProperty()
   name: string;

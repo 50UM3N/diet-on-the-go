@@ -221,7 +221,7 @@ const Data = ({ data }: { data: DietChartData }) => {
         </Group>
       </Group>
       <Divider my="xs" />
-      <MacrosBadge style={{ flex: 1 }} wrapper={{ mb: "sm" }} {...totalMacros} color="blue" size="lg" />
+      <MacrosBadge style={{ flex: 1 }} wrapper={{ mb: "sm" }} {...totalMacros} size="lg" />
 
       <div className="table-wrapper">
         <table className="test-table" style={{ width: "100%" }}>
@@ -247,7 +247,6 @@ const Data = ({ data }: { data: DietChartData }) => {
                         size={16}
                         data-no-print
                         variant="light"
-                        color="blue"
                         onClick={() => {
                           setFoodModal({
                             open: true,
@@ -369,7 +368,7 @@ const Data = ({ data }: { data: DietChartData }) => {
           Are you sure want to delete your meal?
         </Text>
         <Group justify="right">
-          <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })}  variant="outline" color="blue" disabled={deleteMealModal.isDeleting}>
+          <Button size="xs" onClick={() => setDeleteMealModal({ open: false, isDeleting: false, mealId: undefined })} variant="outline" disabled={deleteMealModal.isDeleting}>
             Cancel
           </Button>
           <Button size="xs" onClick={handleDeleteMeal} color="red" loading={deleteMealModal.isDeleting}>
@@ -440,7 +439,7 @@ const Data = ({ data }: { data: DietChartData }) => {
                 meal: undefined,
               })
             }
-            variant="outline" color="blue"
+            variant="outline"
             disabled={deleteFoodModal.isDeleting}
           >
             Cancel

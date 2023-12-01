@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { MealListService } from "./meal-list.service";
-import { CreateMealListDTO } from "./meal-list.dto";
+import { CreateMealListDTO, UpdateMealListDTO } from "./meal-list.dto";
 import { AuthGuard } from "../auth/auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
@@ -30,20 +30,9 @@ export class MealListController {
     return await this.mealListService.getById(id);
   }
 
-  @Post(":id/food-item/:foodItemId")
-  async addFoodItem(
-    @Param("id") id: string,
-    @Param("foodItemId") foodItemId: string,
-  ) {
-    return await this.mealListService.addFoodItem(id, foodItemId);
-  }
-
-  @Delete(":id/food-item/:foodItemId")
-  async removeFoodItem(
-    @Param("id") id: string,
-    @Param("foodItemId") foodItemId: string,
-  ) {
-    return await this.mealListService.removeFoodItem(id, foodItemId);
+  @Get("by-chart-id/:id")
+  async getByChartId(@Param("id") id: string) {
+    return await this.mealListService.getByChartId(id);
   }
 
   @Post()
@@ -52,7 +41,7 @@ export class MealListController {
   }
 
   @Patch(":id")
-  async update(@Param("id") id: string, @Body() body: CreateMealListDTO) {
+  async update(@Param("id") id: string, @Body() body: UpdateMealListDTO) {
     return await this.mealListService.update(id, body);
   }
 

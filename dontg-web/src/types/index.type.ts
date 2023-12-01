@@ -1,5 +1,9 @@
 import { Icon } from "@tabler/icons-react";
-
+export interface MacrosInfo {
+  protein: number;
+  carb: number;
+  fat: number;
+}
 export interface UserInfo {
   id: string;
   email: string;
@@ -33,7 +37,7 @@ export interface UserInfo {
   age?: number;
   createdAt: string;
   updatedAt: string;
-  Chart: ChartInfo[];
+  chart: ChartInfo[];
 }
 
 export interface FoodItemInfo {
@@ -45,8 +49,6 @@ export interface FoodItemInfo {
   carb: number;
   createdAt: string;
   updatedAt: string;
-  MealList?: MealListInfo;
-  mealListId?: string;
 }
 export interface FoodItemDTO {
   name: string;
@@ -77,15 +79,64 @@ export interface ChartInfo {
   mealList: MealListInfo[];
   createdAt: string;
   updatedAt: string;
-  userId: string;
+}
+export interface CreateChartDTO {
+  name: string;
+  description: string;
+}
+
+export interface UpdateChartDTO {
+  name: string;
+  description: string;
+  weight: number;
+  gender: string;
+  height: number;
+  age: number;
+  activityLevel: number;
+  bmr: number;
+  maintenanceCalories: number;
+  adjustAmount: number;
+  adjustType: string;
+  intakeCalories: number;
+  protein: number;
+  fat: number;
+  carb: number;
 }
 
 export interface MealListInfo {
   id: string;
   name: string;
-  foodItem: FoodItemInfo[];
+  mealFood: MealFoodInfo[];
   createdAt: string;
   updatedAt: string;
-  Chart?: ChartInfo;
-  chartId?: string;
+  chart?: ChartInfo;
+}
+
+export interface CreateMealListDTO {
+  name: string;
+  chartId: string;
+}
+
+export interface UpdateMealListDTO {
+  name: string;
+}
+
+export interface MealFoodInfo {
+  id: string;
+  qty: number;
+  foodItem: FoodItemInfo;
+  createdAt: string;
+  updatedAt: string;
+  mealList?: MealListInfo;
+}
+
+export interface CreateMealFoodDto {
+  qty: number;
+  foodItemId: string;
+  mealListId: string;
+}
+
+export interface UpdateMealFoodDto {
+  qty: number;
+  foodItemId: string;
 }

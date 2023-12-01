@@ -19,39 +19,38 @@ model User {
   age       Int?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Chart     Chart[]
+  chart     Chart[]
 }
 
 model FoodItem {
-  id         String    @id @default(uuid())
-  name       String
-  metric     String
-  protein    Float
-  fat        Float
-  carb       Float
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  MealList   MealList? @relation(fields: [mealListId], references: [id], onDelete: Cascade)
-  mealListId String?
+  id        String     @id @default(uuid())
+  name      String
+  metric    String
+  protein   Float
+  fat       Float
+  carb      Float
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  mealFood  MealFood[]
 }
 
 model Chart {
   id                  String     @id @default(uuid())
   name                String
   description         String
-  weight              Float
-  gender              String
-  height              Float
-  age                 Int
-  activityLevel       Int
-  bmr                 Int
-  maintenanceCalories Int
-  adjustAmount        Int
-  adjustType          String
-  intakeCalories      Int
-  protein             Int
-  fat                 Int
-  carb                Int
+  weight              Float?
+  gender              String?
+  height              Float?
+  age                 Int?
+  activityLevel       Float?
+  bmr                 Int?
+  maintenanceCalories Int?
+  adjustAmount        Int?
+  adjustType          String?
+  intakeCalories      Int?
+  protein             Int?
+  fat                 Int?
+  carb                Int?
   user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   mealList            MealList[]
   createdAt           DateTime   @default(now())
@@ -62,9 +61,20 @@ model Chart {
 model MealList {
   id        String     @id @default(uuid())
   name      String
-  foodItem  FoodItem[]
+  mealFood  MealFood[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  Chart     Chart?     @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  chart     Chart?     @relation(fields: [chartId], references: [id], onDelete: Cascade)
   chartId   String?
+}
+
+model MealFood {
+  id         String    @id @default(uuid())
+  qty        Float
+  foodItem   FoodItem  @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  mealList   MealList? @relation(fields: [mealListId], references: [id], onDelete: Cascade)
+  mealListId String?
+  foodItemId String
 }

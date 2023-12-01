@@ -76,7 +76,7 @@ const FoodItems = () => {
           return (
             <Menu shadow="md" width={200}>
               <Menu.Target>
-                <ActionIcon variant="filled" color="blue">
+                <ActionIcon variant="filled"  >
                   <IconSettings size={16} />
                 </ActionIcon>
               </Menu.Target>

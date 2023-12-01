@@ -293,7 +293,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
           <div className="height-input-group">
             <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="BMR" withAsterisk min={0} {...form.getInputProps("bmr")} />
             <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="Maintenances Calorie" withAsterisk min={0} {...form.getInputProps("maintenances_calorie")} />
-            <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateBMRAndMC} hidden={form.values.bmr ? true : false} color="blue" variant="filled">
+            <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateBMRAndMC} hidden={form.values.bmr ? true : false} variant="filled">
               <IconCalculator size="1.125rem" />
             </ActionIcon>
           </div>
@@ -332,7 +332,7 @@ const Form = ({ data }: { data?: DietChartData }) => {
         <Grid.Col span={{ sm: 6 }}>
           <div style={{ position: "relative" }}>
             <NumberInput hideControls size="xs" disabled placeholder="eg. 10" label="Intake Calorie" withAsterisk min={0} {...form.getInputProps("calorie_intake")} />
-            <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateIntake} hidden={form.values.bmr ? true : false} color="blue" variant="filled">
+            <ActionIcon size="sm" style={{ position: "absolute", right: 4, top: 29 }} type="button" onClick={calculateIntake} hidden={form.values.bmr ? true : false} variant="filled">
               <IconCalculator size="1.125rem" />
             </ActionIcon>
           </div>

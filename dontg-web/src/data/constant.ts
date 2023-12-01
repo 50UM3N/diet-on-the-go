@@ -25,6 +25,7 @@ export enum EntryBase {
   CHART = "chart",
   MEAL_LIST = "meal-list",
   USER = "user",
+  MEAL_FOOD = "meal-list/meal-food",
 }
 export const QueryList = Object.values(EntryBase);
 
