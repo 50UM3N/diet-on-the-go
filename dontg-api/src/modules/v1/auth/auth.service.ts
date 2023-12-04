@@ -11,7 +11,7 @@ import { LoginDTO, SignUpDTO } from "./auth.dto";
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async signUp(body: SignUpDTO) {
@@ -44,7 +44,8 @@ export class AuthService {
     });
 
     if (!user) throw new UnauthorizedException("User is not exist");
-    if(user.password!==body.password) throw new UnauthorizedException("Password is incorrect")
+    if (user.password !== body.password)
+      throw new UnauthorizedException("Password is incorrect");
     const token = await this.jwtService.signAsync({
       email: user.email,
       id: user.id,
