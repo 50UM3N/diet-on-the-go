@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "dontg-api/package.json",
-      "use": "@vercel/node"
+      "use": "@vercel/static-build"
     },
     {
       "src": "dontg-web/package.json",
