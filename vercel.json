@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "dontg-api/src/main.ts",
+      "src": "dontg-api/package.json",
       "use": "@vercel/node"
     },
     {
@@ -13,7 +13,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dontg-api/src/main.ts",
+      "dest": "dontg-api/dist",
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
     }
   ]
