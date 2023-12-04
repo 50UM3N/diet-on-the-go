@@ -190,6 +190,7 @@ const FoodItemsForm: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo 
               data={[
                 { value: "/100g", label: "/100g" },
                 { value: "/pc", label: "/pc" },
+                { value: "/ml", label: "/ml" },
               ]}
               onBlur={form.handleBlur("email")}
               onChange={(e) => form.handleChange("metric")(e || "")}

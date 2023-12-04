@@ -197,7 +197,7 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
                               </div>
                             </td>
                             <td>
-                              {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : "pc "}
+                              {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : (mealFood.foodItem.metric === METRIC.PIECE ?"pc" : "ml") }
                             </td>
                             <td>{(mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
                             <td>{(mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
