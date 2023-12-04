@@ -35,9 +35,9 @@ export interface UserInfo {
   height?: number;
   weight?: number;
   age?: number;
-  createdAt: string;
-  updatedAt: string;
-  chart: ChartInfo[];
+  createdAt?: string;
+  updatedAt?: string;
+  chart?: ChartInfo[];
 }
 
 export interface FoodItemInfo {

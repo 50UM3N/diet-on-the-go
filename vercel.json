@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dontg-api/src/main.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dontg-web/**",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dontg-web/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dontg-api/src/main.ts",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    }
+  ]
+}

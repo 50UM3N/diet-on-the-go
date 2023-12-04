@@ -17,11 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev",
-    "migrate:prod": "dotenv -e .env.prod -- npx prisma migrate dev",
-    "migrate-reset:dev": "dotenv -e .env.dev -- npx prisma migrate reset",
-    "migrate-reset:prod": "dotenv -e .env.prod -- npx prisma migrate reset"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "prisma": {
     "schema": "src/db/schema.prisma"
@@ -31,6 +27,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/serve-static": "^4.0.0",
     "@nestjs/swagger": "^7.1.16",
     "@prisma/client": "^5.6.0",
     "bcryptjs": "^2.4.3",

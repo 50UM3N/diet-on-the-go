@@ -21,14 +21,14 @@ export function Login(props: PaperProps) {
   });
 
   return (
-    <Container size={420}>
+    <Container size={420} px="md">
       <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }} {...props}>
         <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">
             Diet On The Go
           </Title>
         </Paper>
-        <Paper shadow="none" p="xl">
+        <Paper shadow="none" px="lg" py="xl">
           <Title order={2} ta="center" mb="xs">
             Sign In
           </Title>
@@ -47,6 +47,7 @@ export function Login(props: PaperProps) {
                 value={form.values.email}
                 error={form.touched.email && form.errors.email}
                 radius="md"
+                type="email"
               />
 
               <PasswordInput

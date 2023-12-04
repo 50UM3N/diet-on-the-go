@@ -1,15 +1,14 @@
 import { RootState } from "@/store";
 import { UserInfo } from "@/types/index.type";
-import { ActionIcon, Burger, Group, Menu, Text, UnstyledButton, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Burger, Group, Menu, Text, Title, UnstyledButton, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
 import { IconChevronDown, IconHome, IconLock, IconLogout, IconMoon, IconSun, IconUser } from "@tabler/icons-react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import classes from "./dashboard.module.scss";
 import { logout } from "@/store/slices/userSlice";
-import cx from "clsx";
 
-const TopNav = ({ setNavOpen, navOpen }: { setNavOpen: React.Dispatch<React.SetStateAction<boolean>>; navOpen: boolean }) => {
+const TopNav = ({ setNavOpen, navOpen, bottomNavOpen }: { setNavOpen: React.Dispatch<React.SetStateAction<boolean>>; navOpen: boolean; bottomNavOpen: boolean }) => {
   const user = useSelector<RootState, UserInfo | null>((state) => state.user.user);
   const dispatch = useDispatch();
   const logoutUser = async () => {
@@ -22,15 +21,8 @@ const TopNav = ({ setNavOpen, navOpen }: { setNavOpen: React.Dispatch<React.SetS
     <>
       <header className={classes.header} data-no-print>
         <div className={classes.inner}>
+          <div>{!bottomNavOpen ? <Burger opened={navOpen} size="sm" onClick={() => setNavOpen((s) => !s)} /> : <Title order={3}>DONTG</Title>}</div>
           <Group>
-            <Burger opened={navOpen} size="sm" onClick={() => setNavOpen((s) => !s)} />
-          </Group>
-
-          <Group>
-            <ActionIcon onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")} variant="default" aria-label="Toggle color scheme">
-              <IconSun className={cx(classes.icon, classes.light)} stroke={1.5} />
-              <IconMoon className={cx(classes.icon, classes.dark)} stroke={1.5} />
-            </ActionIcon>
             <Menu width={260} position="top-end" radius="lg" offset={20}>
               <Menu.Target>
                 <UnstyledButton px={6} py={4} className={classes.user}>
@@ -66,6 +58,10 @@ const TopNav = ({ setNavOpen, navOpen }: { setNavOpen: React.Dispatch<React.SetS
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
+            <ActionIcon radius="md" onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")} variant="default" aria-label="Toggle color scheme">
+              {computedColorScheme === "light" && <IconSun size={16} stroke={1.5} />}
+              {computedColorScheme !== "light" && <IconMoon size={16} stroke={1.5} />}
+            </ActionIcon>
           </Group>
         </div>
       </header>

@@ -9,18 +9,14 @@ export const theme = createTheme({
         radius: "md",
       },
       styles: {
-        input: {
-          borderWidth: 2,
-        },
+        input: {},
       },
     },
     Textarea: {
       defaultProps: {
         radius: "md",
         styles: {
-          input: {
-            borderWidth: 2,
-          },
+          input: {},
         },
       },
     },
@@ -28,9 +24,7 @@ export const theme = createTheme({
       defaultProps: {
         radius: "md",
         styles: {
-          input: {
-            borderWidth: 2,
-          },
+          input: {},
         },
       },
     },
@@ -38,9 +32,7 @@ export const theme = createTheme({
       defaultProps: {
         radius: "md",
         styles: {
-          input: {
-            borderWidth: 2,
-          },
+          input: {},
         },
       },
     },
@@ -51,9 +43,7 @@ export const theme = createTheme({
           radius: "md",
         },
         styles: {
-          input: {
-            borderWidth: 2,
-          },
+          input: {},
         },
       },
     },
@@ -70,6 +60,11 @@ export const theme = createTheme({
     Loader: {
       defaultProps: {
         type: "dots",
+      },
+    },
+    Container: {
+      defaultProps: {
+        p: 0,
       },
     },
   },

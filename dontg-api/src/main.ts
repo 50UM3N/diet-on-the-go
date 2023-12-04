@@ -1,7 +1,11 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { BadRequestException, ValidationPipe } from "@nestjs/common";
+import {
+  BadRequestException,
+  ValidationPipe,
+  VersioningType,
+} from "@nestjs/common";
 import { PrismaService } from "./db/prisma.service";
 import { ValidationError } from "class-validator";
 
@@ -25,12 +29,6 @@ async function bootstrap() {
     )
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document, {
-    swaggerOptions: {
-      persistAuthorization: true,
-    },
-  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -44,6 +42,16 @@ async function bootstrap() {
       },
     }),
   );
+  app.setGlobalPrefix("api");
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup("api", app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
   app.get(PrismaService);
   app.enableCors();
   await app.listen(3000);

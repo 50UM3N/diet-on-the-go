@@ -387,16 +387,16 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
       </Grid>
       {showResult && (
         <Grid grow gutter="xs" mt="sm">
-          <Grid.Col span={3}>
+          <Grid.Col span={{ xs: 3, base: 6 }}>
             <MacroCard type="Calories" color="cyan" total={100} amount={form.values.intakeCalories} />
           </Grid.Col>
-          <Grid.Col span={3}>
+          <Grid.Col span={{ xs: 3, base: 6 }}>
             <MacroCard type="Protein" color="green" total={form.values.protein} amount={calToGm(calcPercentage(data.intakeCalories, form.values.protein), "protein")} />
           </Grid.Col>
-          <Grid.Col span={3}>
+          <Grid.Col span={{ xs: 3, base: 6 }}>
             <MacroCard type="Fat" color="orange" total={form.values.fat} amount={calToGm(calcPercentage(data.intakeCalories, form.values.fat), "fat")} />
           </Grid.Col>
-          <Grid.Col span={3}>
+          <Grid.Col span={{ xs: 3, base: 6 }}>
             <MacroCard type="Carb" color="red" total={form.values.carb} amount={calToGm(calcPercentage(data.intakeCalories, form.values.carb), "carbohydrates")} />
           </Grid.Col>
         </Grid>

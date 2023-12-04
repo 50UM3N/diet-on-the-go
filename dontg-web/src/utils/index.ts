@@ -1,4 +1,3 @@
-import { ACTIVITY_LEVEL } from "@/data/constant";
 import { Gender } from "@/types/index.type";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { FilterFn } from "@tanstack/table-core";

@@ -81,3 +81,28 @@
     display: block;
   }
 }
+
+.bottomNav {
+  border: none;
+  position: fixed;
+  bottom: 0;
+  z-index: 20;
+  padding-inline: var(--mantine-spacing-xs);
+  padding-bottom: var(--mantine-spacing-xs);
+  width: 100%;
+}
+
+.bottomNavInner {
+  border: 1px solid;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-lg);
+  padding: var(--mantine-spacing-xs);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-body));
+}
+
+.bottomNavOpen {
+  padding-bottom: 110px;
+}

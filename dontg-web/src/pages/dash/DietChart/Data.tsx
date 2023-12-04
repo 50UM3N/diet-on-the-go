@@ -78,16 +78,16 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
       {list.data && (
         <>
           <Grid grow gutter="xs">
-            <Grid.Col span={3}>
+            <Grid.Col span={{ xs: 3, base: 6 }}>
               <MacroCard type="Calories" color="cyan" total={100} amount={chart.intakeCalories} />
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={{ xs: 3, base: 6 }}>
               <MacroCard type="Protein" color="green" total={chart.protein} amount={calToGm(calcPercentage(chart.intakeCalories, chart.protein), "protein")} />
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={{ xs: 3, base: 6 }}>
               <MacroCard type="Fat" color="orange" total={chart.fat} amount={calToGm(calcPercentage(chart.intakeCalories, chart.fat), "fat")} />
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={{ xs: 3, base: 6 }}>
               <MacroCard type="Carb" color="red" total={chart.carb} amount={calToGm(calcPercentage(chart.intakeCalories, chart.carb), "carbohydrates")} />
             </Grid.Col>
           </Grid>

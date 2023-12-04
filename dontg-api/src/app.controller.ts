@@ -1,6 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 
-@Controller()
+@Controller({
+  version: "1",
+})
 export class AppController {
   constructor() {}
 
