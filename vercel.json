@@ -6,7 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "dontg-web/**",
+      "src": "dontg-web/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dontg-web/dist"
