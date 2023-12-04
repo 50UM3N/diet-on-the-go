@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "cd dontg-api && npm run build && cd ../dontg-web && npm run build",
+    "build": "cd dontg-api && npm install && npm run build && cd ../dontg-web && npm install &&  npm run build",
     "start": "cd dontg-api && npm run start:prod"
   }
 }
