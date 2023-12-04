@@ -32,4 +32,5 @@ export const QueryList = Object.values(EntryBase);
 export const METRIC = {
   GRAM: "/100g",
   PIECE: "/pc",
+  ML: "/ml",
 };
