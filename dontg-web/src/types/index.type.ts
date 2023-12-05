@@ -40,6 +40,20 @@ export interface UserInfo {
   chart?: ChartInfo[];
 }
 
+export interface UpdateUserDTO {
+  name?: string;
+  mobile?: string;
+  dob?: string;
+  height?: number;
+  weight?: number;
+  age?: number;
+}
+
+export interface ResetPasswordDTO {
+  password: string;
+  conformPassword: string;
+}
+
 export interface FoodItemInfo {
   id: string;
   name: string;

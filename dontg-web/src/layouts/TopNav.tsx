@@ -1,7 +1,7 @@
 import { RootState } from "@/store";
 import { UserInfo } from "@/types/index.type";
 import { ActionIcon, Burger, Group, Menu, Text, Title, UnstyledButton, useComputedColorScheme, useMantineColorScheme } from "@mantine/core";
-import { IconChevronDown, IconHome, IconLock, IconLogout, IconMoon, IconSun, IconUser } from "@tabler/icons-react";
+import { IconChevronDown, IconHome, IconLogout, IconMoon, IconSettings, IconSun } from "@tabler/icons-react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -46,11 +46,8 @@ const TopNav = ({ setNavOpen, navOpen, bottomNavOpen }: { setNavOpen: React.Disp
                 <Menu.Item component={Link} to="/" leftSection={<IconHome size={14} />}>
                   Home
                 </Menu.Item>
-                <Menu.Item component={Link} to="/profile" leftSection={<IconUser size={14} />}>
-                  Profile
-                </Menu.Item>
-                <Menu.Item component={Link} to="/change-password" leftSection={<IconLock size={14} />}>
-                  Change Password
+                <Menu.Item component={Link} to="/settings" leftSection={<IconSettings size={14} />}>
+                  Settings
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item leftSection={<IconLogout size={14} />} onClick={logoutUser} color="red">

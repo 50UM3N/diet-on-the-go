@@ -4,6 +4,7 @@ import ChartForm from "./forms/ChartForm";
 import { Container, Grid, Paper } from "@mantine/core";
 import Data from "./Data";
 import Loader from "@/components/Loader";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const UpdateDietChart = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const UpdateDietChart = () => {
   if (data.data)
     return (
       <Container size="xl">
+        <Breadcrumbs data={[{ name: "Diet Chart", path: "/diet-chart" }, { name: data.data.name }]} />
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Paper withBorder p="md" radius="lg">

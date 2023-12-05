@@ -47,3 +47,11 @@ export const mealListSchema = yup.object().shape({
 export const mealFoodSchema = yup.object().shape({
   qty: yup.number().required("qty is required").moreThan(0),
 });
+
+export const resetPasswordSchema = yup.object().shape({
+  password: yup.string().required("Password is required"),
+  conformPassword: yup
+    .string()
+    .required("Please retype your password.")
+    .oneOf([yup.ref("password")], "Your passwords do not match."),
+});
