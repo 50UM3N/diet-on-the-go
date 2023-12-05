@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
 import { useCreateFoodItem, useDeleteFoodItem, useGetFoodItem, useUpdateFoodItem } from "@/hooks/api/foodItem.hook";
@@ -103,6 +104,7 @@ const FoodItems = () => {
   if (data.data)
     return (
       <Container size="xl">
+        <Breadcrumbs data={[{ name: "Food Items", path: "/food-item" }]} />
         <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
         <Modal
           opened={opened}

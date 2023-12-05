@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
 import { useCreateChart, useDeleteChart, useGetChart } from "@/hooks/api/chart.hook";
@@ -90,6 +91,7 @@ const DietChart = () => {
   if (data.data)
     return (
       <Container size="xl">
+        <Breadcrumbs data={[{ name: "Diet Chart", path: "/diet-chart" }]} />
         <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
         <Modal opened={opened} onClose={close} title={"Create Diet Chart"}>
           <DietChartForm

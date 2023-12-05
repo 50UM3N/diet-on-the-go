@@ -8,6 +8,7 @@ import { DashLayout } from "./layouts/DashLayout";
 import FoodItems from "./pages/dash/FoodItems";
 import DietChart from "./pages/dash/DietChart/DietChart";
 import UpdateDietChart from "./pages/dash/DietChart/UpdateDietChart";
+import Settings from "./pages/settings/Settings";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
               {
                 path: "/diet-chart/:id",
                 element: <UpdateDietChart />,
+              },
+              {
+                path: "/settings",
+                element: <Settings />,
               },
             ],
           },
