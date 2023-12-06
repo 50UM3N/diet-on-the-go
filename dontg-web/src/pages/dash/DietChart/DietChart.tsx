@@ -7,7 +7,7 @@ import { CreateChartDTO } from "@/types/index.type";
 import { ActionIcon, Button, Container, Group, Menu, Modal, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconSettings } from "@tabler/icons-react";
+import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo } from "react";
@@ -46,7 +46,7 @@ const DietChart = () => {
         cell(props) {
           const id = props.getValue();
           return (
-            <Menu shadow="md" width={200} position="bottom-start">
+            <Menu shadow="md" width={110} position="bottom-start">
               <Menu.Target>
                 <ActionIcon size="sm" variant="filled">
                   <IconSettings size={16} />
@@ -59,6 +59,7 @@ const DietChart = () => {
                 <Menu.Divider />
                 <Menu.Item
                   color="red"
+                  leftSection={<IconTrash size={16} />}
                   onClick={() => {
                     handleDelete(id);
                   }}
@@ -93,7 +94,7 @@ const DietChart = () => {
       <Container size="xl">
         <Breadcrumbs data={[{ name: "Diet Chart", path: "/diet-chart" }]} />
         <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
-        <Modal opened={opened} onClose={close} title={"Create Diet Chart"}>
+        <Modal opened={opened} onClose={close} title={"Create Diet Chart"} centered>
           <DietChartForm
             onSave={() => {
               close();

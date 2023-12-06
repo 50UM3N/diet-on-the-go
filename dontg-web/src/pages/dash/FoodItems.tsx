@@ -7,7 +7,7 @@ import { FoodItemDTO, FoodItemInfo } from "@/types/index.type";
 import { ActionIcon, Button, Container, Grid, Group, Menu, Modal, NumberInput, Select, SimpleGrid, Text, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconSettings } from "@tabler/icons-react";
+import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
@@ -45,7 +45,7 @@ const FoodItems = () => {
         cell(props) {
           const id = props.getValue();
           return (
-            <Menu shadow="md" width={200} position="bottom-start">
+            <Menu shadow="md" width={100} position="bottom-start">
               <Menu.Target>
                 <ActionIcon size="sm" variant="filled">
                   <IconSettings size={16} />
@@ -64,6 +64,7 @@ const FoodItems = () => {
                 <Menu.Divider />
                 <Menu.Item
                   color="red"
+                  leftSection={<IconTrash size={16} />}
                   onClick={() => {
                     handleDelete(id);
                   }}
@@ -105,7 +106,7 @@ const FoodItems = () => {
     return (
       <Container size="xl">
         <Breadcrumbs data={[{ name: "Food Items", path: "/food-item" }]} />
-        <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
+        <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open}/>
         <Modal
           opened={opened}
           onClose={() => {
@@ -113,6 +114,7 @@ const FoodItems = () => {
             setEditingItem(undefined);
           }}
           title={editingItem ? "Update Food Item" : "Add Food Item"}
+          centered
         >
           <FoodItemsForm
             onSave={() => {
@@ -171,7 +173,7 @@ const FoodItemsForm: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo 
     <>
       <form onSubmit={form.handleSubmit}>
         <Grid gutter="xs" mb="xs">
-          <Grid.Col span={{ md: 10 }}>
+          <Grid.Col span={{ md: 9 }}>
             <TextInput
               size="xs"
               placeholder="eg. Chicken"
@@ -183,7 +185,7 @@ const FoodItemsForm: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo 
               error={form.touched.name && form.errors.name}
             />
           </Grid.Col>
-          <Grid.Col span={{ md: 2 }}>
+          <Grid.Col span={{ md: 3 }}>
             <Select
               withAsterisk
               size="xs"

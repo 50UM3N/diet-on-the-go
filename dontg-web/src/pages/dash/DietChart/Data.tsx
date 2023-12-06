@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Text, Title } from "@mantine/core";
-import { IconDotsVertical, IconFile, IconPencil, IconPlus, IconSalad, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconFile, IconPencil, IconPlus, IconSalad, IconTrash, IconRainbow} from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChartInfo, MealFoodInfo, MealListInfo } from "@/types/index.type";
@@ -13,7 +13,7 @@ import MacroCard from "@/components/MacroCard";
 import { calToGm, calcPercentage } from "@/utils";
 import MacrosBadge from "@/components/MacrosBadge";
 
-const Data = ({ chart }: { chart: ChartInfo }) => {
+const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) => {
   const { id } = useParams();
   const [list] = useGetMealListByChartId(id as string);
   const [deleteMealList] = useDeleteMealList();
@@ -96,7 +96,21 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
           <Group justify="space-between" mb="xs">
             <Title order={4}>Meal List</Title>
             <Group gap="xs">
-              <Button
+            <Button
+                leftSection={<IconRainbow size={16} />}
+                size="xs"
+                onClick={() => {
+                  // setMealModal({
+                  //   open: true,
+                  //   isEditing: false,
+                  // });
+                }}
+                data-no-print
+              >
+                Share
+              </Button>
+              {isViewing==false &&(
+                <Button
                 leftSection={<IconPlus size={16} />}
                 size="xs"
                 onClick={() => {
@@ -109,6 +123,7 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
               >
                 Add Meal
               </Button>
+              )}
               <Button
                 leftSection={<IconFile size={16} />}
                 size="xs"
@@ -129,21 +144,24 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
                 <tbody>
                   <tr className="t-head">
                     <td style={{}}>Name</td>
-                    <td style={{ width: "12%" }}>Amount</td>
-                    <td style={{ width: "12%" }}>Protein</td>
-                    <td style={{ width: "12%" }}>Fat</td>
-                    <td style={{ width: "12%" }}>Carbohydrate </td>
-                    <td style={{ width: "80px" }}>Action</td>
+                    <td style={{ width: "12%"}}>Amount</td>
+                    <td style={{ width: "12%", textAlign:"center" }}>Protein</td>
+                    <td style={{ width: "12%", textAlign:"center" }}>Fat</td>
+                    <td style={{ width: "12%", textAlign:"center" }}>Carbohydrate </td>
+                    {isViewing==false &&(
+                      <td style={{ width: "80px", textAlign:"center" }}>Action</td>
+                    )}
                   </tr>
                   {list.data.mealList?.map((item) => (
                     <Fragment key={item.id}>
                       <tr className="t-meal-head">
                         <td colSpan={2}>{item.name}</td>
-                        <td>{item.protein} g</td>
-                        <td>{item.fat} g</td>
-                        <td>{item.carb} g</td>
-                        <td>
-                          <Group gap="xs">
+                        <td align="center">{item.protein} g</td>
+                        <td align="center">{item.fat} g</td>
+                        <td align="center">{item.carb} g</td>
+                        {isViewing==false &&(
+                          <td>
+                          <Group gap="xs" justify="center">
                             <ActionIcon
                               size={16}
                               data-no-print
@@ -186,6 +204,7 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
                             </Menu>
                           </Group>
                         </td>
+                        )}
                       </tr>
                       {item.mealFood.map((mealFood) => {
                         return (
@@ -196,32 +215,35 @@ const Data = ({ chart }: { chart: ChartInfo }) => {
                                 {mealFood.foodItem.name}
                               </div>
                             </td>
-                            <td>
+                            <td align="center">
                               {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : (mealFood.foodItem.metric === METRIC.PIECE ?"pc" : "ml") }
                             </td>
-                            <td>{(mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
-                            <td>{(mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
-                            <td>{(mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
-                            <td>
-                              <Group gap="xs" wrap="nowrap" data-no-print>
-                                <ActionIcon size={16} onClick={() => setMealFoodModal({ open: true, mealListId: item.id, isEditing: true, mealFood: mealFood })}>
-                                  <IconPencil size="12px" />
-                                </ActionIcon>
-                                <ActionIcon
-                                  size={16}
-                                  color="red"
-                                  onClick={() =>
-                                    setDeleteFoodModal({
-                                      open: true,
-                                      isDeleting: false,
-                                      mealFoodId: mealFood.id,
-                                    })
-                                  }
-                                >
-                                  <IconTrash size="12px" />
-                                </ActionIcon>
-                              </Group>
-                            </td>
+                            <td align="center">{(mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
+                            <td align="center">{(mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
+                            <td align="center">{(mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
+                            {isViewing==false &&(
+                                <td>
+                                <Group gap="xs" wrap="nowrap" justify="center" data-no-print>
+                                  <ActionIcon size={16} onClick={() => setMealFoodModal({ open: true, mealListId: item.id, isEditing: true, mealFood: mealFood })}>
+                                    <IconPencil size="12px" />
+                                  </ActionIcon>
+                                  <ActionIcon
+                                    size={16}
+                                    color="red"
+                                    onClick={() =>
+                                      setDeleteFoodModal({
+                                        open: true,
+                                        isDeleting: false,
+                                        mealFoodId: mealFood.id,
+                                      })
+                                    }
+                                  >
+                                    <IconTrash size="12px" />
+                                  </ActionIcon>
+                                </Group>
+                              </td>
+                            )}
+
                           </tr>
                         );
                       })}
