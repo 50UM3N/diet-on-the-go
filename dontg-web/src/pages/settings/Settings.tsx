@@ -1,6 +1,7 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Container, Grid, Paper, Text, Title } from "@mantine/core";
 import ResetPassword from "./forms/ResetPassword";
+import UpdateProfile from "./forms/UpdateProfile";
 
 const Settings = () => {
   return (
@@ -10,6 +11,7 @@ const Settings = () => {
         <Grid.Col span={{ md: 6 }}>
           <Paper withBorder p="md" radius="lg">
             <Title order={4}>Update Profile</Title>
+            <UpdateProfile />
           </Paper>
         </Grid.Col>
         <Grid.Col span={{ md: 6 }}>
@@ -17,7 +19,7 @@ const Settings = () => {
             <Title order={3} mb={4}>
               Reset Password
             </Title>
-            <Text mb="xs">Reset password leads to logout the system</Text>
+            <Text mb="xs">Reset password leads to logout from the system</Text>
             <ResetPassword />
           </Paper>
         </Grid.Col>
