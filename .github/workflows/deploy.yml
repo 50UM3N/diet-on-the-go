@@ -42,7 +42,7 @@ jobs:
 
             cd dontg-web
             echo "$PROJECT_WEB_ENV" > ".env.prod"
-            bash deploy.sh
+            bash build.sh
             # cd ..
 
             # cd dontg-api 
