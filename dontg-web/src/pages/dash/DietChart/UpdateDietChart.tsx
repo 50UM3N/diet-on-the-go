@@ -20,7 +20,7 @@ const UpdateDietChart = () => {
             </Paper>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Data chart={data.data} isViewing={false} />
+            <Data chart={data.data} />
           </Grid.Col>
         </Grid>
       </Container>

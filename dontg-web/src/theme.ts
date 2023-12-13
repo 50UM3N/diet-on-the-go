@@ -31,6 +31,7 @@ export const theme = createTheme({
     NumberInput: {
       defaultProps: {
         radius: "md",
+        hideControls: true,
         styles: {
           input: {},
         },

@@ -1,5 +1,5 @@
-import { ActionIcon, Button, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Text, Title } from "@mantine/core";
-import { IconDotsVertical, IconFile, IconPencil, IconPlus, IconSalad, IconTrash, IconRainbow} from "@tabler/icons-react";
+import { ActionIcon, Avatar, Button, CopyButton, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Popover, Stack, Text, TextInput, Title } from "@mantine/core";
+import { IconDotsVertical, IconPencil, IconPlus, IconSalad, IconTrash, IconShare, IconCopy, IconCheck } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChartInfo, MealFoodInfo, MealListInfo } from "@/types/index.type";
@@ -13,7 +13,7 @@ import MacroCard from "@/components/MacroCard";
 import { calToGm, calcPercentage } from "@/utils";
 import MacrosBadge from "@/components/MacrosBadge";
 
-const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) => {
+const Data = ({ chart, isViewing = false }: { chart: ChartInfo; isViewing?: boolean }) => {
   const { id } = useParams();
   const [list] = useGetMealListByChartId(id as string);
   const [deleteMealList] = useDeleteMealList();
@@ -74,7 +74,7 @@ const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) =>
 
   return (
     <Paper withBorder p="md" radius="lg">
-      <LoadingOverlay visible={list.isLoading} overlayProps={{ radius: "sm", blur: 2 }} />
+      <LoadingOverlay visible={list.isPending} overlayProps={{ radius: "sm", blur: 2 }} />
       {list.data && (
         <>
           <Grid grow gutter="xs">
@@ -94,47 +94,74 @@ const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) =>
           <Divider my="xs" />
 
           <Group justify="space-between" mb="xs">
-            <Title order={4}>Meal List</Title>
-            <Group gap="xs">
-            <Button
-                leftSection={<IconRainbow size={16} />}
-                size="xs"
-                onClick={() => {
-                  // setMealModal({
-                  //   open: true,
-                  //   isEditing: false,
-                  // });
-                }}
-                data-no-print
-              >
-                Share
-              </Button>
-              {isViewing==false &&(
+            <Title order={4}>Meal List</Title>{" "}
+            {!isViewing && (
+              <Group gap="xs">
+                <Popover width={400} position="bottom" radius="lg" withArrow shadow="md">
+                  <Popover.Target>
+                    <Button leftSection={<IconShare size={16} />} size="xs" data-no-print>
+                      Share
+                    </Button>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    <Title order={5} mb="xs">
+                      Share Chart
+                    </Title>
+                    <TextInput placeholder="Email" />
+                    <Text size="sm" fw="bold" my="xs">
+                      People with access
+                    </Text>
+                    <Stack my="xs">
+                      <Paper withBorder p="xs" radius="md">
+                        <Group justify="space-between">
+                          <Group>
+                            <Avatar color="cyan" radius="xl">
+                              SK
+                            </Avatar>
+                            <div>
+                              <Text size="14px" fw="bold">
+                                Soumen Khara
+                              </Text>
+                              <Text size="12px">soumen2015.s.k@gmail.com</Text>
+                            </div>
+                          </Group>
+                          <ActionIcon size="sm" variant="filled" color="red">
+                            <IconTrash size={14} />
+                          </ActionIcon>
+                        </Group>
+                      </Paper>
+                    </Stack>
+
+                    <Group grow mt="md">
+                      <CopyButton value={`${window.location.origin}/diet-chart/view/${chart.id}`} timeout={2000}>
+                        {({ copied, copy }) => (
+                          <Button color={copied ? "green" : undefined} leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />} size="xs" variant="light" onClick={copy}>
+                            {copied ? "Copied" : "Copy Link"}
+                          </Button>
+                        )}
+                      </CopyButton>
+                      <Button leftSection={<IconShare size={16} />} size="xs">
+                        Share
+                      </Button>
+                    </Group>
+                  </Popover.Dropdown>
+                </Popover>
+
                 <Button
-                leftSection={<IconPlus size={16} />}
-                size="xs"
-                onClick={() => {
-                  setMealModal({
-                    open: true,
-                    isEditing: false,
-                  });
-                }}
-                data-no-print
-              >
-                Add Meal
-              </Button>
-              )}
-              <Button
-                leftSection={<IconFile size={16} />}
-                size="xs"
-                onClick={() => {
-                  window.print();
-                }}
-                data-no-print
-              >
-                Export
-              </Button>
-            </Group>
+                  leftSection={<IconPlus size={16} />}
+                  size="xs"
+                  onClick={() => {
+                    setMealModal({
+                      open: true,
+                      isEditing: false,
+                    });
+                  }}
+                  data-no-print
+                >
+                  Add Meal
+                </Button>
+              </Group>
+            )}
           </Group>
           <Divider my="xs" />
           <MacrosBadge style={{ flex: 1 }} wrapper={{ mb: "sm" }} protein={list.data.protein} fat={list.data.fat} carb={list.data.carb} size="lg" />
@@ -143,67 +170,65 @@ const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) =>
               <table className="test-table" style={{ width: "100%" }}>
                 <tbody>
                   <tr className="t-head">
-                    <td style={{}}>Name</td>
-                    <td style={{ width: "12%"}}>Amount</td>
-                    <td style={{ width: "12%", textAlign:"center" }}>Protein</td>
-                    <td style={{ width: "12%", textAlign:"center" }}>Fat</td>
-                    <td style={{ width: "12%", textAlign:"center" }}>Carbohydrate </td>
-                    {isViewing==false &&(
-                      <td style={{ width: "80px", textAlign:"center" }}>Action</td>
-                    )}
+                    <td>Name</td>
+                    <td style={{ width: "12%" }}>Amount</td>
+                    <td style={{ width: "12%" }}>Protein</td>
+                    <td style={{ width: "12%" }}>Fat</td>
+                    <td style={{ width: "12%" }}>Carbohydrate </td>
+                    {!isViewing && <td style={{ width: "80px" }}>Action</td>}
                   </tr>
                   {list.data.mealList?.map((item) => (
                     <Fragment key={item.id}>
                       <tr className="t-meal-head">
                         <td colSpan={2}>{item.name}</td>
-                        <td align="center">{item.protein} g</td>
-                        <td align="center">{item.fat} g</td>
-                        <td align="center">{item.carb} g</td>
-                        {isViewing==false &&(
+                        <td>{item.protein} g</td>
+                        <td>{item.fat} g</td>
+                        <td>{item.carb} g</td>
+                        {!isViewing && (
                           <td>
-                          <Group gap="xs" justify="center">
-                            <ActionIcon
-                              size={16}
-                              data-no-print
-                              variant="light"
-                              onClick={() => {
-                                setMealFoodModal({
-                                  open: true,
-                                  mealListId: item.id,
-                                  isEditing: false,
-                                });
-                              }}
-                            >
-                              <IconPlus size={12} />
-                            </ActionIcon>
-                            <Menu shadow="md" width={100} position="bottom-end">
-                              <Menu.Target>
-                                <ActionIcon size={16} variant="light" data-no-print>
-                                  <IconDotsVertical size={16} />
-                                </ActionIcon>
-                              </Menu.Target>
+                            <Group gap="xs" justify="center">
+                              <ActionIcon
+                                size={16}
+                                data-no-print
+                                variant="light"
+                                onClick={() => {
+                                  setMealFoodModal({
+                                    open: true,
+                                    mealListId: item.id,
+                                    isEditing: false,
+                                  });
+                                }}
+                              >
+                                <IconPlus size={12} />
+                              </ActionIcon>
+                              <Menu shadow="md" width={100} position="bottom-end">
+                                <Menu.Target>
+                                  <ActionIcon size={16} variant="light" data-no-print>
+                                    <IconDotsVertical size={16} />
+                                  </ActionIcon>
+                                </Menu.Target>
 
-                              <Menu.Dropdown>
-                                <Menu.Item leftSection={<IconPencil size={16} />} onClick={() => setMealModal({ open: true, isEditing: true, data: item })}>
-                                  Edit
-                                </Menu.Item>
-                                <Menu.Item
-                                  color="red"
-                                  leftSection={<IconTrash size={16} />}
-                                  onClick={() =>
-                                    setDeleteMealListModal({
-                                      open: true,
-                                      isDeleting: false,
-                                      mealListId: item.id,
-                                    })
-                                  }
-                                >
-                                  Delete
-                                </Menu.Item>
-                              </Menu.Dropdown>
-                            </Menu>
-                          </Group>
-                        </td>
+                                <Menu.Dropdown>
+                                  <Menu.Item leftSection={<IconPencil size={16} />} onClick={() => setMealModal({ open: true, isEditing: true, data: item })}>
+                                    Edit
+                                  </Menu.Item>
+                                  <Menu.Item
+                                    color="red"
+                                    leftSection={<IconTrash size={16} />}
+                                    onClick={() =>
+                                      setDeleteMealListModal({
+                                        open: true,
+                                        isDeleting: false,
+                                        mealListId: item.id,
+                                      })
+                                    }
+                                  >
+                                    Delete
+                                  </Menu.Item>
+                                </Menu.Dropdown>
+                              </Menu>
+                            </Group>
+                          </td>
                         )}
                       </tr>
                       {item.mealFood.map((mealFood) => {
@@ -215,14 +240,14 @@ const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) =>
                                 {mealFood.foodItem.name}
                               </div>
                             </td>
-                            <td align="center">
-                              {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : (mealFood.foodItem.metric === METRIC.PIECE ?"pc" : "ml") }
+                            <td>
+                              {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : mealFood.foodItem.metric === METRIC.PIECE ? "pc" : "ml"}
                             </td>
-                            <td align="center">{(mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
-                            <td align="center">{(mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
-                            <td align="center">{(mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
-                            {isViewing==false &&(
-                                <td>
+                            <td>{(mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
+                            <td>{(mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
+                            <td>{(mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
+                            {!isViewing && (
+                              <td>
                                 <Group gap="xs" wrap="nowrap" justify="center" data-no-print>
                                   <ActionIcon size={16} onClick={() => setMealFoodModal({ open: true, mealListId: item.id, isEditing: true, mealFood: mealFood })}>
                                     <IconPencil size="12px" />
@@ -243,7 +268,6 @@ const Data = ({ chart, isViewing }: { chart: ChartInfo; isViewing: boolean }) =>
                                 </Group>
                               </td>
                             )}
-
                           </tr>
                         );
                       })}

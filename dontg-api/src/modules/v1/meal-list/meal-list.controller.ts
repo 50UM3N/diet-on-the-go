@@ -14,21 +14,23 @@ import { AuthGuard } from "../auth/auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("meal-list")
-@ApiBearerAuth("JWT-token")
 @Controller({
   path: "meal-list",
   version: "1",
 })
-@UseGuards(AuthGuard)
 export class MealListController {
   constructor(private mealListService: MealListService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
   async get() {
     return await this.mealListService.get();
   }
 
   @Get("by-id/:id")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
   async getById(@Param("id") id: string) {
     return await this.mealListService.getById(id);
   }
@@ -39,16 +41,22 @@ export class MealListController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
   async create(@Body() body: CreateMealListDTO) {
     return await this.mealListService.create(body);
   }
 
   @Patch(":id")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
   async update(@Param("id") id: string, @Body() body: UpdateMealListDTO) {
     return await this.mealListService.update(id, body);
   }
 
   @Delete(":id")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
   async delete(@Param("id") id: string) {
     return await this.mealListService.delete(id);
   }

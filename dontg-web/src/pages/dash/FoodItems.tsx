@@ -8,10 +8,10 @@ import { ActionIcon, Button, Container, Grid, Group, Menu, Modal, NumberInput, S
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
-import { useQueryClient } from "react-query";
 
 const FoodItems = () => {
   const queryClient = useQueryClient();
@@ -24,7 +24,7 @@ const FoodItems = () => {
       title: "Action Required",
       children: <Text size="sm">Are you sure to delete this item?</Text>,
       labels: { confirm: "Confirm", cancel: "Cancel" },
-      confirmProps: { color: "red", loading: deleteFoodItem.isLoading },
+      confirmProps: { color: "red", loading: deleteFoodItem.isPending },
       onConfirm: () => {
         deleteFoodItem.mutate(id, {
           onSuccess: () => {
@@ -106,7 +106,7 @@ const FoodItems = () => {
     return (
       <Container size="xl">
         <Breadcrumbs data={[{ name: "Food Items", path: "/food-item" }]} />
-        <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open}/>
+        <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
         <Modal
           opened={opened}
           onClose={() => {
@@ -244,7 +244,7 @@ const FoodItemsForm: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo 
           />
         </SimpleGrid>
         <Group justify="right" mt="md">
-          <Button size="xs" type="submit" loading={createFoodItem.isLoading || updateFoodItem.isLoading}>
+          <Button size="xs" type="submit" loading={createFoodItem.isPending || updateFoodItem.isPending}>
             {editingItem ? "Update" : "Save"}
           </Button>
         </Group>

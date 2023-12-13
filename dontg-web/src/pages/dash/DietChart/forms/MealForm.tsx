@@ -22,7 +22,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
             onSuccess: () => {
               onAddSuccessful && onAddSuccessful();
               onClose && onClose();
-              queryClient.invalidateQueries(key);
+              queryClient.invalidateQueries({ queryKey: key });
             },
           }
         );
@@ -36,7 +36,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
             onSuccess: () => {
               onAddSuccessful && onAddSuccessful();
               onClose && onClose();
-              queryClient.invalidateQueries(key);
+              queryClient.invalidateQueries({ queryKey: key });
             },
           }
         );
@@ -58,10 +58,10 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
         error={form.touched.name && form.errors.name}
       />
       <Group justify="right" mt="md">
-        <Button variant="outline" type="button" onClick={onClose} disabled={createMealList.isLoading || updateMealList.isLoading}>
+        <Button variant="outline" type="button" onClick={onClose} disabled={createMealList.isPending || updateMealList.isPending}>
           Cancel
         </Button>
-        <Button type="submit" loading={createMealList.isLoading || updateMealList.isLoading}>
+        <Button type="submit" loading={createMealList.isPending || updateMealList.isPending}>
           {isEditing ? "Update" : "Add"}
         </Button>
       </Group>

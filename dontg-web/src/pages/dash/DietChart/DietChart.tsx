@@ -8,10 +8,10 @@ import { ActionIcon, Button, Container, Group, Menu, Modal, Stack, Text, TextInp
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo } from "react";
-import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 const DietChart = () => {
@@ -42,7 +42,8 @@ const DietChart = () => {
         header: "Action",
         accessorKey: "id",
         enableColumnFilter: false,
-        maxSize: 30,
+        maxSize: 10,
+
         cell(props) {
           const id = props.getValue();
           return (
@@ -152,7 +153,7 @@ const DietChartForm: React.FC<{ onSave?: (id: string) => void }> = ({ onSave }) 
         </Stack>
 
         <Group justify="right" mt="md">
-          <Button size="xs" type="submit" loading={createChart.isLoading}>
+          <Button size="xs" type="submit" loading={createChart.isPending}>
             Create
           </Button>
         </Group>

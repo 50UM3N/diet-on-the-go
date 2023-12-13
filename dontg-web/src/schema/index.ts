@@ -1,9 +1,9 @@
 import * as yup from "yup";
 export const foodItemSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
-  protein: yup.number().required("Protein is required").min(0),
-  fat: yup.number().required("Fat is required").min(0),
-  carb: yup.number().required("Carbohydrate is required").min(0),
+  protein: yup.number().required("Protein is required").min(0, "Protein must be greater than 0"),
+  fat: yup.number().required("Fat is required").min(0, "Fat must be greater than 0"),
+  carb: yup.number().required("Carbohydrate is required").min(0, "Carbohydrate must be greater than 0"),
   metric: yup.string().required("Metric is required"),
 });
 export const loginSchema = yup.object().shape({
@@ -27,17 +27,17 @@ export const createChartSchema = yup.object().shape({
 
 export const updateChartSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
-  weight: yup.number().required("weight is required").moreThan(0),
-  heightInches: yup.number().required("height is required").moreThan(0),
-  heightFeet: yup.number().required("height is required"),
-  age: yup.number().required("age is required").moreThan(0),
-  activityLevel: yup.number().required("activityLevel is required").moreThan(0),
-  bmr: yup.number().required("bmr is required").moreThan(0),
-  maintenanceCalories: yup.number().required("maintenanceCalories is required").moreThan(0),
-  intakeCalories: yup.number().required("intakeCalories is required").moreThan(0),
-  adjustAmount: yup.number().required("weight is required").moreThan(0),
-  gender: yup.string().required("gender is required"),
-  adjustType: yup.string().required("adjustType is required"),
+  weight: yup.number().required("Weight is required").moreThan(0, "Weight must be greater than 0"),
+  heightInches: yup.number().required("Height (in inches) is required").moreThan(0, "Height must be greater than 0"),
+  heightFeet: yup.number().required("Height (in feet) is required").moreThan(0, "Height must be greater than 0"),
+  age: yup.number().required("Age is required").moreThan(0, "Age must be greater than 0"),
+  activityLevel: yup.number().required("Activity level is required").moreThan(0, "Activity level must be greater than 0"),
+  bmr: yup.number().required("BMR is required").moreThan(0, "BMR must be greater than 0"),
+  maintenanceCalories: yup.number().required("Maintenance calories are required").moreThan(0, "Maintenance calories must be greater than 0"),
+  intakeCalories: yup.number().required("Intake calories are required").moreThan(0, "Intake calories must be greater than 0"),
+  adjustAmount: yup.number().required("Adjust amount is required").moreThan(0, "Adjust amount must be greater than 0"),
+  gender: yup.string().required("Gender is required"),
+  adjustType: yup.string().required("Adjust type is required"),
 });
 
 export const mealListSchema = yup.object().shape({
@@ -45,7 +45,7 @@ export const mealListSchema = yup.object().shape({
 });
 
 export const mealFoodSchema = yup.object().shape({
-  qty: yup.number().required("qty is required").moreThan(0),
+  qty: yup.number().required("Quantity is required").moreThan(0, "Quantity must be greater than 0"),
 });
 
 export const resetPasswordSchema = yup.object().shape({
@@ -54,4 +54,13 @@ export const resetPasswordSchema = yup.object().shape({
     .string()
     .required("Please retype your password.")
     .oneOf([yup.ref("password")], "Your passwords do not match."),
+});
+
+export const updateUserSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  mobile: yup.number().required("Mobile number is required"),
+  heightFeet: yup.number().required("Height (in feet) is required").moreThan(0, "Height must be greater than 0"),
+  heightInches: yup.number().required("Height (in inches) is required").moreThan(0, "Height must be greater than 0").lessThan(12, "Height (in inches) must be less than 12"),
+  weight: yup.number().required("Weight is required").moreThan(0, "Weight must be greater than 0"),
+  dob: yup.string().required("Date of Birth is required"),
 });

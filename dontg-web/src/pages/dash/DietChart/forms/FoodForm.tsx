@@ -53,31 +53,6 @@ const FoodForm: React.FC<{
     },
     validationSchema: mealFoodSchema,
   });
-
-  // const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ label, protein, fat, carbohydrate, metric, ...others }: ItemProps, ref) => (
-  //   <div ref={ref} {...others}>
-  //     <Group grow align="center">
-  //       <Text size="sm" mb="xs" fw={500}>
-  //         {label}
-  //       </Text>
-  //       <Badge size="xs" color="red">
-  //         {METRIC[metric]}
-  //       </Badge>
-  //     </Group>
-  //     <Group gap="xs">
-  //       <Badge size="xs" variant="outline" color="green">
-  //         {protein}g P
-  //       </Badge>
-  //       <Badge size="xs" variant="outline" color="orange">
-  //         {fat}g F
-  //       </Badge>
-  //       <Badge size="xs" variant="outline" color="cyan">
-  //         {carbohydrate}g C
-  //       </Badge>
-  //     </Group>
-  //   </div>
-  // ));
-  // SelectItem.displayName = "SelectItem";
   return (
     <>
       <form onSubmit={form.handleSubmit}>
@@ -86,8 +61,6 @@ const FoodForm: React.FC<{
             <Select
               label="Choose your food item"
               placeholder="Pick one"
-              // // @ts-ignore
-              // itemComponent={SelectItem}
               data={foodItem.data?.map((item) => ({
                 label: item.name,
                 value: item.id,
@@ -113,10 +86,10 @@ const FoodForm: React.FC<{
           </Grid.Col>
         </Grid>
         <Group justify="right" mt="md">
-          <Button variant="outline" type="button" onClick={onClose} disabled={createMealFood.isLoading || updateMealFood.isLoading}>
+          <Button variant="outline" type="button" onClick={onClose} disabled={createMealFood.isPending || updateMealFood.isPending}>
             Cancel
           </Button>
-          <Button type="submit" loading={createMealFood.isLoading || updateMealFood.isLoading}>
+          <Button type="submit" loading={createMealFood.isPending || updateMealFood.isPending}>
             {isEditing ? "Update" : "Add"}
           </Button>
         </Group>

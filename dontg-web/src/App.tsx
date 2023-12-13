@@ -9,6 +9,7 @@ import FoodItems from "./pages/dash/FoodItems";
 import DietChart from "./pages/dash/DietChart/DietChart";
 import UpdateDietChart from "./pages/dash/DietChart/UpdateDietChart";
 import Settings from "./pages/settings/Settings";
+import View from "./pages/View";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: "/diet-chart/view/:id",
+        element: <View />,
       },
     ],
   },

@@ -7,5 +7,6 @@ import { MealFoodModule } from "./meal-food/meal-food.module";
   imports: [MealFoodModule],
   providers: [MealListService],
   controllers: [MealListController],
+  exports: [MealListService],
 })
 export class MealListModule {}

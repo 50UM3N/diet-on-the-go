@@ -20,7 +20,7 @@ const ResetPassword = () => {
     <form>
       <Stack>
         <PasswordInput
-          required
+          withAsterisk
           label="Password"
           placeholder="Your password"
           onBlur={form.handleBlur("password")}
@@ -31,7 +31,7 @@ const ResetPassword = () => {
         />
 
         <PasswordInput
-          required
+          withAsterisk
           label="Confirm Password"
           placeholder="Confirm Your password"
           onBlur={form.handleBlur("conformPassword")}
@@ -43,7 +43,7 @@ const ResetPassword = () => {
       </Stack>
 
       <Group justify="e" mt="xl">
-        <Button color="red" type="submit" radius="xl" loading={resetPassword.isLoading}>
+        <Button color="red" type="submit" radius="xl" loading={resetPassword.isPending}>
           Reset
         </Button>
       </Group>

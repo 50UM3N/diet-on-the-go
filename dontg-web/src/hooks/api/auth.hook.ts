@@ -118,9 +118,12 @@ export const useSignUp = () => {
           const data = await res.json();
           throw Error(data.message);
         }
-      } catch (error: unknown) {
+      } catch (error: any) {
         setLoading(false);
-        // ToastAndroid.show(error.message, ToastAndroid.SHORT);
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
       }
     },
     [dispatch, navigate]

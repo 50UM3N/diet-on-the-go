@@ -3,47 +3,48 @@ import { AppError, ChartInfo, CreateChartDTO, UpdateChartDTO } from "@/types/ind
 import { toUrl } from "@/utils";
 import { fetcher, updater } from "@/utils/fetch";
 import { notifications } from "@mantine/notifications";
-import { UseMutationResult, UseQueryResult, useMutation, useQuery } from "react-query";
-
+import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
 const base = EntryBase.CHART;
 
+// Endpoint: [GET] /chart
 export const useGetChart = (): [UseQueryResult<ChartInfo[], AppError>, string[]] => {
   const key = [base];
-  return [useQuery(key, () => fetcher(toUrl(key))), key];
+  return [useQuery({ queryKey: key, queryFn: () => fetcher(toUrl(key)) }), key];
 };
 
+// Endpoint: [GET] /chart/by-id/:id
 export const useGetChartById = (id: string): [UseQueryResult<ChartInfo, AppError>, string[]] => {
   const key = [base, "by-id", id];
-  return [useQuery(key, () => fetcher(toUrl(key))), key];
+  return [useQuery({ queryKey: key, queryFn: () => fetcher(toUrl(key)) }), key];
 };
 
-export const useCreateChart = (): [UseMutationResult<ChartInfo, AppError, CreateChartDTO, unknown>, string[]] => {
+// Endpoint: [POST] /chart
+export const useCreateChart = (): [UseMutationResult<ChartInfo, AppError, CreateChartDTO>, string[]] => {
   const key = [base];
   return [
-    useMutation(
-      (data) =>
+    useMutation({
+      mutationFn: (data) =>
         updater(toUrl([base]), {
           method: "POST",
           body: data,
         }),
-      {
-        onSuccess: () => {
-          notifications.show({
-            message: "Chart created successfully",
-          });
-        },
-        onError(error) {
-          notifications.show({
-            color: "red",
-            message: error.message,
-          });
-        },
-      }
-    ),
+      onSuccess: () => {
+        notifications.show({
+          message: "Chart created successfully",
+        });
+      },
+      onError(error) {
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      },
+    }),
     key,
   ];
 };
 
+// Endpoint: [PATCH] /chart/:id
 export const useUpdateChart = (): [
   UseMutationResult<
     ChartInfo,
@@ -58,52 +59,49 @@ export const useUpdateChart = (): [
 ] => {
   const key = [base];
   return [
-    useMutation(
-      (param) =>
+    useMutation({
+      mutationFn: (param) =>
         updater(toUrl([base, param.id]), {
           method: "PATCH",
           body: param.data,
         }),
-      {
-        onSuccess: () => {
-          notifications.show({
-            message: "Chart updated successfully",
-          });
-        },
-        onError(error) {
-          notifications.show({
-            color: "red",
-            message: error.message,
-          });
-        },
-      }
-    ),
+      onSuccess: () => {
+        notifications.show({
+          message: "Chart updated successfully",
+        });
+      },
+      onError(error) {
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      },
+    }),
     key,
   ];
 };
 
-export const useDeleteChart = (): [UseMutationResult<ChartInfo, AppError, string, unknown>, string[]] => {
+// Endpoint: [DELETE] /chart/:id
+export const useDeleteChart = (): [UseMutationResult<ChartInfo, AppError, string>, string[]] => {
   const key = [base];
   return [
-    useMutation(
-      (id) =>
+    useMutation({
+      mutationFn: (id) =>
         updater(toUrl([base, id]), {
           method: "DELETE",
         }),
-      {
-        onSuccess: () => {
-          notifications.show({
-            message: "Chart deleted successfully",
-          });
-        },
-        onError(error) {
-          notifications.show({
-            color: "red",
-            message: error.message,
-          });
-        },
-      }
-    ),
+      onSuccess: () => {
+        notifications.show({
+          message: "Chart deleted successfully",
+        });
+      },
+      onError(error) {
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      },
+    }),
     key,
   ];
 };

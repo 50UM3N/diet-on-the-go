@@ -6,5 +6,6 @@ import { FoodItemController } from "./food-item.controller";
   imports: [],
   providers: [FoodItemService],
   controllers: [FoodItemController],
+  exports: [FoodItemService],
 })
 export class FoodItemModule {}

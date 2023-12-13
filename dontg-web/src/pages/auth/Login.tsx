@@ -39,7 +39,7 @@ export function Login(props: PaperProps) {
           <form onSubmit={form.handleSubmit}>
             <Stack>
               <TextInput
-                required
+                withAsterisk
                 label="Email"
                 placeholder="hello@test.dev"
                 onBlur={form.handleBlur("email")}
@@ -51,7 +51,7 @@ export function Login(props: PaperProps) {
               />
 
               <PasswordInput
-                required
+                withAsterisk
                 label="Password"
                 placeholder="Your password"
                 onBlur={form.handleBlur("password")}

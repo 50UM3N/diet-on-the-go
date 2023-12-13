@@ -83,3 +83,9 @@ main {
     background-color: var(--mantine-color-cyan-light);
   }
 }
+
+tr,
+td,
+th {
+  white-space: nowrap;
+}

@@ -41,7 +41,7 @@ export function Register() {
           <form onSubmit={form.handleSubmit}>
             <Stack>
               <TextInput
-                required
+                withAsterisk
                 label="Name"
                 placeholder="Your name"
                 onBlur={form.handleBlur("name")}
@@ -51,7 +51,7 @@ export function Register() {
                 radius="md"
               />
               <TextInput
-                required
+                withAsterisk
                 label="Email"
                 placeholder="hello@test.dev"
                 onBlur={form.handleBlur("email")}
@@ -63,7 +63,7 @@ export function Register() {
               />
 
               <PasswordInput
-                required
+                withAsterisk
                 label="Password"
                 placeholder="Your password"
                 onBlur={form.handleBlur("password")}
@@ -74,7 +74,7 @@ export function Register() {
               />
 
               <PasswordInput
-                required
+                withAsterisk
                 label="Confirm Password"
                 placeholder="Confirm Your password"
                 onBlur={form.handleBlur("conformPassword")}

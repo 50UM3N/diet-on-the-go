@@ -4,6 +4,7 @@ import { UserModule } from "./user/user.module";
 import { FoodItemModule } from "./food-item/food-item.module";
 import { ChartModule } from "./chart/chart.module";
 import { MealListModule } from "./meal-list/meal-list.module";
+import { BackupRestoreModule } from "./backup-restore/backup-restore.module";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { MealListModule } from "./meal-list/meal-list.module";
     FoodItemModule,
     ChartModule,
     MealListModule,
+    BackupRestoreModule,
   ],
 })
 export class V1Module {}

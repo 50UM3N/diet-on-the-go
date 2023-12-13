@@ -8,7 +8,16 @@ export class UserService {
   async get(id: string) {
     return await this.prismaService.user.findUnique({
       where: { id },
-      select: { name: true, email: true, mobile: true, id: true },
+      select: {
+        name: true,
+        email: true,
+        mobile: true,
+        id: true,
+        dob: true,
+        height: true,
+        weight: true,
+        age: true,
+      },
     });
   }
 

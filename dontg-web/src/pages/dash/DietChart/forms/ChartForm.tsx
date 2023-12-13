@@ -405,7 +405,7 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
         <Button variant="light" type="button" onClick={calculateAll}>
           Calculate
         </Button>
-        <Button type="submit" loading={updateChart.isLoading}>
+        <Button type="submit" loading={updateChart.isPending}>
           Save
         </Button>
       </Group>
