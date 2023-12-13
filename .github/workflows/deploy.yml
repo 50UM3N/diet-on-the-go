@@ -1,0 +1,62 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy code to EC2
+        uses: appleboy/ssh-action@master
+        env:
+          PROJECT_WEB_ENV: ${{ secrets.PROJECT_WEB_ENV }}
+          PROJECT_API_ENV: ${{ secrets.PROJECT_API_ENV }}
+        with:
+          host: 54.238.240.71
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: PROJECT_API_ENV, PROJECT_WEB_ENV
+          script: |
+            # Navigate to your code directory
+            code_dir="~/applications/diet-on-the-go"
+            first_time=true
+            # Check if the code directory exists
+            if [ -d "$code_dir" ]; then
+              first_time=false
+            fi
+
+            # Check if the code directory exists, if not, clone the repository
+            if [ "$first_time" = true ]; then
+              git clone https://github.com/50UM3N/diet-on-the-go.git "$code_dir"
+              cd "$code_dir"
+            fi
+            cd "$code_dir"
+            git pull origin main
+
+            cd dontg-web
+            echo "$PROJECT_WEB_ENV" > ".env.prod"
+            npm run build
+
+            cd ..
+
+            cd dontg-api 
+            echo "$PROJECT_API_ENV" > ".env.prod"
+            npm run build
+
+            if [ "$first_time" = true ]; then
+              pm2 start npm --name "dontg" -- run start
+              pm2 start dontg
+              pm2 save
+            fi
+
+            pm2 restart dontg
+
+          # Optional: Ignore SSH host key checking
+          options: "-o StrictHostKeyChecking=no"
