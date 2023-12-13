@@ -40,9 +40,17 @@ jobs:
 
             git pull origin main
 
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+
             cd dontg-web
             echo "$PROJECT_WEB_ENV" > ".env.prod"
-            bash build.sh
+            ls -la
+            node -v
+            npm
+            # npm install
+            # npm run build
+
             # cd ..
 
             # cd dontg-api 
