@@ -47,24 +47,23 @@ jobs:
             echo "$PROJECT_WEB_ENV" > ".env.prod"
             ls -la
             node -v
-            npm
-            # npm install
-            # npm run build
+            npm install
+            npm run build
 
             # cd ..
 
-            # cd dontg-api 
-            # echo "$PROJECT_API_ENV" > ".env.prod"
-            # npm install
-            # npm run build
+            cd dontg-api 
+            echo "$PROJECT_API_ENV" > ".env.prod"
+            npm install
+            npm run build
 
-            # if [ "$first_time" = true ]; then
-            #   pm2 start npm --name "dontg" -- run start
-            #   pm2 start dontg
-            #   pm2 save
-            # fi
+            if [ "$first_time" = true ]; then
+              pm2 start npm --name "dontg" -- run start
+              pm2 start dontg
+              pm2 save
+            fi
 
-            # pm2 restart dontg
+            pm2 restart dontg
 
           # Optional: Ignore SSH host key checking
           options: "-o StrictHostKeyChecking=no"
