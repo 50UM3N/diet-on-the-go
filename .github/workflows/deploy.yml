@@ -42,12 +42,7 @@ jobs:
 
             cd dontg-web
             echo "$PROJECT_WEB_ENV" > ".env.prod"
-            ls -la
-            node -v
-            npm -v
-            # npm install
-            # npm run build
-
+            bash deploy.sh
             # cd ..
 
             # cd dontg-api 
