@@ -37,11 +37,11 @@ jobs:
               git clone https://github.com/50UM3N/diet-on-the-go.git "$code_dir"
             fi
             cd "$code_dir"
-            ls -la
-            # git pull origin main
 
-            # cd dontg-web
-            # echo "$PROJECT_WEB_ENV" > ".env.prod"
+            git pull origin main
+
+            cd dontg-web
+            echo "$PROJECT_WEB_ENV" > ".env.prod"
             # npm run build
 
             # cd ..
