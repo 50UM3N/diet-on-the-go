@@ -42,13 +42,15 @@ jobs:
 
             cd dontg-web
             echo "$PROJECT_WEB_ENV" > ".env.prod"
-            # npm run build
+            npm install
+            npm run build
 
-            # cd ..
+            cd ..
 
-            # cd dontg-api 
-            # echo "$PROJECT_API_ENV" > ".env.prod"
-            # npm run build
+            cd dontg-api 
+            echo "$PROJECT_API_ENV" > ".env.prod"
+            npm install
+            npm run build
 
             # if [ "$first_time" = true ]; then
             #   pm2 start npm --name "dontg" -- run start
