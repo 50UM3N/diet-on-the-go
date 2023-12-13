@@ -35,7 +35,6 @@ jobs:
             # Check if the code directory exists, if not, clone the repository
             if [ "$first_time" = true ]; then
               git clone https://github.com/50UM3N/diet-on-the-go.git "$code_dir"
-              cd "$code_dir"
             fi
             cd "$code_dir"
             git pull origin main
