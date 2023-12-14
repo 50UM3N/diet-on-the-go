@@ -24,6 +24,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: PROJECT_API_ENV, PROJECT_WEB_ENV
           script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             # Navigate to your code directory
             code_dir="~/applications/dotheg"
             first_time=true
