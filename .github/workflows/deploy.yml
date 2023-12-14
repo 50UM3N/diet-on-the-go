@@ -25,7 +25,7 @@ jobs:
           envs: PROJECT_API_ENV, PROJECT_WEB_ENV
           script: |
             # Navigate to your code directory
-            code_dir="~/applications/diet-on-the-go"
+            code_dir="~/applications/dotheg"
             first_time=true
             # Check if the code directory exists
             if [ -d "$code_dir" ]; then
