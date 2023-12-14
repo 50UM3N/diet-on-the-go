@@ -47,6 +47,7 @@ jobs:
             echo "------------------------------------------"
 
             cd dotheg-web
+            npm install
             echo "$PROJECT_WEB_ENV" > ".env.prod"
             NODE_OPTIONS=--max_old_space_size=512 npm run build
             echo "------------------------------------------"
