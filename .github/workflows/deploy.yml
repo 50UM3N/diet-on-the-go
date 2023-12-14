@@ -27,7 +27,7 @@ jobs:
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             # Navigate to your code directory
-            code_dir="~/applications/dotheg"
+            code_dir="/home/ubuntu/applications/dotheg"
             first_time=true
             # Check if the code directory exists
             if [ -d "$code_dir" ]; then
@@ -42,18 +42,40 @@ jobs:
             cd "$code_dir"
             git pull origin main
 
+            echo "------------------------------------------"
+            echo "|          Starting Web Build            |"
+            echo "------------------------------------------"
+
             cd dotheg-web
             echo "$PROJECT_WEB_ENV" > ".env.prod"
             NODE_OPTIONS=--max_old_space_size=512 npm run build
-
+            echo "------------------------------------------"
+            echo "|            Build Completed              |"
+            echo "------------------------------------------"
+            echo ""
+            echo ""
             cd ..
-
+            echo ""
+            echo ""
+            echo "------------------------------------------"
+            echo "|          Starting Api Build            |"
+            echo "------------------------------------------"
             cd dotheg-api
             npm install
             echo "$PROJECT_API_ENV" > ".env.prod"
             npm run prisma:migrate
             npm run build
 
+            echo "------------------------------------------"
+            echo "|            Build Completed              |"
+            echo "------------------------------------------"
+            echo ""
+            echo ""
+            echo ""
+            echo ""
+            echo "------------------------------------------"
+            echo "|             Starting PM2                |"
+            echo "------------------------------------------"
             if [ "$first_time" = true ]; then
               pm2 start npm --name "dotheg" -- run start
               pm2 start dotheg
