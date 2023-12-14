@@ -16,7 +16,7 @@ import { join } from "path";
       signOptions: { expiresIn: "365d" },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "../../", "dontg-web/dist"),
+      rootPath: join(__dirname, "../../", "dotheg-web/dist"),
     }),
     PrismaModule,
     V1Module,

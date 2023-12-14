@@ -81,3 +81,26 @@ Live link https://dotheg.vercel.app/
 ---
 
 This documentation provides an overview of the Diet on the Go application, explaining its functionalities and the technologies used. If you need further assistance or have specific questions, feel free to reach out.
+
+## Deploy the code
+
+```
+  cd dotheg-web
+  npm run build
+  scp -r dist/* mastery:~/applications/diet-on-the-go/dotheg-web/dist
+
+  ssh mastery
+
+  #one time
+  pm2 start npm --name "dotheg" -- run start
+  NODE_OPTIONS=--max_old_space_size=512 npm run build
+  pm2 stop dotheg
+  cd applications/diet-on-the-go
+  git pull
+  cd dotheg-web
+  npm install
+  npm run build
+
+  pm2 start dotheg
+
+```

@@ -25,7 +25,7 @@ jobs:
           envs: PROJECT_API_ENV, PROJECT_WEB_ENV
           script: |
             # Navigate to your code directory
-            code_dir="/home/ubuntu/applications/diet-on-the-go"
+            code_dir="~/applications/diet-on-the-go"
             first_time=true
             # Check if the code directory exists
             if [ -d "$code_dir" ]; then
@@ -35,35 +35,29 @@ jobs:
             # Check if the code directory exists, if not, clone the repository
             if [ "$first_time" = true ]; then
               git clone https://github.com/50UM3N/diet-on-the-go.git "$code_dir"
+              cd "$code_dir"
             fi
             cd "$code_dir"
-
             git pull origin main
 
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
-
-            cd dontg-web
+            cd dotheg-web
             echo "$PROJECT_WEB_ENV" > ".env.prod"
-            ls -la
-            node -v
-            npm install
-            npm run build
+            NODE_OPTIONS=--max_old_space_size=512 npm run build
 
-            # cd ..
+            cd ..
 
-            cd dontg-api 
+            cd dotheg-api 
             echo "$PROJECT_API_ENV" > ".env.prod"
-            npm install
+            npm run prisma:migrate
             npm run build
 
             if [ "$first_time" = true ]; then
-              pm2 start npm --name "dontg" -- run start
-              pm2 start dontg
+              pm2 start npm --name "dotheg" -- run start
+              pm2 start dotheg
               pm2 save
             fi
 
-            pm2 restart dontg
+            pm2 restart dotheg
 
           # Optional: Ignore SSH host key checking
           options: "-o StrictHostKeyChecking=no"
