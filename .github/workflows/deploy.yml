@@ -48,7 +48,8 @@ jobs:
 
             cd ..
 
-            cd dotheg-api 
+            cd dotheg-api
+            npm install
             echo "$PROJECT_API_ENV" > ".env.prod"
             npm run prisma:migrate
             npm run build
