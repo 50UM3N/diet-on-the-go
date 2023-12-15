@@ -5,8 +5,12 @@ import { CreateChartDTO, UpdateChartDTO } from "./chart.dto";
 @Injectable()
 export class ChartService {
   constructor(private prismaService: PrismaService) {}
-  async get() {
-    return await this.prismaService.chart.findMany();
+  async get(id: string) {
+    return await this.prismaService.chart.findMany({
+      where: {
+        userId: id,
+      },
+    });
   }
   async getById(id: string) {
     return await this.prismaService.chart.findUnique({
