@@ -26,8 +26,8 @@ export class ChartController {
   @Get()
   @UseGuards(AuthGuard)
   @ApiBearerAuth("JWT-token")
-  async get() {
-    return await this.chartService.get();
+  async get(@User() user: userDTO) {
+    return await this.chartService.get(user.id);
   }
 
   @Get("by-id/:id")
