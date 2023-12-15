@@ -2,19 +2,18 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
 import { useCreateFoodItem, useDeleteFoodItem, useGetFoodItem, useUpdateFoodItem } from "@/hooks/api/foodItem.hook";
+import { queryClient } from "@/main";
 import { foodItemSchema } from "@/schema";
 import { FoodItemDTO, FoodItemInfo } from "@/types/index.type";
 import { ActionIcon, Button, Container, Grid, Group, Menu, Modal, NumberInput, Select, SimpleGrid, Text, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 
 const FoodItems = () => {
-  const queryClient = useQueryClient();
   const [opened, { open, close }] = useDisclosure(false);
   const [data] = useGetFoodItem();
   const [editingItem, setEditingItem] = useState<FoodItemInfo>();
@@ -133,7 +132,6 @@ const FoodItems = () => {
 export default FoodItems;
 
 const FoodItemsForm: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo }> = ({ onSave, editingItem }) => {
-  const queryClient = useQueryClient();
   const [createFoodItem] = useCreateFoodItem();
   const [updateFoodItem] = useUpdateFoodItem();
   const form = useFormik<FoodItemDTO>({

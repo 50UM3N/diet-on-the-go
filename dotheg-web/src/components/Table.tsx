@@ -1,9 +1,9 @@
-import React from "react";
-import { Group, Pagination, Table as MTable, Text, Button, ButtonProps, Paper } from "@mantine/core";
+import { Group, Pagination, Table as MTable, Text, Button, ButtonProps, Paper, TextInput } from "@mantine/core";
 import { fuzzyFilter } from "../utils";
-import GlobalFilter from "./GlobalFilter";
 
 import { ColumnDef, getCoreRowModel, getFacetedMinMaxValues, getFacetedRowModel, getFacetedUniqueValues, getFilteredRowModel, getPaginationRowModel, flexRender, useReactTable } from "@tanstack/react-table";
+import { useDebouncedState } from "@mantine/hooks";
+import { IconSearch } from "@tabler/icons-react";
 
 type Props = {
   columns: ColumnDef<any, any>[];
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Table = (props: Props) => {
-  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [globalFilter, setGlobalFilter] = useDebouncedState("", 200);
   const table = useReactTable({
     data: props.data,
     columns: props.columns,
@@ -36,7 +36,7 @@ const Table = (props: Props) => {
   return (
     <>
       <Group justify="space-between">
-        <GlobalFilter setGlobalFilter={setGlobalFilter} />
+        <TextInput styles={{ input: { borderWidth: 2 } }} leftSection={<IconSearch size={16} />} placeholder="Global Search " defaultValue={globalFilter} onChange={(e) => setGlobalFilter(e.currentTarget.value)} />
         {props.showAddButton && (
           <Button {...props.buttonProps} onClick={props.onAddButtonClick}>
             {props.buttonProps?.children || "Add New"}
