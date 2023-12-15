@@ -1,0 +1,108 @@
+.header {
+  border: none;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-inline: var(--mantine-spacing-xs);
+  padding-top: var(--mantine-spacing-xs);
+}
+.inner {
+  border: 1px solid;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-lg);
+  padding-left: var(--mantine-spacing-xs);
+  padding-right: var(--mantine-spacing-xs);
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-body));
+}
+.user {
+  color: var(--mantine-color-white);
+  padding: 8px var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-sm);
+  transition: background-color 100ms ease;
+}
+
+.sideNavWrapper {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  padding: var(--mantine-spacing-sm);
+  padding-right: 0;
+  transition: all 200ms ease-in-out;
+}
+
+.sideNav {
+  border: 1px solid;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-lg);
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-body));
+  height: 100%;
+  width: 100%;
+}
+
+.linkWrapper {
+  margin: var(--mantine-spacing-sm);
+}
+
+.mainWrapper {
+  transition: all 200ms ease-in-out;
+}
+.contentWrapper {
+  padding: var(--mantine-spacing-sm);
+  padding-top: var(--mantine-spacing-xl);
+}
+
+.icon {
+  width: rem(22px);
+  height: rem(22px);
+}
+
+.dark {
+  @mixin dark {
+    display: none;
+  }
+
+  @mixin light {
+    display: block;
+  }
+}
+
+.light {
+  @mixin light {
+    display: none;
+  }
+
+  @mixin dark {
+    display: block;
+  }
+}
+
+.bottomNav {
+  border: none;
+  position: fixed;
+  bottom: 0;
+  z-index: 20;
+  padding-inline: var(--mantine-spacing-xs);
+  padding-bottom: var(--mantine-spacing-xs);
+  width: 100%;
+}
+
+.bottomNavInner {
+  border: 1px solid;
+  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-lg);
+  padding: var(--mantine-spacing-xs);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: light-dark(var(--mantine-color-white), var(--mantine-color-body));
+}
+
+.bottomNavOpen {
+  padding-bottom: 110px;
+}

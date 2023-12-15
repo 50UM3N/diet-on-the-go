@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  mobile    String?
+  password  String
+  dob       DateTime?
+  height    Float?
+  weight    Float?
+  age       Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  chart     Chart[]
+}
+
+model FoodItem {
+  id        String     @id @default(uuid())
+  name      String
+  metric    String
+  protein   Float
+  fat       Float
+  carb      Float
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  mealFood  MealFood[]
+}
+
+model Chart {
+  id                  String     @id @default(uuid())
+  name                String
+  description         String
+  weight              Float?
+  gender              String?
+  height              Float?
+  age                 Int?
+  activityLevel       Float?
+  bmr                 Int?
+  maintenanceCalories Int?
+  adjustAmount        Int?
+  adjustType          String?
+  intakeCalories      Int?
+  protein             Int?
+  fat                 Int?
+  carb                Int?
+  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealList            MealList[]
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  userId              String
+}
+
+model MealList {
+  id        String     @id @default(uuid())
+  name      String
+  mealFood  MealFood[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  chart     Chart?     @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  chartId   String?
+}
+
+model MealFood {
+  id         String    @id @default(uuid())
+  qty        Float
+  foodItem   FoodItem  @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  mealList   MealList? @relation(fields: [mealListId], references: [id], onDelete: Cascade)
+  mealListId String?
+  foodItemId String
+}

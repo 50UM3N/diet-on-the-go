@@ -27,7 +27,7 @@ jobs:
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             # Navigate to your code directory
-            code_dir="/home/ubuntu/applications/diet-on-the-go"
+            code_dir="/home/ubuntu/applications/dotheg"
             first_time=true
             # Check if the code directory exists
             if [ -d "$code_dir" ]; then
@@ -37,35 +37,53 @@ jobs:
             # Check if the code directory exists, if not, clone the repository
             if [ "$first_time" = true ]; then
               git clone https://github.com/50UM3N/diet-on-the-go.git "$code_dir"
+              cd "$code_dir"
             fi
             cd "$code_dir"
-
             git pull origin main
 
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
+            echo "------------------------------------------"
+            echo "|          Starting Web Build            |"
+            echo "------------------------------------------"
 
-            cd dontg-web
+            cd dotheg-web
+            npm install
             echo "$PROJECT_WEB_ENV" > ".env.prod"
-            ls -la
-            node -v
+            NODE_OPTIONS=--max_old_space_size=512 npm run build
+            echo "------------------------------------------"
+            echo "|            Build Completed              |"
+            echo "------------------------------------------"
+            echo ""
+            echo ""
+            cd ..
+            echo ""
+            echo ""
+            echo "------------------------------------------"
+            echo "|          Starting Api Build            |"
+            echo "------------------------------------------"
+            cd dotheg-api
             npm install
-            npm run build
-
-            # cd ..
-
-            cd dontg-api 
             echo "$PROJECT_API_ENV" > ".env.prod"
-            npm install
+            npm run prisma:migrate
             npm run build
 
+            echo "------------------------------------------"
+            echo "|            Build Completed              |"
+            echo "------------------------------------------"
+            echo ""
+            echo ""
+            echo ""
+            echo ""
+            echo "------------------------------------------"
+            echo "|             Starting PM2                |"
+            echo "------------------------------------------"
             if [ "$first_time" = true ]; then
-              pm2 start npm --name "dontg" -- run start
-              pm2 start dontg
+              pm2 start npm --name "dotheg" -- run start
+              pm2 start dotheg
               pm2 save
             fi
 
-            pm2 restart dontg
+            pm2 restart dotheg
 
           # Optional: Ignore SSH host key checking
           options: "-o StrictHostKeyChecking=no"
