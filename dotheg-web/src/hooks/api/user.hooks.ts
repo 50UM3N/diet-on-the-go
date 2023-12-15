@@ -1,10 +1,11 @@
 import { EntryBase } from "@/data/constant";
+import { queryClient } from "@/main";
 import { logout, updateUser } from "@/store/slices/userSlice";
 import { AppError, UpdateUserDTO, UserInfo } from "@/types/index.type";
 import { toUrl } from "@/utils";
 import { fetcher, updater } from "@/utils/fetch";
 import { notifications } from "@mantine/notifications";
-import { useQuery, useMutation, UseQueryResult, UseMutationResult, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +17,6 @@ export const useGetUser = (): [UseQueryResult<UserInfo, Error>, string[]] => {
 };
 
 export const useUpdateUser = (): [UseMutationResult<UserInfo, AppError, UpdateUserDTO>, string[]] => {
-  const query = useQueryClient();
   const dispatch = useDispatch();
   const key = [base];
   return [
@@ -28,7 +28,7 @@ export const useUpdateUser = (): [UseMutationResult<UserInfo, AppError, UpdateUs
         }),
       onSuccess(_, data) {
         dispatch(updateUser(data));
-        query.invalidateQueries({ queryKey: key });
+        queryClient.invalidateQueries({ queryKey: key });
         notifications.show({
           message: "User updated successfully",
         });

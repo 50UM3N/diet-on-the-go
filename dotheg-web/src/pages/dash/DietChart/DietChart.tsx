@@ -2,13 +2,13 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
 import { useCreateChart, useDeleteChart, useGetChart } from "@/hooks/api/chart.hook";
+import { queryClient } from "@/main";
 import { createChartSchema } from "@/schema";
 import { CreateChartDTO } from "@/types/index.type";
 import { ActionIcon, Button, Container, Group, Menu, Modal, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo } from "react";
@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 const DietChart = () => {
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const queryClient = useQueryClient();
   const [data] = useGetChart();
   const [deleteChart] = useDeleteChart();
   const handleDelete = async (id: string) => {
@@ -110,7 +109,6 @@ const DietChart = () => {
 export default DietChart;
 
 const DietChartForm: React.FC<{ onSave?: (id: string) => void }> = ({ onSave }) => {
-  const queryClient = useQueryClient();
   const [createChart] = useCreateChart();
   const form = useFormik<CreateChartDTO>({
     initialValues: {

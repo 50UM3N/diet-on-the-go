@@ -9,10 +9,11 @@ import { updateChartSchema } from "@/schema";
 import { useUpdateChart } from "@/hooks/api/chart.hook";
 import { useState } from "react";
 import MacroCard from "@/components/MacroCard";
+import { queryClient } from "@/main";
 
 const ChartForm = ({ data }: { data: ChartInfo }) => {
   const [showResult, setShowResult] = useState(data.protein + data.fat + data.carb === 100);
-  const [updateChart] = useUpdateChart();
+  const [updateChart, key] = useUpdateChart();
   const form = useFormik<
     Omit<UpdateChartDTO, "height"> & {
       heightFeet: number;
@@ -69,7 +70,14 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
         fat: values.fat,
         carb: values.carb,
       };
-      updateChart.mutate({ id: data.id, data: dto });
+      updateChart.mutate(
+        { id: data.id, data: dto },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: key });
+          },
+        }
+      );
     },
     validationSchema: updateChartSchema,
   });
@@ -113,7 +121,7 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
     form.setTouched({
       intakeCalories: true,
     });
-    if (form.errors.intakeCalories) return false;
+    if (!form.values.intakeCalories) return false;
     if (form.values.protein + form.values.fat + form.values.carb === 100) {
       setShowResult(true);
       return true;
@@ -391,13 +399,13 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
             <MacroCard type="Calories" color="cyan" total={100} amount={form.values.intakeCalories} />
           </Grid.Col>
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Protein" color="green" total={form.values.protein} amount={calToGm(calcPercentage(data.intakeCalories, form.values.protein), "protein")} />
+            <MacroCard type="Protein" color="green" total={form.values.protein} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.protein), "protein")} />
           </Grid.Col>
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Fat" color="orange" total={form.values.fat} amount={calToGm(calcPercentage(data.intakeCalories, form.values.fat), "fat")} />
+            <MacroCard type="Fat" color="orange" total={form.values.fat} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.fat), "fat")} />
           </Grid.Col>
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Carb" color="red" total={form.values.carb} amount={calToGm(calcPercentage(data.intakeCalories, form.values.carb), "carbohydrates")} />
+            <MacroCard type="Carb" color="red" total={form.values.carb} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.carb), "carbohydrates")} />
           </Grid.Col>
         </Grid>
       )}
