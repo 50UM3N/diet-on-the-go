@@ -3,12 +3,14 @@ import { TextInput, PasswordInput, Text, Paper, Group, PaperProps, Button, Ancho
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { LoginDTO } from "@/types/auth.type";
-import { useLogin } from "@/hooks/api/auth.hook";
+import { useGoogleLogin, useLogin } from "@/hooks/api/auth.hook";
 import { loginSchema } from "@/schema";
+import GoogleLogin from "@/components/GoogleLogin";
 
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
   const { loading, userLogin } = useLogin();
+  const { postLoginToken } = useGoogleLogin();
   const form = useFormik<LoginDTO>({
     initialValues: {
       email: "",
@@ -66,6 +68,11 @@ export function Login(props: PaperProps) {
               <Anchor component={Link} to={"/register"} type="button" c="dimmed" size="xs">
                 Don't have an account? Register
               </Anchor>
+              <GoogleLogin
+                onGoogleSignIn={(res: any) => {
+                  postLoginToken(res.credential);
+                }}
+              />
               <Button type="submit" radius="xl" loading={loading}>
                 Login
               </Button>
@@ -75,16 +82,31 @@ export function Login(props: PaperProps) {
       </Paper>
       <style>
         {`
-        
+
         #root{
           height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        
+
         `}
       </style>
     </Container>
   );
+  // return (
+  //   <div className="App">
+  //     <h1>Welcome</h1>
+  //     <GoogleOAuthProvider clientId={import.meta.env.APP_GOOGLE_CLIENT_ID as string}>
+  //       <GoogleLogin
+  //         onSuccess={async (credentialResponse) => {
+  //           console.log(credentialResponse);
+  //         }}
+  //         onError={() => {
+  //           console.log("Login Failed");
+  //         }}
+  //       />
+  //     </GoogleOAuthProvider>
+  //   </div>
+  // );
 }
