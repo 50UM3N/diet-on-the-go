@@ -53,4 +53,29 @@ export class AuthService {
 
     return { token, user };
   }
+  async googleLogin(name: string, email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email: email },
+    });
+    if (!user) {
+      const newUser = await this.prismaService.user.create({
+        data: {
+          email: email,
+          name: name,
+          password: email,
+        },
+      });
+      const token = await this.jwtService.signAsync({
+        email: newUser.email,
+        id: newUser.id,
+      });
+      return { token, user: newUser };
+    } else {
+      const token = await this.jwtService.signAsync({
+        email: user.email,
+        id: user.id,
+      });
+      return { token, user };
+    }
+  }
 }
