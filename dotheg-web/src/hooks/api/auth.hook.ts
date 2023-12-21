@@ -137,12 +137,11 @@ export const useGoogleLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const postLoginToken = useCallback(
+  const googleLogin = useCallback(
     async (credential: string) => {
       setLoading(true);
-
       try {
-        const response = await fetch(import.meta.env.APP_BASE_API + "/auth/googleLogin", {
+        const response = await fetch(import.meta.env.APP_BASE_API + "/auth/google-login", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -170,5 +169,5 @@ export const useGoogleLogin = () => {
     [dispatch, navigate]
   );
 
-  return { loading, postLoginToken };
+  return { loading, googleLogin };
 };

@@ -3,14 +3,19 @@ import { TextInput, PasswordInput, Text, Paper, Group, PaperProps, Button, Ancho
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { LoginDTO } from "@/types/auth.type";
-import { useGoogleLogin, useLogin } from "@/hooks/api/auth.hook";
+import { useGoogleLogin as useGoogle, useLogin } from "@/hooks/api/auth.hook";
 import { loginSchema } from "@/schema";
+// import { useGoogleLogin } from "@react-oauth/google";
 import GoogleLogin from "@/components/GoogleLogin";
 
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
   const { loading, userLogin } = useLogin();
-  const { postLoginToken } = useGoogleLogin();
+  const { googleLogin } = useGoogle();
+  // const login = useGoogleLogin({
+  //   onSuccess: (tokenResponse) => googleLogin(tokenResponse.access_token),
+  //   flow: "implicit",
+  // });
   const form = useFormik<LoginDTO>({
     initialValues: {
       email: "",
@@ -64,18 +69,23 @@ export function Login(props: PaperProps) {
               />
             </Stack>
 
-            <Group justify="space-between" mt="xl">
+            <Group justify="center" align="center" mt="xl">
               <Anchor component={Link} to={"/register"} type="button" c="dimmed" size="xs">
                 Don't have an account? Register
               </Anchor>
-              <GoogleLogin
-                onGoogleSignIn={(res: any) => {
-                  postLoginToken(res.credential);
-                }}
-              />
-              <Button type="submit" radius="xl" loading={loading}>
-                Login
-              </Button>
+              <Group>
+                {/* <Button onClick={() => login()} radius="xl">
+                  Google
+                </Button> */}
+                <GoogleLogin
+                  onGoogleSignIn={(res: any) => {
+                    googleLogin(res.credential);
+                  }}
+                />
+                <Button type="submit" radius="xl" loading={loading}>
+                  Login
+                </Button>
+              </Group>
             </Group>
           </form>
         </Paper>
@@ -94,19 +104,4 @@ export function Login(props: PaperProps) {
       </style>
     </Container>
   );
-  // return (
-  //   <div className="App">
-  //     <h1>Welcome</h1>
-  //     <GoogleOAuthProvider clientId={import.meta.env.APP_GOOGLE_CLIENT_ID as string}>
-  //       <GoogleLogin
-  //         onSuccess={async (credentialResponse) => {
-  //           console.log(credentialResponse);
-  //         }}
-  //         onError={() => {
-  //           console.log("Login Failed");
-  //         }}
-  //       />
-  //     </GoogleOAuthProvider>
-  //   </div>
-  // );
 }

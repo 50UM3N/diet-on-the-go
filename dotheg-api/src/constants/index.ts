@@ -5,3 +5,8 @@ export enum FoodItemMetric {
   PIECE = "/pc",
   ML = "/ml",
 }
+
+export enum LoginType {
+  GOOGLE = "google",
+  DEFAULT = "default",
+}

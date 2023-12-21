@@ -6,6 +6,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "src/db/prisma.service";
 import { LoginDTO, SignUpDTO } from "./auth.dto";
+import { LoginType } from "src/constants";
 
 @Injectable()
 export class AuthService {
@@ -27,6 +28,7 @@ export class AuthService {
         password: body.password,
         name: body.name,
         mobile: body.mobile,
+        loginType: LoginType.DEFAULT,
       },
     });
 
@@ -63,6 +65,7 @@ export class AuthService {
           email: email,
           name: name,
           password: email,
+          loginType: LoginType.GOOGLE,
         },
       });
       const token = await this.jwtService.signAsync({
@@ -71,6 +74,11 @@ export class AuthService {
       });
       return { token, user: newUser };
     } else {
+      if (user.loginType !== LoginType.GOOGLE) {
+        throw new UnauthorizedException(
+          "User already exist with different login type",
+        );
+      }
       const token = await this.jwtService.signAsync({
         email: user.email,
         id: user.id,
