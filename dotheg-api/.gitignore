@@ -36,3 +36,4 @@ lerna-debug.log*
 .env.prod
 .vercel
 *.sqlite
+*.sqlite-journal
