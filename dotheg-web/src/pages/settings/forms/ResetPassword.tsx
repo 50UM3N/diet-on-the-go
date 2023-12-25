@@ -12,12 +12,14 @@ const ResetPassword = () => {
       password: "",
     },
     onSubmit: async (values) => {
+      console.log("aasd");
       resetPassword.mutate(values);
     },
     validationSchema: resetPasswordSchema,
   });
+  console.log(form.errors);
   return (
-    <form>
+    <form onSubmit={form.handleSubmit}>
       <Stack>
         <PasswordInput
           withAsterisk

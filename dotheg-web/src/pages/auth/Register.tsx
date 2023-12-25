@@ -14,7 +14,7 @@ export function Register() {
     initialValues: {
       name: "",
       email: "",
-      conformPassword: "",
+      confirmPassword: "",
       password: "",
     },
     onSubmit: async (values) => {
@@ -77,10 +77,10 @@ export function Register() {
                 withAsterisk
                 label="Confirm Password"
                 placeholder="Confirm Your password"
-                onBlur={form.handleBlur("conformPassword")}
-                onChange={(e) => form.handleChange("conformPassword")(e.currentTarget.value)}
-                value={form.values.conformPassword}
-                error={form.touched.conformPassword && form.errors.conformPassword}
+                onBlur={form.handleBlur("confirmPassword")}
+                onChange={(e) => form.handleChange("confirmPassword")(e.currentTarget.value)}
+                value={form.values.confirmPassword}
+                error={form.touched.confirmPassword && form.errors.confirmPassword}
                 radius="md"
               />
             </Stack>

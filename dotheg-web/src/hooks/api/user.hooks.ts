@@ -76,7 +76,7 @@ export const useResetUserPassword = (): [UseMutationResult<UserInfo, AppError, {
     useMutation({
       mutationFn: (param) =>
         updater(toUrl([base, "reset-password"]), {
-          method: "POST",
+          method: "PATCH",
           body: param,
         }),
       onSuccess() {
