@@ -1,10 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
 import { UpdateUserDTO } from "./user.dto";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private authService: AuthService,
+  ) {}
   async get(id: string) {
     return await this.prismaService.user.findUnique({
       where: { id },
@@ -42,13 +46,15 @@ export class UserService {
     });
   }
 
-  async resetPassword(id: string, password: string) {
+  async resetPassword(id: string, bodyPassword: string) {
+    const hashedPassword = await this.authService.hashPassword(bodyPassword);
+    console.log(hashedPassword);
     return await this.prismaService.user.update({
       where: {
         id,
       },
       data: {
-        password,
+        password: hashedPassword,
       },
     });
   }

@@ -26,7 +26,7 @@ Remaining Works
 - ✅ [@5n3h4515h] Make all input filed same size in modal and all place.
 - ⬜ [@5n3h4515h] After login user directly prompt a form to save details.
 - ✅ [@5n3h4515h] Settings Page Api Endpoints update user and reset password.
-- ⬜ [@5n3h4515h] Hash password in bcrypt.
+- ✅ [@5n3h4515h] Hash password in bcrypt.
 - ✅ [@5n3h4515h] Back and Restore Ui.
 
 Test Work

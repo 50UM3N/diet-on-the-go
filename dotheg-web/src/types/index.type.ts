@@ -51,7 +51,7 @@ export interface UpdateUserDTO {
 
 export interface ResetPasswordDTO {
   password: string;
-  conformPassword: string;
+  confirmPassword: string;
 }
 
 export interface FoodItemInfo {

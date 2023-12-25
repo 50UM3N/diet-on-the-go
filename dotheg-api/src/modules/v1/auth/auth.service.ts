@@ -7,6 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "src/db/prisma.service";
 import { LoginDTO, SignUpDTO } from "./auth.dto";
 import { LoginType } from "src/constants";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
     const newUser = await this.prismaService.user.create({
       data: {
         email: body.email,
-        password: body.password,
+        password: await this.hashPassword(body.password),
         name: body.name,
         mobile: body.mobile,
         loginType: LoginType.DEFAULT,
@@ -45,9 +46,12 @@ export class AuthService {
       where: { email: body.email },
     });
 
-    if (!user) throw new UnauthorizedException("User is not exist");
-    if (user.password !== body.password)
-      throw new UnauthorizedException("Password is incorrect");
+    if (!user) throw new UnauthorizedException("User doesn't exists");
+    const isMatch: boolean = await this.comparePasswords(
+      body.password,
+      user.password,
+    );
+    if (!isMatch) throw new UnauthorizedException("Password is incorrect");
     const token = await this.jwtService.signAsync({
       email: user.email,
       id: user.id,
@@ -64,7 +68,7 @@ export class AuthService {
         data: {
           email: email,
           name: name,
-          password: email,
+          password: await this.hashPassword(email),
           loginType: LoginType.GOOGLE,
         },
       });
@@ -76,7 +80,7 @@ export class AuthService {
     } else {
       if (user.loginType !== LoginType.GOOGLE) {
         throw new UnauthorizedException(
-          "User already exist with different login type",
+          "User already exists with different login type",
         );
       }
       const token = await this.jwtService.signAsync({
@@ -85,5 +89,19 @@ export class AuthService {
       });
       return { token, user };
     }
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+  }
+
+  async comparePasswords(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    const match = await bcrypt.compare(plainPassword, hashedPassword);
+    return match;
   }
 }

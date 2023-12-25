@@ -81,7 +81,7 @@ export const useResetUserPassword = (): [UseMutationResult<UserInfo, AppError, {
         }),
       onSuccess() {
         notifications.show({
-          message: "Password reset successfully",
+          message: "Password reset successful",
         });
         dispatch(logout());
         navigate("/login");
