@@ -36,7 +36,7 @@ model FoodItem {
 }
 
 model Chart {
-  id                  String     @id @default(uuid())
+  id                  String      @id @default(uuid())
   name                String
   description         String
   weight              Float?
@@ -52,21 +52,31 @@ model Chart {
   protein             Int?
   fat                 Int?
   carb                Int?
-  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  mealList            MealList[]
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealChart           MealChart[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
   userId              String
 }
 
-model MealList {
+model MealChart {
   id        String     @id @default(uuid())
   name      String
-  mealFood  MealFood[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  chart     Chart?     @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  mealList  MealList[]
+  Chart     Chart?     @relation(fields: [chartId], references: [id], onDelete: Cascade)
   chartId   String?
+}
+
+model MealList {
+  id          String     @id @default(uuid())
+  name        String
+  mealFood    MealFood[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  mealChart   MealChart? @relation(fields: [mealChartId], references: [id], onDelete: Cascade)
+  mealChartId String?
 }
 
 model MealFood {

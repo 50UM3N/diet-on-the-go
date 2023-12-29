@@ -17,18 +17,18 @@ export class BackupRestoreService {
   ) {}
 
   async createBackup(userId: string): Promise<RestoreDTO> {
-    const charts = await this.prismaService.chart.findMany({
+    const charts: any = await this.prismaService.chart.findMany({
       where: { userId },
       include: {
-        mealList: {
-          include: {
-            mealFood: {
-              include: {
-                foodItem: true,
-              },
-            },
-          },
-        },
+        // mealList: {
+        //   include: {
+        //     mealFood: {
+        //       include: {
+        //         foodItem: true,
+        //       },
+        //     },
+        //   },
+        // },
       },
     });
 
@@ -56,6 +56,7 @@ export class BackupRestoreService {
 
     for (let i = 0; i < data.charts.length; i++) {
       const chartItem = data.charts[i];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const newChartItem = await this.prismaService.chart.create({
         data: {
           userId,
@@ -77,22 +78,22 @@ export class BackupRestoreService {
         },
       });
 
-      for (let i = 0; i < chartItem.mealList.length; i++) {
-        const mealListItem = chartItem.mealList[i];
-        const newMealListItem = await this.mealListService.create({
-          name: mealListItem.name,
-          chartId: newChartItem.id,
-        });
+      // for (let i = 0; i < chartItem.mealList.length; i++) {
+      //   const mealListItem = chartItem.mealList[i];
+      //   const newMealListItem = await this.mealListService.create({
+      //     name: mealListItem.name,
+      //     chartId: newChartItem.id,
+      //   });
 
-        for (let i = 0; i < mealListItem.mealFood.length; i++) {
-          const mealFoodItem = mealListItem.mealFood[i];
-          await this.mealFoodService.create({
-            foodItemId: foodItemMap[mealFoodItem.foodItem.id],
-            qty: mealFoodItem.qty,
-            mealListId: newMealListItem.id,
-          });
-        }
-      }
+      //   for (let i = 0; i < mealListItem.mealFood.length; i++) {
+      //     const mealFoodItem = mealListItem.mealFood[i];
+      //     await this.mealFoodService.create({
+      //       foodItemId: foodItemMap[mealFoodItem.foodItem.id],
+      //       qty: mealFoodItem.qty,
+      //       mealListId: newMealListItem.id,
+      //     });
+      //   }
+      // }
     }
   }
 

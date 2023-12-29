@@ -9,7 +9,11 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ChartService } from "./chart.service";
-import { CreateChartDTO, UpdateChartDTO } from "./chart.dto";
+import {
+  CreateChartDTO,
+  CreateCopyChartDTO,
+  UpdateChartDTO,
+} from "./chart.dto";
 import { AuthGuard } from "../auth/auth.guard";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { User } from "src/decorators/user.decorator";
@@ -41,6 +45,14 @@ export class ChartController {
   async create(@Body() body: CreateChartDTO, @User() user: userDTO) {
     return await this.chartService.create(body, user.id);
   }
+
+  @Post("copy")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
+  async copy(@Body() body: CreateCopyChartDTO, @User() user: userDTO) {
+    return await this.chartService.copy(body, user.id);
+  }
+
   @Patch(":id")
   @UseGuards(AuthGuard)
   @ApiBearerAuth("JWT-token")

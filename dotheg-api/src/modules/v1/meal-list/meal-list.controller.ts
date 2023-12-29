@@ -35,7 +35,7 @@ export class MealListController {
     return await this.mealListService.getById(id);
   }
 
-  @Get("by-chart-id/:id")
+  @Get("by-meal-chart-id/:id")
   async getByChartId(@Param("id") id: string) {
     return await this.mealListService.getByChartId(id);
   }

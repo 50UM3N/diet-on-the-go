@@ -1,14 +1,14 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
-import { useCreateChart, useDeleteChart, useGetChart } from "@/hooks/api/chart.hook";
+import { useCreateChart, useCreateCopyChart, useDeleteChart, useGetChart } from "@/hooks/api/chart.hook";
 import { queryClient } from "@/main";
 import { createChartSchema } from "@/schema";
 import { CreateChartDTO } from "@/types/index.type";
 import { ActionIcon, Button, Container, Group, Menu, Modal, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
 import { useMemo } from "react";
@@ -19,6 +19,7 @@ const DietChart = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [data] = useGetChart();
   const [deleteChart] = useDeleteChart();
+  const [copyChart] = useCreateCopyChart();
   const handleDelete = async (id: string) => {
     modals.openConfirmModal({
       title: "Action Required",
@@ -46,7 +47,7 @@ const DietChart = () => {
         cell(props) {
           const id = props.getValue();
           return (
-            <Menu shadow="md" width={110} position="bottom-start">
+            <Menu shadow="md" width={150} position="bottom-start">
               <Menu.Target>
                 <ActionIcon size="sm" variant="filled">
                   <IconSettings size={16} />
@@ -55,6 +56,9 @@ const DietChart = () => {
               <Menu.Dropdown>
                 <Menu.Item leftSection={<IconEdit size={14} />} onClick={() => navigate(`/diet-chart/${id}`)}>
                   Edit
+                </Menu.Item>
+                <Menu.Item leftSection={<IconCopy size={14} />} onClick={() => copyChart.mutate({ chartId: id })}>
+                  Duplicate
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item

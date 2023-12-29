@@ -1,6 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
-import { CreateChartDTO, UpdateChartDTO } from "./chart.dto";
+import {
+  CreateChartDTO,
+  CreateCopyChartDTO,
+  UpdateChartDTO,
+} from "./chart.dto";
 
 @Injectable()
 export class ChartService {
@@ -17,6 +21,9 @@ export class ChartService {
       where: {
         id,
       },
+      include: {
+        mealChart: true,
+      },
     });
   }
 
@@ -27,6 +34,87 @@ export class ChartService {
         name: body.name,
         description: body.description,
       },
+    });
+  }
+
+  async copy(body: CreateCopyChartDTO, userId: string) {
+    const chart = await this.prismaService.chart.findUnique({
+      where: {
+        id: body.chartId,
+      },
+      include: {
+        mealChart: {
+          include: {
+            mealList: {
+              include: {
+                mealFood: {
+                  include: {
+                    foodItem: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!chart) throw new NotFoundException("Chart not found");
+
+    return await this.prismaService.$transaction(async (tx) => {
+      const newChart = await tx.chart.create({
+        data: {
+          userId,
+          name: chart.name + " copy",
+          description: chart.description,
+          weight: chart.weight,
+          gender: chart.gender,
+          height: chart.height,
+          age: chart.age,
+          activityLevel: chart.activityLevel,
+          bmr: chart.bmr,
+          maintenanceCalories: chart.maintenanceCalories,
+          adjustAmount: chart.adjustAmount,
+          adjustType: chart.adjustType,
+          intakeCalories: chart.intakeCalories,
+          protein: chart.protein,
+          fat: chart.fat,
+          carb: chart.carb,
+        },
+      });
+
+      for (let i = 0; i < chart.mealChart.length; i++) {
+        const mealChart = chart.mealChart[i];
+        const newMealChart = await tx.mealChart.create({
+          data: {
+            name: mealChart.name,
+            chartId: newChart.id,
+          },
+        });
+
+        for (let j = 0; j < mealChart.mealList.length; j++) {
+          const meal = mealChart.mealList[j];
+          const newMealList = await tx.mealList.create({
+            data: {
+              name: meal.name,
+              mealChartId: newMealChart.id,
+            },
+          });
+
+          for (let k = 0; k < meal.mealFood.length; k++) {
+            const mealFood = meal.mealFood[k];
+            await tx.mealFood.create({
+              data: {
+                qty: mealFood.qty,
+                foodItemId: mealFood.foodItemId,
+                mealListId: newMealList.id,
+              },
+            });
+          }
+        }
+      }
+
+      return newChart;
     });
   }
 

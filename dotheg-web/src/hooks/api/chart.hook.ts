@@ -1,5 +1,6 @@
 import { EntryBase } from "@/data/constant";
-import { AppError, ChartInfo, CreateChartDTO, UpdateChartDTO } from "@/types/index.type";
+import { queryClient } from "@/main";
+import { AppError, ChartInfo, CreateChartDTO, CreateCopyChartDTO, UpdateChartDTO } from "@/types/index.type";
 import { toUrl } from "@/utils";
 import { fetcher, updater } from "@/utils/fetch";
 import { notifications } from "@mantine/notifications";
@@ -32,6 +33,38 @@ export const useCreateChart = (): [UseMutationResult<ChartInfo, AppError, Create
         notifications.show({
           message: "Chart created successfully",
         });
+      },
+      onError(error) {
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      },
+    }),
+    key,
+  ];
+};
+
+// Endpoint: [POST] /chart/copy
+export const useCreateCopyChart = (): [UseMutationResult<ChartInfo, AppError, CreateCopyChartDTO>, string[]] => {
+  const key = [base];
+  return [
+    useMutation({
+      mutationFn: (data) =>
+        updater(toUrl([base, "copy"]), {
+          method: "POST",
+          body: data,
+        }),
+      onMutate: () => {
+        notifications.show({
+          message: "Copying chart...",
+        });
+      },
+      onSuccess: () => {
+        notifications.show({
+          message: "Chart copied successfully",
+        });
+        queryClient.invalidateQueries();
       },
       onError(error) {
         notifications.show({
