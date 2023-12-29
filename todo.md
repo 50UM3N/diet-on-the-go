@@ -20,12 +20,17 @@ Remaining Works
 
 - ✅ [@5n3h4515h] Back and Restore Api.
 - ⬜ [@5n3h4515h] Update the documentation.
-- ⬜ [@5n3h4515h] Make all input filed same size in modal and all place.
+- ✅ [@5n3h4515h] Make all input filed same size in modal and all place.
 - ⬜ [@5n3h4515h] After login user directly prompt a form to save details.
-- ⬜ [@5n3h4515h] Settings Page Api Endpoints update user and reset password.
-- ⬜ [@5n3h4515h] Hash password in bcrypt.
+- ✅ [@5n3h4515h] Settings Page Api Endpoints update user and reset password.
+- ✅ [@5n3h4515h] Hash password in bcrypt.
+- ✅ [@5n3h4515h] in password reset old new confirm check in server.
 - ⬜ [@5n3h4515h] Back and Restore Ui.
+- ✅ [@5n3h4515h] Name shouldn't contain number, special characters
+- ✅ [@5n3h4515h] Password must be of 8-16 character length and should contain these[ 1 small letter, 1 capital letter, 1 number, 1 special character]
+- ⬜ [@5n3h4515h] check if it is a valid email or not, picture sent in whatsapp
+- ✅ [@5n3h4515h] mobile number must be of 10 character length
 
 Test Work
 
-- ⬜ Test the chart form working flawlessly or not.
+- ✅ Test the chart form working flawlessly or not.

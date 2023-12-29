@@ -3,12 +3,21 @@ import { TextInput, PasswordInput, Text, Paper, Group, PaperProps, Button, Ancho
 import { darkLight } from "@/utils";
 import { Link } from "react-router-dom";
 import { LoginDTO } from "@/types/auth.type";
-import { useLogin } from "@/hooks/api/auth.hook";
+import { useGoogleLogin as useGoogle, useLogin } from "@/hooks/api/auth.hook";
 import { loginSchema } from "@/schema";
+import { useGoogleLogin } from "@react-oauth/google";
+import { IconBrandGoogleFilled } from "@tabler/icons-react";
 
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
   const { loading, userLogin } = useLogin();
+  const { googleLogin } = useGoogle();
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      googleLogin(tokenResponse.access_token);
+    },
+  });
+
   const form = useFormik<LoginDTO>({
     initialValues: {
       email: "",
@@ -21,7 +30,7 @@ export function Login(props: PaperProps) {
   });
 
   return (
-    <Container size={420} px="md">
+    <Container size={580} px="md">
       <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }} {...props}>
         <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">
@@ -62,27 +71,32 @@ export function Login(props: PaperProps) {
               />
             </Stack>
 
-            <Group justify="space-between" mt="xl">
+            <Group justify="space-between" align="center" mt="xl">
               <Anchor component={Link} to={"/register"} type="button" c="dimmed" size="xs">
                 Don't have an account? Register
               </Anchor>
-              <Button type="submit" radius="xl" loading={loading}>
-                Login
-              </Button>
+              <Group gap="xs">
+                <Button onClick={() => login()} radius="xl" leftSection={<IconBrandGoogleFilled size={18} />}>
+                  Google
+                </Button>
+                <Button type="submit" radius="xl" loading={loading}>
+                  Login
+                </Button>
+              </Group>
             </Group>
           </form>
         </Paper>
       </Paper>
       <style>
         {`
-        
+
         #root{
           height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        
+
         `}
       </style>
     </Container>

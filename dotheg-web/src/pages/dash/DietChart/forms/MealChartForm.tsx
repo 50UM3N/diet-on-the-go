@@ -1,27 +1,23 @@
-import { useCreateMealList, useUpdateMealList } from "@/hooks/api/mealList.hook";
+import { useCreateMealChart, useUpdateMealChart } from "@/hooks/api/mealChart.hook";
 import { queryClient } from "@/main";
 import { mealListSchema } from "@/schema";
-import { MealListInfo, UpdateMealListDTO } from "@/types/index.type";
+import { MealChartInfo, UpdateMealChartDTO } from "@/types/index.type";
 import { Button, Group, TextInput } from "@mantine/core";
 import { useFormik } from "formik";
+import { useParams } from "react-router-dom";
 
-const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; isEditing?: boolean; mealListInfo?: MealListInfo; mealChartId: string }> = ({
-  onAddSuccessful,
-  onClose,
-  isEditing,
-  mealListInfo,
-  mealChartId,
-}) => {
-  const [createMealList, key] = useCreateMealList();
-  const [updateMealList] = useUpdateMealList();
-  const form = useFormik<UpdateMealListDTO>({
+const MealChartForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; isEditing?: boolean; mealChartInfo?: MealChartInfo }> = ({ onAddSuccessful, onClose, isEditing, mealChartInfo }) => {
+  const { id } = useParams();
+  const [createMealChart, key] = useCreateMealChart();
+  const [updateMealChart] = useUpdateMealChart();
+  const form = useFormik<UpdateMealChartDTO>({
     initialValues: {
-      name: mealListInfo?.name || "",
+      name: mealChartInfo?.name || "",
     },
     onSubmit: async (values) => {
-      if (isEditing && mealListInfo) {
-        updateMealList.mutate(
-          { id: mealListInfo?.id, data: values },
+      if (isEditing && mealChartInfo) {
+        updateMealChart.mutate(
+          { id: mealChartInfo?.id, data: values },
           {
             onSuccess: () => {
               onAddSuccessful && onAddSuccessful();
@@ -31,10 +27,10 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
           }
         );
       } else {
-        createMealList.mutate(
+        createMealChart.mutate(
           {
             name: values.name,
-            mealChartId,
+            chartId: id as string,
           },
           {
             onSuccess: () => {
@@ -53,7 +49,7 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
     <form onSubmit={form.handleSubmit}>
       <TextInput
         mb="xs"
-        placeholder="eg. Breakfast"
+        placeholder="eg. Veg Chart"
         label="Name"
         withAsterisk
         onBlur={form.handleBlur("name")}
@@ -62,10 +58,10 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
         error={form.touched.name && form.errors.name}
       />
       <Group justify="right" mt="md">
-        <Button variant="outline" type="button" onClick={onClose} disabled={createMealList.isPending || updateMealList.isPending}>
+        <Button variant="outline" type="button" onClick={onClose} disabled={createMealChart.isPending || updateMealChart.isPending}>
           Cancel
         </Button>
-        <Button type="submit" loading={createMealList.isPending || updateMealList.isPending}>
+        <Button type="submit" loading={createMealChart.isPending || updateMealChart.isPending}>
           {isEditing ? "Update" : "Add"}
         </Button>
       </Group>
@@ -73,4 +69,4 @@ const MealForm: React.FC<{ onAddSuccessful?: () => void; onClose?: () => void; i
   );
 };
 
-export default MealForm;
+export default MealChartForm;

@@ -30,11 +30,10 @@ interface Updater {
     url: string,
     options: {
       method?: HTTPMethods;
-      body?: object;
+      body?: object | FormData;
     }
   ): Promise<any>;
 }
-
 export const updater: Updater = async (url, { method, body }) => {
   const token = localStorage.getItem("token");
   const options: any = {
@@ -45,7 +44,7 @@ export const updater: Updater = async (url, { method, body }) => {
       "Content-type": "application/json",
     },
   };
-  if (method !== "GET" && method !== "HEAD") options.body = JSON.stringify(body);
+  if (method !== "GET" && method !== "HEAD") options.body = body instanceof FormData ? body : JSON.stringify(body);
   import.meta.env.DEV && console.info(`[${method}] ${import.meta.env.APP_BASE_API + url}`);
   const res = await fetch(import.meta.env.APP_BASE_API + url, options);
   if (!res.ok) {

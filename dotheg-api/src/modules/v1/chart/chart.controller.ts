@@ -7,13 +7,25 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Res,
+  UseInterceptors,
+  UploadedFile,
+  NotFoundException,
+  ForbiddenException,
 } from "@nestjs/common";
 import { ChartService } from "./chart.service";
-import { CreateChartDTO, UpdateChartDTO } from "./chart.dto";
+import {
+  CreateChartDTO,
+  CreateCopyChartDTO,
+  UpdateChartDTO,
+} from "./chart.dto";
 import { AuthGuard } from "../auth/auth.guard";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { User } from "src/decorators/user.decorator";
 import { userDTO } from "../user/user.dto";
+import { Response } from "express";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Chart } from "@prisma/client";
 
 @ApiTags("chart")
 @Controller({
@@ -41,11 +53,51 @@ export class ChartController {
   async create(@Body() body: CreateChartDTO, @User() user: userDTO) {
     return await this.chartService.create(body, user.id);
   }
+
+  @Post("copy")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
+  async copy(@Body() body: CreateCopyChartDTO, @User() user: userDTO) {
+    return await this.chartService.copy(body, user.id);
+  }
+
   @Patch(":id")
   @UseGuards(AuthGuard)
   @ApiBearerAuth("JWT-token")
   async update(@Param("id") id: string, @Body() body: UpdateChartDTO) {
     return await this.chartService.update(id, body);
+  }
+
+  @Get("export")
+  async export(@Res() res: Response) {
+    const data = await this.chartService.export();
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Disposition", `attachment; filename=food-item.json`);
+    res.send(JSON.stringify(data));
+  }
+
+  @Post("import")
+  @UseInterceptors(FileInterceptor("file"))
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
+  async readJsonFile(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new NotFoundException("No File Found.");
+    try {
+      const data: Chart[] = JSON.parse(file.buffer.toString());
+      return await this.chartService.import(data);
+    } catch (error) {
+      throw new ForbiddenException("Error reading JSON file.");
+    }
   }
 
   @Delete(":id")

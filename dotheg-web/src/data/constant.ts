@@ -23,6 +23,7 @@ export const ACTIVITY_LEVEL = {
 export enum EntryBase {
   FOOD_ITEM = "food-item",
   CHART = "chart",
+  MEAL_CHART = "meal-chart",
   MEAL_LIST = "meal-list",
   USER = "user",
   MEAL_FOOD = "meal-list/meal-food",

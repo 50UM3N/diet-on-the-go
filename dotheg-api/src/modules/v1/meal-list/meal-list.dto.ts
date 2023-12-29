@@ -8,7 +8,7 @@ export class CreateMealListDTO {
 
   @IsString()
   @ApiProperty()
-  chartId: string;
+  mealChartId: string;
 }
 
 export class UpdateMealListDTO {

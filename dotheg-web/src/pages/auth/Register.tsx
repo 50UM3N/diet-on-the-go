@@ -14,7 +14,7 @@ export function Register() {
     initialValues: {
       name: "",
       email: "",
-      conformPassword: "",
+      confirmPassword: "",
       password: "",
     },
     onSubmit: async (values) => {
@@ -24,7 +24,7 @@ export function Register() {
   });
 
   return (
-    <Container size={420} px="md">
+    <Container size={480} px="md">
       <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }}>
         <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">
@@ -77,10 +77,10 @@ export function Register() {
                 withAsterisk
                 label="Confirm Password"
                 placeholder="Confirm Your password"
-                onBlur={form.handleBlur("conformPassword")}
-                onChange={(e) => form.handleChange("conformPassword")(e.currentTarget.value)}
-                value={form.values.conformPassword}
-                error={form.touched.conformPassword && form.errors.conformPassword}
+                onBlur={form.handleBlur("confirmPassword")}
+                onChange={(e) => form.handleChange("confirmPassword")(e.currentTarget.value)}
+                value={form.values.confirmPassword}
+                error={form.touched.confirmPassword && form.errors.confirmPassword}
                 radius="md"
               />
             </Stack>

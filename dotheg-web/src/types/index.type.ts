@@ -35,6 +35,7 @@ export interface UserInfo {
   height?: number;
   weight?: number;
   age?: number;
+  loginType?: string;
   createdAt?: string;
   updatedAt?: string;
   chart?: ChartInfo[];
@@ -50,8 +51,9 @@ export interface UpdateUserDTO {
 }
 
 export interface ResetPasswordDTO {
+  oldPassword: string;
   password: string;
-  conformPassword: string;
+  confirmPassword: string;
 }
 
 export interface FoodItemInfo {
@@ -90,7 +92,7 @@ export interface ChartInfo {
   fat: number;
   carb: number;
   user: UserInfo;
-  mealList: MealListInfo[];
+  mealChart: MealChartInfo[];
   createdAt: string;
   updatedAt: string;
 }
@@ -98,7 +100,9 @@ export interface CreateChartDTO {
   name: string;
   description: string;
 }
-
+export interface CreateCopyChartDTO {
+  chartId: string;
+}
 export interface UpdateChartDTO {
   name: string;
   description: string;
@@ -117,18 +121,39 @@ export interface UpdateChartDTO {
   carb: number;
 }
 
+export interface MealChartInfo {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  chart?: ChartInfo;
+}
+
+export interface CreateMealChartDTO {
+  name: string;
+  chartId: string;
+}
+export interface CreateCopyMealChartDTO {
+  mealChartId: string;
+  chartId: string;
+}
+
+export interface UpdateMealChartDTO {
+  name: string;
+}
+
 export interface MealListInfo {
   id: string;
   name: string;
   mealFood: MealFoodInfo[];
   createdAt: string;
   updatedAt: string;
-  chart?: ChartInfo;
+  mealChart?: MealChartInfo;
 }
 
 export interface CreateMealListDTO {
   name: string;
-  chartId: string;
+  mealChartId: string;
 }
 
 export interface UpdateMealListDTO {

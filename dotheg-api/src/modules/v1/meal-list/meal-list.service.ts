@@ -10,10 +10,10 @@ export class MealListService {
     return await this.prismaService.mealList.findMany();
   }
 
-  async getByChartId(chartId: string) {
+  async getByChartId(mealChartId: string) {
     const data = await this.prismaService.mealList.findMany({
       where: {
-        chartId,
+        mealChartId,
       },
       include: {
         mealFood: {
@@ -83,7 +83,7 @@ export class MealListService {
     return await this.prismaService.mealList.create({
       data: {
         name: body.name,
-        chartId: body.chartId,
+        mealChartId: body.mealChartId,
       },
     });
   }

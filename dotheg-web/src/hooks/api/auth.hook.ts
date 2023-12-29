@@ -131,3 +131,43 @@ export const useSignUp = () => {
 
   return { loading, userSignUp };
 };
+
+export const useGoogleLogin = () => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const googleLogin = useCallback(
+    async (credential: string) => {
+      setLoading(true);
+      try {
+        const response = await fetch(import.meta.env.APP_BASE_API + "/auth/google-login", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ token: credential }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("token", data.token);
+          dispatch(login(data.user));
+          navigate("/", { replace: true });
+        } else {
+          const data = await response.json();
+          throw Error(data.message);
+        }
+      } catch (error: any) {
+        setLoading(false);
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      }
+    },
+    [dispatch, navigate]
+  );
+
+  return { loading, googleLogin };
+};

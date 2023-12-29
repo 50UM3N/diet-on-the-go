@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
 import { FoodItemDTO } from "./food-item.dto";
+import { FoodItem } from "@prisma/client";
 
 @Injectable()
 export class FoodItemService {
@@ -57,6 +58,27 @@ export class FoodItemService {
         fat: body.fat,
         carb: body.carb,
       },
+    });
+  }
+
+  async export() {
+    return await this.prismaService.foodItem.findMany();
+  }
+
+  async import(data: FoodItem[]) {
+    return await this.prismaService.$transaction(async (tx) => {
+      for (let i = 0; i < data.length; i++) {
+        const food = data[i];
+        await tx.foodItem.create({
+          data: {
+            name: food.name,
+            metric: food.metric,
+            protein: food.protein,
+            fat: food.fat,
+            carb: food.carb,
+          },
+        });
+      }
     });
   }
 

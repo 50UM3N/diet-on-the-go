@@ -38,18 +38,20 @@ const UpdateProfile = ({ data }: { data: UserInfo }) => {
   return (
     <form onSubmit={form.handleSubmit}>
       <Grid gutter="xs">
-        <Grid.Col span={{ sm: 6 }}>
-          <TextInput
-            withAsterisk
-            label="Name"
-            placeholder="Your name"
-            onBlur={form.handleBlur("name")}
-            onChange={(e) => form.handleChange("name")(e.currentTarget.value)}
-            value={form.values.name}
-            error={form.touched.name && form.errors.name}
-            radius="md"
-          />
-        </Grid.Col>
+        {data.loginType == "default" && (
+          <Grid.Col span={{ sm: 6 }}>
+            <TextInput
+              withAsterisk
+              label="Name"
+              placeholder="Your name"
+              onBlur={form.handleBlur("name")}
+              onChange={(e) => form.handleChange("name")(e.currentTarget.value)}
+              value={form.values.name}
+              error={form.touched.name && form.errors.name}
+              radius="md"
+            />
+          </Grid.Col>
+        )}
         <Grid.Col span={{ sm: 6 }}>
           <NumberInput
             withAsterisk

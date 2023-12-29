@@ -5,7 +5,6 @@ import { User } from "src/decorators/user.decorator";
 import { AuthGuard } from "./auth.guard";
 import { userDTO } from "../user/user.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-
 @ApiTags("auth")
 @Controller({
   path: "auth",
@@ -29,5 +28,18 @@ export class AuthController {
   @Post("/login")
   login(@Body() body: LoginDTO) {
     return this.authService.login(body);
+  }
+
+  @Post("/google-login")
+  async googleLogin(@Body("token") access_token): Promise<any> {
+    const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    const data = await res.json();
+    const { name, email } = data;
+    return await this.authService.googleLogin(name, email);
   }
 }

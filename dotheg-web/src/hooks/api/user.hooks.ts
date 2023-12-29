@@ -76,12 +76,12 @@ export const useResetUserPassword = (): [UseMutationResult<UserInfo, AppError, {
     useMutation({
       mutationFn: (param) =>
         updater(toUrl([base, "reset-password"]), {
-          method: "POST",
+          method: "PATCH",
           body: param,
         }),
       onSuccess() {
         notifications.show({
-          message: "Password reset successfully",
+          message: "Password reset successful",
         });
         dispatch(logout());
         navigate("/login");

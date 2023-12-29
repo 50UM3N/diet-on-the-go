@@ -1,35 +1,29 @@
 import { EntryBase } from "@/data/constant";
-import { AppError, CreateMealListDTO, MealListInfo, UpdateMealListDTO } from "@/types/index.type";
+import { queryClient } from "@/main";
+import { AppError, CreateCopyMealChartDTO, CreateMealChartDTO, MealChartInfo, UpdateMealChartDTO } from "@/types/index.type";
 import { toUrl } from "@/utils";
 import { fetcher, updater } from "@/utils/fetch";
 import { notifications } from "@mantine/notifications";
 import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanstack/react-query";
 
-const base = EntryBase.MEAL_LIST;
+const base = EntryBase.MEAL_CHART;
 
-export const useGetMealList = (): [UseQueryResult<MealListInfo[], AppError>, string[]] => {
+export const useGetMealChart = (): [UseQueryResult<MealChartInfo[], AppError>, string[]] => {
   const key = [base];
   return [useQuery({ queryKey: key, queryFn: () => fetcher(toUrl(key)) }), key];
 };
 
-export const useGetMealListById = (id: string): [UseQueryResult<MealListInfo, AppError>, string[]] => {
+export const useGetMealChartById = (id: string): [UseQueryResult<MealChartInfo, AppError>, string[]] => {
   const key = [base, "by-id", id];
   return [useQuery({ queryKey: key, queryFn: () => fetcher(toUrl(key)) }), key];
 };
 
-interface GetMealListByMealChartIdDTO {
-  protein: number;
-  fat: number;
-  carb: number;
-  mealList: (MealListInfo & { protein: number; fat: number; carb: number })[];
-}
-
-export const useGetMealListByMealChartId = (id: string): [UseQueryResult<GetMealListByMealChartIdDTO, AppError>, string[]] => {
-  const key = [base, "by-meal-chart-id", id];
+export const useGetMealChartByChartId = (id: string): [UseQueryResult<MealChartInfo[], AppError>, string[]] => {
+  const key = [base, "by-chart-id", id];
   return [useQuery({ queryKey: key, queryFn: () => fetcher(toUrl(key)) }), key];
 };
 
-export const useCreateMealList = (): [UseMutationResult<MealListInfo, AppError, CreateMealListDTO, unknown>, string[]] => {
+export const useCreateMealChart = (): [UseMutationResult<MealChartInfo, AppError, CreateMealChartDTO, unknown>, string[]] => {
   const key = [base];
   return [
     useMutation({
@@ -40,7 +34,7 @@ export const useCreateMealList = (): [UseMutationResult<MealListInfo, AppError, 
         }),
       onSuccess: () => {
         notifications.show({
-          message: "Meal list created successfully",
+          message: "Meal Chart created successfully",
         });
       },
       onError(error) {
@@ -54,13 +48,42 @@ export const useCreateMealList = (): [UseMutationResult<MealListInfo, AppError, 
   ];
 };
 
-export const useUpdateMealList = (): [
+export const useCopyMealChart = (): [UseMutationResult<MealChartInfo, AppError, CreateCopyMealChartDTO, unknown>, string[]] => {
+  const key = [base];
+  return [
+    useMutation({
+      mutationFn: (data) =>
+        updater(toUrl([base, "copy"]), {
+          method: "POST",
+          body: data,
+        }),
+      onMutate: () => {
+        notifications.show({
+          message: "Start copying...",
+        });
+      },
+      onSuccess: () => {
+        notifications.update({
+          message: "Meal Chart copied successfully",
+        });
+        queryClient.invalidateQueries();
+        console.log("success");
+      },
+      onError(error) {
+        notifications.update({ color: "red", message: error.message });
+      },
+    }),
+    key,
+  ];
+};
+
+export const useUpdateMealChart = (): [
   UseMutationResult<
     any,
     AppError,
     {
       id: string;
-      data: UpdateMealListDTO;
+      data: UpdateMealChartDTO;
     },
     unknown
   >,
@@ -76,7 +99,7 @@ export const useUpdateMealList = (): [
         }),
       onSuccess: () => {
         notifications.show({
-          message: "Meal list updated successfully",
+          message: "Meal Chart updated successfully",
         });
       },
       onError(error) {
@@ -90,14 +113,14 @@ export const useUpdateMealList = (): [
   ];
 };
 
-export const useDeleteMealList = (): [UseMutationResult<MealListInfo, AppError, string, unknown>, string[]] => {
+export const useDeleteMealChart = (): [UseMutationResult<MealChartInfo, AppError, string, unknown>, string[]] => {
   const key = [base];
   return [
     useMutation({
       mutationFn: (id) => updater(toUrl([base, id]), { method: "DELETE" }),
       onSuccess: () => {
         notifications.show({
-          message: "Meal list deleted successfully",
+          message: "Meal Chart deleted successfully",
         });
       },
       onError(error) {

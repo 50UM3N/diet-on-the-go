@@ -6,6 +6,6 @@ export interface LoginDTO {
 export interface SignUpDTO {
   name: string;
   email: string;
-  conformPassword: string;
+  confirmPassword: string;
   password: string;
 }

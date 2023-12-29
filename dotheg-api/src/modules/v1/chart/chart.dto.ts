@@ -10,6 +10,12 @@ export class CreateChartDTO {
   @ApiProperty()
   description: string;
 }
+
+export class CreateCopyChartDTO {
+  @IsString()
+  @ApiProperty()
+  chartId: string;
+}
 export class UpdateChartDTO {
   @IsString()
   @ApiProperty()

@@ -1,4 +1,5 @@
 import { Gender } from "@/types/index.type";
+import { notifications } from "@mantine/notifications";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { FilterFn } from "@tanstack/table-core";
 
@@ -73,4 +74,37 @@ export const cmToInchFeet = (cm: number) => {
     feet: Math.floor(cm / 30.48),
     inch: Math.floor((cm % 30.48) / 2.54),
   };
+};
+
+export const downloadFile = async (url: string, filename?: string) => {
+  const id = notifications.show({
+    message: "Start file downloading",
+  });
+  const token = localStorage.getItem("token");
+  const res = await fetch(import.meta.env.APP_BASE_API + url, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+
+  if (res.ok === true) {
+    const file = await res.blob();
+    const urlObj = window.URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = urlObj;
+    link.setAttribute("download", filename || "export");
+    document.body.append(link);
+    link.click();
+    link.remove();
+    notifications.update({
+      id,
+      message: "File Download successfully",
+    });
+  } else {
+    notifications.update({
+      id,
+      color: "red",
+      message: "File Download failed",
+    });
+  }
 };
