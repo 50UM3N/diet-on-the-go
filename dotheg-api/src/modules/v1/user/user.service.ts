@@ -1,14 +1,11 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
-import { UpdateUserDTO } from "./user.dto";
-import { PasswordUtils } from "src/utils/passwordUtils";
+import { ResetPasswordDTO, UpdateUserDTO } from "./user.dto";
+import { comparePasswords, hashPassword } from "src/utils";
 
 @Injectable()
 export class UserService {
-  constructor(
-    private prismaService: PrismaService,
-    private passwordUtils: PasswordUtils,
-  ) {}
+  constructor(private prismaService: PrismaService) {}
   async get(id: string) {
     return await this.prismaService.user.findUnique({
       where: { id },
@@ -47,12 +44,12 @@ export class UserService {
     });
   }
 
-  async resetPassword(id: string, oldPassword: string, password: string) {
+  async resetPassword(id: string, body: ResetPasswordDTO) {
     const user = await this.prismaService.user.findUnique({
       where: { id: id },
     });
-    const isMatch: boolean = await this.passwordUtils.comparePasswords(
-      oldPassword,
+    const isMatch: boolean = await comparePasswords(
+      body.oldPassword,
       user.password,
     );
     if (!isMatch) throw new UnauthorizedException("Old Password is incorrect");
@@ -61,7 +58,7 @@ export class UserService {
         id,
       },
       data: {
-        password: await this.passwordUtils.hashPassword(password),
+        password: await hashPassword(body.password),
       },
     });
   }

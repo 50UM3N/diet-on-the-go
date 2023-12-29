@@ -11,6 +11,7 @@ type Props = {
   showAddButton?: boolean;
   buttonProps?: ButtonProps;
   onAddButtonClick?: () => void;
+  otherButtons?: JSX.Element;
 };
 
 const Table = (props: Props) => {
@@ -38,9 +39,12 @@ const Table = (props: Props) => {
       <Group justify="space-between">
         <TextInput styles={{ input: { borderWidth: 2 } }} leftSection={<IconSearch size={16} />} placeholder="Global Search " defaultValue={globalFilter} onChange={(e) => setGlobalFilter(e.currentTarget.value)} />
         {props.showAddButton && (
-          <Button {...props.buttonProps} onClick={props.onAddButtonClick}>
-            {props.buttonProps?.children || "Add New"}
-          </Button>
+          <Group>
+            <Button {...props.buttonProps} onClick={props.onAddButtonClick}>
+              {props.buttonProps?.children || "Add New"}
+            </Button>
+            {props.otherButtons}
+          </Group>
         )}
       </Group>
 

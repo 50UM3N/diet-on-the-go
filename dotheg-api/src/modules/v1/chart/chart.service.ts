@@ -5,6 +5,7 @@ import {
   CreateCopyChartDTO,
   UpdateChartDTO,
 } from "./chart.dto";
+import { Chart } from "@prisma/client";
 
 @Injectable()
 export class ChartService {
@@ -140,6 +141,35 @@ export class ChartService {
         fat: body.fat,
         carb: body.carb,
       },
+    });
+  }
+  async export() {
+    return await this.prismaService.chart.findMany({
+      include: {
+        mealChart: {
+          include: {
+            mealList: {
+              include: {
+                mealFood: {
+                  include: {
+                    foodItem: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async import(data: Chart[]) {
+    return await this.prismaService.$transaction(async (tx) => {
+      // write your code
+      // make sure when you add create a meal food just check the food item is exist in the database or not
+      // if not the don't create the meal food
+      console.log(data);
+      console.log(tx);
     });
   }
 

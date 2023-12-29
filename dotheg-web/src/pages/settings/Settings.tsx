@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { Button, Container, Grid, Group, Paper, Text, Title, FileInput, rem, Notification } from "@mantine/core";
+import { Button, Container, Grid, Group, Paper, Text, Title, FileInput, rem } from "@mantine/core";
 import ResetPassword from "./forms/ResetPassword";
 import UpdateProfile from "./forms/UpdateProfile";
 import { useGetUser } from "@/hooks/api/user.hooks";
@@ -11,7 +11,6 @@ const Settings = () => {
   const icon = <IconFilePlus style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
 
   if (data.data) {
-    console.log(data.data);
     return (
       <Container size="xl">
         <Breadcrumbs data={[{ name: "Settings" }]} />
@@ -22,7 +21,6 @@ const Settings = () => {
                 Update Profile
               </Title>
               <UpdateProfile data={data.data} />
-              {/* <Notification title="We notify you that">You are now obligated to give a star to Mantine project on GitHub</Notification> */}
             </Paper>
             {data.data.loginType == "default" && (
               <Paper withBorder p="md" radius="lg">

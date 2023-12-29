@@ -84,3 +84,7 @@ export const updateUserSchema = yup.object().shape({
   weight: yup.number().required("Weight is required").moreThan(0, "Weight must be greater than 0"),
   dob: yup.string().required("Date of Birth is required"),
 });
+
+export const importFoodItemSchema = yup.object().shape({
+  file: yup.mixed().required("File is required"),
+});

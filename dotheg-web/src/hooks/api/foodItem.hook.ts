@@ -42,6 +42,30 @@ export const useCreateFoodItem = (): [UseMutationResult<FoodItemInfo, AppError, 
   ];
 };
 
+export const useImportFoodItem = (): [UseMutationResult<FoodItemInfo, AppError, FormData, unknown>, string[]] => {
+  const key = [base];
+  return [
+    useMutation({
+      mutationFn: (data) =>
+        updater(toUrl([base, "import"]), {
+          method: "POST",
+          body: data,
+        }),
+      onSuccess: () => {
+        notifications.show({
+          message: "Food item import successfully",
+        });
+      },
+      onError(error) {
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      },
+    }),
+    key,
+  ];
+};
 export const useUpdateFoodItem = (): [
   UseMutationResult<
     FoodItemInfo,

@@ -3,7 +3,7 @@ import { createTheme } from "@mantine/core";
 export const theme = createTheme({
   primaryColor: "cyan",
   components: {
-    Button: { defaultProps: { radius: "md" } },
+    Button: { defaultProps: { radius: "md", size: "sm" } },
     TextInput: {
       defaultProps: {
         radius: "md",

@@ -17,7 +17,6 @@ const ResetPassword = () => {
     },
     validationSchema: resetPasswordSchema,
   });
-  console.log(form.errors);
   return (
     <form onSubmit={form.handleSubmit}>
       <Stack>
