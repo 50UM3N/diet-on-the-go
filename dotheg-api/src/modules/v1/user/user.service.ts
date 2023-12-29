@@ -1,13 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
 import { UpdateUserDTO } from "./user.dto";
-import { AuthService } from "../auth/auth.service";
+import { PasswordUtils } from "src/utils/passwordUtils";
 
 @Injectable()
 export class UserService {
   constructor(
     private prismaService: PrismaService,
-    private authService: AuthService,
+    private passwordUtils: PasswordUtils,
   ) {}
   async get(id: string) {
     return await this.prismaService.user.findUnique({
@@ -21,6 +21,7 @@ export class UserService {
         height: true,
         weight: true,
         age: true,
+        loginType: true,
       },
     });
   }
@@ -46,15 +47,21 @@ export class UserService {
     });
   }
 
-  async resetPassword(id: string, bodyPassword: string) {
-    const hashedPassword = await this.authService.hashPassword(bodyPassword);
-    console.log(hashedPassword);
+  async resetPassword(id: string, oldPassword: string, password: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
+    const isMatch: boolean = await this.passwordUtils.comparePasswords(
+      oldPassword,
+      user.password,
+    );
+    if (!isMatch) throw new UnauthorizedException("Old Password is incorrect");
     return await this.prismaService.user.update({
       where: {
         id,
       },
       data: {
-        password: hashedPassword,
+        password: await this.passwordUtils.hashPassword(password),
       },
     });
   }

@@ -7,13 +7,14 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "src/db/prisma.service";
 import { LoginDTO, SignUpDTO } from "./auth.dto";
 import { LoginType } from "src/constants";
-import * as bcrypt from "bcrypt";
+import { PasswordUtils } from "src/utils/passwordUtils";
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
+    private passwordUtils: PasswordUtils,
   ) {}
 
   async signUp(body: SignUpDTO) {
@@ -26,7 +27,7 @@ export class AuthService {
     const newUser = await this.prismaService.user.create({
       data: {
         email: body.email,
-        password: await this.hashPassword(body.password),
+        password: await this.passwordUtils.hashPassword(body.password),
         name: body.name,
         mobile: body.mobile,
         loginType: LoginType.DEFAULT,
@@ -47,7 +48,7 @@ export class AuthService {
     });
 
     if (!user) throw new UnauthorizedException("User doesn't exists");
-    const isMatch: boolean = await this.comparePasswords(
+    const isMatch: boolean = await this.passwordUtils.comparePasswords(
       body.password,
       user.password,
     );
@@ -68,7 +69,6 @@ export class AuthService {
         data: {
           email: email,
           name: name,
-          password: await this.hashPassword(email),
           loginType: LoginType.GOOGLE,
         },
       });
@@ -89,19 +89,5 @@ export class AuthService {
       });
       return { token, user };
     }
-  }
-
-  async hashPassword(password: string): Promise<string> {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    return hashedPassword;
-  }
-
-  async comparePasswords(
-    plainPassword: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    const match = await bcrypt.compare(plainPassword, hashedPassword);
-    return match;
   }
 }
