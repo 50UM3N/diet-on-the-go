@@ -26,6 +26,10 @@ export class UserController {
 
   @Patch("/reset-password")
   async updatePassword(@User() user: userDTO, @Body() body: ResetPasswordDTO) {
-    return this.userService.resetPassword(user.id, body.password);
+    return this.userService.resetPassword(
+      user.id,
+      body.oldPassword,
+      body.password,
+    );
   }
 }

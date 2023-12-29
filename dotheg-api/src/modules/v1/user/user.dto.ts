@@ -59,5 +59,9 @@ export class userDTO {
 export class ResetPasswordDTO {
   @IsString()
   @ApiProperty()
+  oldPassword: string;
+
+  @IsString()
+  @ApiProperty()
   password: string;
 }

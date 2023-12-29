@@ -8,11 +8,11 @@ const ResetPassword = () => {
   const [resetPassword] = useResetUserPassword();
   const form = useFormik<ResetPasswordDTO>({
     initialValues: {
+      oldPassword: "",
       confirmPassword: "",
       password: "",
     },
     onSubmit: async (values) => {
-      console.log("aasd");
       resetPassword.mutate(values);
     },
     validationSchema: resetPasswordSchema,
@@ -23,8 +23,19 @@ const ResetPassword = () => {
       <Stack>
         <PasswordInput
           withAsterisk
-          label="Password"
-          placeholder="Your password"
+          label=" Old Password"
+          placeholder="Your old password"
+          onBlur={form.handleBlur("oldPassword")}
+          onChange={(e) => form.handleChange("oldPassword")(e.currentTarget.value)}
+          value={form.values.oldPassword}
+          error={form.touched.oldPassword && form.errors.oldPassword}
+          radius="md"
+        />
+
+        <PasswordInput
+          withAsterisk
+          label="New Password"
+          placeholder="Your new password"
           onBlur={form.handleBlur("password")}
           onChange={(e) => form.handleChange("password")(e.currentTarget.value)}
           value={form.values.password}
@@ -34,8 +45,8 @@ const ResetPassword = () => {
 
         <PasswordInput
           withAsterisk
-          label="Confirm Password"
-          placeholder="Confirm Your password"
+          label="Confirm New Password"
+          placeholder="Confirm your new password"
           onBlur={form.handleBlur("confirmPassword")}
           onChange={(e) => form.handleChange("confirmPassword")(e.currentTarget.value)}
           value={form.values.confirmPassword}

@@ -35,6 +35,7 @@ export interface UserInfo {
   height?: number;
   weight?: number;
   age?: number;
+  loginType?: string;
   createdAt?: string;
   updatedAt?: string;
   chart?: ChartInfo[];
@@ -50,6 +51,7 @@ export interface UpdateUserDTO {
 }
 
 export interface ResetPasswordDTO {
+  oldPassword: string;
   password: string;
   confirmPassword: string;
 }
