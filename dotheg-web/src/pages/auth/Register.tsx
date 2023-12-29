@@ -24,7 +24,7 @@ export function Register() {
   });
 
   return (
-    <Container size={420} px="md">
+    <Container size={480} px="md">
       <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }}>
         <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">

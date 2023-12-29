@@ -5,21 +5,13 @@ import { User } from "src/decorators/user.decorator";
 import { AuthGuard } from "./auth.guard";
 import { userDTO } from "../user/user.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { OAuth2Client } from "google-auth-library";
 @ApiTags("auth")
 @Controller({
   path: "auth",
   version: "1",
 })
 export class AuthController {
-  googleClient: OAuth2Client;
-
-  constructor(private authService: AuthService) {
-    this.googleClient = new OAuth2Client(
-      process.env.APP_GOOGLE_CLIENT_ID,
-      process.env.APP_GOOGLE_CLIENT_SECRET,
-    );
-  }
+  constructor(private authService: AuthService) {}
 
   @ApiBearerAuth("JWT-token")
   @UseGuards(AuthGuard)
@@ -39,12 +31,15 @@ export class AuthController {
   }
 
   @Post("/google-login")
-  async googleLogin(@Body("token") token): Promise<any> {
-    const ticket = await this.googleClient.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+  async googleLogin(@Body("token") access_token): Promise<any> {
+    const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     });
-    const { name, email } = ticket.getPayload();
+    const data = await res.json();
+    const { name, email } = data;
     return await this.authService.googleLogin(name, email);
   }
 }

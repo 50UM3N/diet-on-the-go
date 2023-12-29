@@ -5,17 +5,19 @@ import { Link } from "react-router-dom";
 import { LoginDTO } from "@/types/auth.type";
 import { useGoogleLogin as useGoogle, useLogin } from "@/hooks/api/auth.hook";
 import { loginSchema } from "@/schema";
-// import { useGoogleLogin } from "@react-oauth/google";
-import GoogleLogin from "@/components/GoogleLogin";
+import { useGoogleLogin } from "@react-oauth/google";
+import { IconBrandGoogleFilled } from "@tabler/icons-react";
 
 export function Login(props: PaperProps) {
   const { colorScheme } = useMantineColorScheme();
   const { loading, userLogin } = useLogin();
   const { googleLogin } = useGoogle();
-  // const login = useGoogleLogin({
-  //   onSuccess: (tokenResponse) => googleLogin(tokenResponse.access_token),
-  //   flow: "implicit",
-  // });
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      googleLogin(tokenResponse.access_token);
+    },
+  });
+
   const form = useFormik<LoginDTO>({
     initialValues: {
       email: "",
@@ -28,7 +30,7 @@ export function Login(props: PaperProps) {
   });
 
   return (
-    <Container size={420} px="md">
+    <Container size={580} px="md">
       <Paper radius="lg" withBorder shadow="xs" style={{ overflow: "hidden" }} {...props}>
         <Paper shadow="none" p="xl" bg={darkLight(colorScheme, "cyan.9", "cyan")} radius={0}>
           <Title order={2} c="white" ta="center">
@@ -69,19 +71,14 @@ export function Login(props: PaperProps) {
               />
             </Stack>
 
-            <Group justify="center" align="center" mt="xl">
+            <Group justify="space-between" align="center" mt="xl">
               <Anchor component={Link} to={"/register"} type="button" c="dimmed" size="xs">
                 Don't have an account? Register
               </Anchor>
-              <Group>
-                {/* <Button onClick={() => login()} radius="xl">
+              <Group gap="xs">
+                <Button onClick={() => login()} radius="xl" leftSection={<IconBrandGoogleFilled size={18} />}>
                   Google
-                </Button> */}
-                <GoogleLogin
-                  onGoogleSignIn={(res: any) => {
-                    googleLogin(res.credential);
-                  }}
-                />
+                </Button>
                 <Button type="submit" radius="xl" loading={loading}>
                   Login
                 </Button>
