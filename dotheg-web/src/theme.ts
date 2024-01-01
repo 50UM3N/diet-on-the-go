@@ -20,6 +20,14 @@ export const theme = createTheme({
         },
       },
     },
+    FileInput: {
+      defaultProps: {
+        radius: "md",
+        styles: {
+          input: {},
+        },
+      },
+    },
     PasswordInput: {
       defaultProps: {
         radius: "md",

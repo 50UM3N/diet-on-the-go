@@ -312,12 +312,13 @@ const FoodItemImport: React.FC<{ onSave?: () => void; editingItem?: FoodItemInfo
         rightSection={<IconJson />}
         mb="sm"
         label="File"
-        placeholder=".json file"
         onChange={(e) => {
           setFile(e);
         }}
         value={file}
         error={error}
+        // @ts-ignore
+        placeholder="Upload files"
       />
       <Button w="100%" type="submit">
         Import

@@ -67,7 +67,6 @@ export const useCopyMealChart = (): [UseMutationResult<MealChartInfo, AppError, 
           message: "Meal Chart copied successfully",
         });
         queryClient.invalidateQueries();
-        console.log("success");
       },
       onError(error) {
         notifications.update({ color: "red", message: error.message });

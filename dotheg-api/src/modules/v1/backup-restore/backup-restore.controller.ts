@@ -58,7 +58,6 @@ export class BackupRestoreController {
     if (!file) throw new NotFoundException("No File Found.");
     try {
       const data: RestoreDTO = JSON.parse(file.buffer.toString());
-      console.log("JSON Content:", data);
       return await this.backupRestoreService.restoreBackup(user.id, data);
     } catch (error) {
       throw new ForbiddenException("Error reading JSON file.");

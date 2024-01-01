@@ -74,7 +74,6 @@ export class FoodItemController {
   })
   async readJsonFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new NotFoundException("No File Found.");
-    console.log(file.buffer.toString());
     try {
       const data: FoodItem[] = JSON.parse(file.buffer.toString());
       return await this.foodItemService.import(data);

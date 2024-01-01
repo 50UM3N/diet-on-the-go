@@ -41,10 +41,16 @@ export const updater: Updater = async (url, { method, body }) => {
     headers: {
       Accept: "application/json",
       Authorization: "Bearer " + token,
-      "Content-type": "application/json",
     },
   };
-  if (method !== "GET" && method !== "HEAD") options.body = body instanceof FormData ? body : JSON.stringify(body);
+  if (method !== "GET" && method !== "HEAD") {
+    if ((options.body = body instanceof FormData)) {
+      options.body = body;
+    } else {
+      options.body = JSON.stringify(body);
+      options.headers["Content-Type"] = "application/json";
+    }
+  }
   import.meta.env.DEV && console.info(`[${method}] ${import.meta.env.APP_BASE_API + url}`);
   const res = await fetch(import.meta.env.APP_BASE_API + url, options);
   if (!res.ok) {
