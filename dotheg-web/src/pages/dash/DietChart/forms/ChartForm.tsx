@@ -110,9 +110,9 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
     if (form.errors.adjustAmount || form.errors.adjustType || form.errors.maintenanceCalories || form.errors.bmr) return;
     let calorieIntake = Number(form.values.maintenanceCalories) || 0;
     if (form.values.adjustType == "deficit") {
-      calorieIntake -= form.values.adjustAmount;
+      calorieIntake -= Number(form.values.adjustAmount);
     } else {
-      calorieIntake += form.values.adjustAmount;
+      calorieIntake += Number(form.values.adjustAmount);
     }
     form.handleChange("intakeCalories")(String(calorieIntake));
   };
@@ -122,7 +122,7 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
       intakeCalories: true,
     });
     if (!form.values.intakeCalories) return false;
-    if (form.values.protein + form.values.fat + form.values.carb === 100) {
+    if (Number(form.values.protein) + Number(form.values.fat) + Number(form.values.carb) === 100) {
       setShowResult(true);
       return true;
     } else {
