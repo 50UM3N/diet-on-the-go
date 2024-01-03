@@ -66,7 +66,7 @@ export const calcAmount: CalcAmount = (unit, toBeCalc, metric) => {
 };
 
 export const inchFeetToCm = (inch: number, feet: number) => {
-  return (inch + feet * 12) * 2.54;
+  return feet * 30.48 + inch * 2.54;
 };
 
 export const cmToInchFeet = (cm: number) => {

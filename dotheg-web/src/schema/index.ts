@@ -71,10 +71,7 @@ export const resetPasswordSchema = yup.object().shape({
 });
 
 export const updateUserSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required("Name is required")
-    .matches(/^[A-Za-z]+$/, "Name should only contain letters"),
+  name: yup.string().required("Name is required"),
   mobile: yup
     .number()
     .required("Mobile number is required")

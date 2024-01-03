@@ -3,7 +3,7 @@ import { ACTIVITY_LEVEL } from "@/data/constant";
 import { calToGm, calcPercentage, calculateAMR, calculateBMR, cmToInchFeet, inchFeetToCm } from "@/utils";
 import { IconCalculator } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
-import { ChartInfo, Gender, UpdateChartDTO } from "@/types/index.type";
+import { ChartInfo, Gender, UpdateChartDTO, UserInfo } from "@/types/index.type";
 import { useFormik } from "formik";
 import { updateChartSchema } from "@/schema";
 import { useUpdateChart } from "@/hooks/api/chart.hook";
@@ -11,7 +11,7 @@ import { useState } from "react";
 import MacroCard from "@/components/MacroCard";
 import { queryClient } from "@/main";
 
-const ChartForm = ({ data }: { data: ChartInfo }) => {
+const ChartForm = ({ data, user }: { data: ChartInfo; user: UserInfo }) => {
   const [showResult, setShowResult] = useState(data.protein + data.fat + data.carb === 100);
   const [updateChart, key] = useUpdateChart();
   const form = useFormik<
@@ -23,11 +23,11 @@ const ChartForm = ({ data }: { data: ChartInfo }) => {
     initialValues: {
       name: data?.name || "",
       description: data?.description || "",
-      weight: data?.weight || 0,
-      heightFeet: cmToInchFeet(data?.height || 0).feet,
-      heightInches: cmToInchFeet(data?.height || 0).inch,
+      weight: data?.weight || user.weight || 0,
+      heightFeet: cmToInchFeet(data?.height || user.height || 0).feet,
+      heightInches: cmToInchFeet(data?.height || user.height || 0).inch,
       gender: data?.gender || "",
-      age: data?.age || 0,
+      age: data?.age || user.age || 0,
       activityLevel: data?.activityLevel || 0,
       bmr: data?.bmr || 0,
       maintenanceCalories: data?.maintenanceCalories || 0,

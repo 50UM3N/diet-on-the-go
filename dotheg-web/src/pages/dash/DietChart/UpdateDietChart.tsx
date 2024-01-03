@@ -5,18 +5,20 @@ import { Container, Grid, Paper } from "@mantine/core";
 import Data from "./Data";
 import Loader from "@/components/Loader";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { useGetUser } from "@/hooks/api/user.hooks";
 
 const UpdateDietChart = () => {
   const { id } = useParams();
   const [data] = useGetChartById(id as string);
-  if (data.data)
+  const [userData] = useGetUser();
+  if (data.data && userData.data)
     return (
       <Container size="xl">
         <Breadcrumbs data={[{ name: "Diet Chart", path: "/diet-chart" }, { name: data.data.name }]} />
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Paper withBorder p="md" radius="lg">
-              <ChartForm data={data.data} />
+              <ChartForm user={userData.data} data={data.data} />
             </Paper>
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
