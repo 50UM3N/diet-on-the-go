@@ -28,7 +28,7 @@ export const useUpdateUser = (): [UseMutationResult<UserInfo, AppError, UpdateUs
         }),
       onSuccess(_, data) {
         dispatch(updateUser(data));
-        queryClient.invalidateQueries({ queryKey: key });
+        queryClient.invalidateQueries();
         notifications.show({
           message: "User updated successfully",
         });

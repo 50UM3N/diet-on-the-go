@@ -71,8 +71,8 @@ export const inchFeetToCm = (inch: number, feet: number) => {
 
 export const cmToInchFeet = (cm: number) => {
   return {
-    feet: Math.floor(cm / 30.48),
-    inch: Math.floor((cm % 30.48) / 2.54),
+    feet: Math.floor((cm % 30.48) / 2.54),
+    inch: Math.floor(cm / 30.48),
   };
 };
 
