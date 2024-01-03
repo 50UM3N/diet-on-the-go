@@ -37,7 +37,14 @@ const Settings = () => {
               <Title order={3} mb={4}>
                 Import/Export Data
               </Title>
-              <FileInput clearable leftSection={icon} label="Attach your file to import" placeholder="Your File" leftSectionPointerEvents="none" />
+              <FileInput
+                clearable
+                leftSection={icon}
+                label="Attach your file to import"
+                // @ts-ignore
+                placeholder="Your File"
+                leftSectionPointerEvents="none"
+              />
               <Group justify="e" mt="xl">
                 <Button type="submit" radius="xl">
                   Import
