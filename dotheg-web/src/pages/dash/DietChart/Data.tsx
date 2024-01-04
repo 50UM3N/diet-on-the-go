@@ -366,9 +366,9 @@ const MealList = ({ isViewing, mealChartInfo }: { mealChartInfo: MealChartInfo; 
                             <td>
                               {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : mealFood.foodItem.metric === METRIC.PIECE ? "pc" : "ml"}
                             </td>
-                            <td>{((mealFood.foodItem.protein * mealFood.qty) / 100).toFixed(2)} g</td>
-                            <td>{((mealFood.foodItem.fat * mealFood.qty) / 100).toFixed(2)} g</td>
-                            <td>{((mealFood.foodItem.carb * mealFood.qty) / 100).toFixed(2)} g</td>
+                            <td>{mealFood.foodItem.metric === METRIC.GRAM ? ((mealFood.foodItem.protein * mealFood.qty) / 100).toFixed(2) : (mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
+                            <td>{mealFood.foodItem.metric === METRIC.GRAM ? ((mealFood.foodItem.fat * mealFood.qty) / 100).toFixed(2) : (mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
+                            <td>{mealFood.foodItem.metric === METRIC.GRAM ? ((mealFood.foodItem.carb * mealFood.qty) / 100).toFixed(2) : (mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
                             {!isViewing && (
                               <td>
                                 <Group gap="xs" wrap="nowrap" justify="center" data-no-print>
