@@ -304,9 +304,9 @@ const MealList = ({ isViewing, mealChartInfo }: { mealChartInfo: MealChartInfo; 
                     <Fragment key={item.id}>
                       <tr className="t-meal-head">
                         <td colSpan={2}>{item.name}</td>
-                        <td>{item.protein} g</td>
-                        <td>{item.fat} g</td>
-                        <td>{item.carb} g</td>
+                        <td>{item.protein.toFixed(2)} g</td>
+                        <td>{item.fat.toFixed(2)} g</td>
+                        <td>{item.carb.toFixed(2)} g</td>
                         {!isViewing && (
                           <td>
                             <Group gap="xs" justify="center">
