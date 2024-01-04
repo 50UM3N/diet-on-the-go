@@ -1,7 +1,14 @@
 import { Badge, DefaultMantineColor, Paper, PaperProps, Text, Title } from "@mantine/core";
 import { IconBaguette, IconCheese, IconEggs, IconFlame } from "@tabler/icons-react";
 
-const MacroCard = ({ type, amount, total, color, ...rest }: { type: "Protein" | "Carb" | "Fat" | "Calories"; amount: string | number; total: number; color?: DefaultMantineColor } & PaperProps) => {
+const MacroCard = ({
+  type,
+  amount,
+  total,
+  color,
+  unit,
+  ...rest
+}: { type: "Protein" | "Carb" | "Fat" | "Calories"; amount: string | number; total: number; color?: DefaultMantineColor; unit: "g" | "kcal" } & PaperProps) => {
   const Icon = generateIcons(type);
   return (
     <Paper
@@ -20,7 +27,9 @@ const MacroCard = ({ type, amount, total, color, ...rest }: { type: "Protein" | 
         <Badge color={color} size="xs" variant="filled">
           {total}%
         </Badge>
-        <Text size="xs">{amount} kcal</Text>
+        <Text size="xs">
+          {amount} {unit}
+        </Text>
       </div>
       <Icon size={60} style={{ position: "absolute", top: "8", right: "8", color: `var(--mantine-color-${color}-filled)`, opacity: 0.3 }} />
     </Paper>
