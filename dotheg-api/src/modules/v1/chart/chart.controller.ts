@@ -17,6 +17,7 @@ import { ChartService } from "./chart.service";
 import {
   CreateChartDTO,
   CreateCopyChartDTO,
+  ImportChartDTO,
   UpdateChartDTO,
 } from "./chart.dto";
 import { AuthGuard } from "../auth/auth.guard";
@@ -25,7 +26,6 @@ import { User } from "src/decorators/user.decorator";
 import { userDTO } from "../user/user.dto";
 import { Response } from "express";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Chart } from "@prisma/client";
 
 @ApiTags("chart")
 @Controller({
@@ -72,11 +72,16 @@ export class ChartController {
   async export(@Res() res: Response) {
     const data = await this.chartService.export();
     res.setHeader("Content-Type", "application/json");
-    res.setHeader("Content-Disposition", `attachment; filename=food-item.json`);
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=meal-chart.json`,
+    );
     res.send(JSON.stringify(data));
   }
 
   @Post("import")
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -90,11 +95,14 @@ export class ChartController {
       },
     },
   })
-  async readJsonFile(@UploadedFile() file: Express.Multer.File) {
+  async readJsonFile(
+    @UploadedFile() file: Express.Multer.File,
+    @User() user: userDTO,
+  ) {
     if (!file) throw new NotFoundException("No File Found.");
     try {
-      const data: Chart[] = JSON.parse(file.buffer.toString());
-      return await this.chartService.import(data);
+      const data: ImportChartDTO = JSON.parse(file.buffer.toString());
+      return await this.chartService.import(data, user.id);
     } catch (error) {
       throw new ForbiddenException("Error reading JSON file.");
     }

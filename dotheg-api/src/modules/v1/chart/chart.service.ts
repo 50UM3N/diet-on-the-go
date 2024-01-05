@@ -3,9 +3,9 @@ import { PrismaService } from "src/db/prisma.service";
 import {
   CreateChartDTO,
   CreateCopyChartDTO,
+  ImportChartDTO,
   UpdateChartDTO,
 } from "./chart.dto";
-import { Chart } from "@prisma/client";
 
 @Injectable()
 export class ChartService {
@@ -163,16 +163,65 @@ export class ChartService {
     });
   }
 
-  async import(data: Chart[]) {
+  async import(data: ImportChartDTO, userId: string) {
     return await this.prismaService.$transaction(async (tx) => {
-      // write your code
-      // make sure when you add create a meal food just check the food item is exist in the database or not
-      // if not the don't create the meal food
-      console.log(data);
-      console.log(tx);
+      for (let i = 0; i < data.length; i++) {
+        const chart = data[i];
+        const newChart = await tx.chart.create({
+          data: {
+            userId: userId,
+            name: chart.name,
+            description: chart.description,
+            weight: chart.weight,
+            gender: chart.gender,
+            height: chart.height,
+            age: chart.age,
+            activityLevel: chart.activityLevel,
+            bmr: chart.bmr,
+            maintenanceCalories: chart.maintenanceCalories,
+            adjustAmount: chart.adjustAmount,
+            adjustType: chart.adjustType,
+            intakeCalories: chart.intakeCalories,
+            protein: chart.protein,
+            fat: chart.fat,
+            carb: chart.carb,
+          },
+        });
+
+        for (let i = 0; i < chart.mealChart.length; i++) {
+          const mealChart = chart.mealChart[i];
+          const newMealChart = await tx.mealChart.create({
+            data: {
+              name: mealChart.name,
+              chartId: newChart.id,
+            },
+          });
+
+          for (let j = 0; j < mealChart.mealList.length; j++) {
+            const meal = mealChart.mealList[j];
+            const newMealList = await tx.mealList.create({
+              data: {
+                name: meal.name,
+                mealChartId: newMealChart.id,
+              },
+            });
+
+            for (let k = 0; k < meal.mealFood.length; k++) {
+              const mealFood = meal.mealFood[k];
+              await tx.mealFood.create({
+                data: {
+                  qty: mealFood.qty,
+                  foodItemId: mealFood.foodItemId,
+                  mealListId: newMealList.id,
+                },
+              });
+            }
+          }
+        }
+        return newChart;
+      }
     });
   }
-
   async delete(id: string) {
     return await this.prismaService.chart.delete({
       where: {
