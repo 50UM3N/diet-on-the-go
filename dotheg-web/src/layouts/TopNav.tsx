@@ -21,7 +21,7 @@ const TopNav = ({ setNavOpen, navOpen, bottomNavOpen }: { setNavOpen: React.Disp
     <>
       <header className={classes.header} data-no-print>
         <div className={classes.inner}>
-          <div>{!bottomNavOpen ? <Burger opened={navOpen} size="sm" onClick={() => setNavOpen((s) => !s)} /> : <Title order={3}>dotheg</Title>}</div>
+          <div>{!bottomNavOpen ? <Burger opened={navOpen} size="sm" onClick={() => setNavOpen((s) => !s)} /> : <Title order={3}>DonGo</Title>}</div>
           <Group>
             <Menu width={260} position="top-end" radius="lg" offset={20}>
               <Menu.Target>

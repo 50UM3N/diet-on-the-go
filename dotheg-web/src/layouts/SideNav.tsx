@@ -8,7 +8,7 @@ const SideNav = () => {
     <div className={classes.sideNavWrapper + " side-bar-wrapper"}>
       <div className={classes.sideNav}>
         <Title ta="center" px="sm" py="sm">
-          dotheg
+          DonGo
         </Title>
         <div className={classes.linkWrapper}>
           {navLinks.map((item, index) => (
