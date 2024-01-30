@@ -53,7 +53,7 @@ export const useImportFoodItem = (): [UseMutationResult<FoodItemInfo, AppError, 
         }),
       onSuccess: () => {
         notifications.show({
-          message: "Food item import successfully",
+          message: "Food item imported successfully",
         });
       },
       onError(error) {

@@ -396,16 +396,16 @@ const ChartForm = ({ data, user }: { data: ChartInfo; user: UserInfo }) => {
       {showResult && (
         <Grid grow gutter="xs" mt="sm">
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Calories" color="cyan" total={100} amount={form.values.intakeCalories} />
+            <MacroCard type="Calories" color="cyan" total={100} amount={form.values.intakeCalories} unit="kcal" />
           </Grid.Col>
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Protein" color="green" total={form.values.protein} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.protein), "protein")} />
+            <MacroCard type="Protein" color="green" total={form.values.protein} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.protein), "protein")} unit="g" />
           </Grid.Col>
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Fat" color="orange" total={form.values.fat} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.fat), "fat")} />
+            <MacroCard type="Fat" color="orange" total={form.values.fat} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.fat), "fat")} unit="g" />
           </Grid.Col>
           <Grid.Col span={{ xs: 3, base: 6 }}>
-            <MacroCard type="Carb" color="red" total={form.values.carb} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.carb), "carbohydrates")} />
+            <MacroCard type="Carb" color="red" total={form.values.carb} amount={calToGm(calcPercentage(form.values.intakeCalories, form.values.carb), "carbohydrates")} unit="g" />
           </Grid.Col>
         </Grid>
       )}

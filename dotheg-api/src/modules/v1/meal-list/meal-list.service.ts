@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/db/prisma.service";
 import { CreateMealListDTO, UpdateMealListDTO } from "./meal-list.dto";
+import { FoodItemMetric } from "src/constants";
 
 @Injectable()
 export class MealListService {
@@ -35,13 +36,19 @@ export class MealListService {
       for (let i = 0; i < mealList.mealFood.length; i++) {
         const mealFood = mealList.mealFood[i];
         totalMealFoodProtein += Number(
-          (mealFood.foodItem.protein * mealFood.qty).toFixed(2),
+          mealFood.foodItem.metric === FoodItemMetric.GRAM
+            ? ((mealFood.foodItem.protein * mealFood.qty) / 100).toFixed(2)
+            : (mealFood.foodItem.protein * mealFood.qty).toFixed(2),
         );
         totalMealFoodCarb += Number(
-          (mealFood.foodItem.carb * mealFood.qty).toFixed(2),
+          mealFood.foodItem.metric === FoodItemMetric.GRAM
+            ? ((mealFood.foodItem.carb * mealFood.qty) / 100).toFixed(2)
+            : (mealFood.foodItem.carb * mealFood.qty).toFixed(2),
         );
         totalMealFoodFat += Number(
-          (mealFood.foodItem.fat * mealFood.qty).toFixed(2),
+          mealFood.foodItem.metric === FoodItemMetric.GRAM
+            ? ((mealFood.foodItem.fat * mealFood.qty) / 100).toFixed(2)
+            : (mealFood.foodItem.fat * mealFood.qty).toFixed(2),
         );
       }
       newMealList.push({

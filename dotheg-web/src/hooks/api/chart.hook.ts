@@ -138,3 +138,28 @@ export const useDeleteChart = (): [UseMutationResult<ChartInfo, AppError, string
     key,
   ];
 };
+
+export const useImportChart = (): [UseMutationResult<ChartInfo, AppError, FormData, unknown>, string[]] => {
+  const key = [base];
+  return [
+    useMutation({
+      mutationFn: (data) =>
+        updater(toUrl([base, "import"]), {
+          method: "POST",
+          body: data,
+        }),
+      onSuccess: () => {
+        notifications.show({
+          message: "Diet chart imported successfully",
+        });
+      },
+      onError(error) {
+        notifications.show({
+          color: "red",
+          message: error.message,
+        });
+      },
+    }),
+    key,
+  ];
+};

@@ -78,7 +78,7 @@ const Table = (props: Props) => {
       </Paper>
       <Group justify="space-between">
         <Text size="sm" c="dimmed">
-          Showing <strong>{table.getState().pagination.pageIndex + 1}</strong> of <strong>{table.getPageCount()}</strong> results
+          Showing <strong>{table.getPageCount()}</strong> of <strong>{table.getPageCount()}</strong> results
         </Text>
         <Pagination total={table.getPageCount()} value={table.getState().pagination.pageIndex + 1} onChange={(page) => table.setPageIndex(page - 1)} size="sm" />
       </Group>

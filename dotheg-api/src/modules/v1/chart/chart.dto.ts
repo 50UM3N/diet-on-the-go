@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNumber } from "class-validator";
+import { Chart, FoodItem, MealChart, MealFood, MealList } from "@prisma/client";
 
 export class CreateChartDTO {
   @IsString()
@@ -77,3 +78,13 @@ export class UpdateChartDTO {
   @ApiProperty()
   carb: number;
 }
+
+export type ImportChartDTO = (Chart & {
+  mealChart: (MealChart & {
+    mealList: (MealList & {
+      mealFood: (MealFood & {
+        foodItem: FoodItem;
+      })[];
+    })[];
+  })[];
+})[];

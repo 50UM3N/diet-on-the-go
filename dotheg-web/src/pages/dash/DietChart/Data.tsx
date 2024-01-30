@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Button, Center, CopyButton, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Popover, Stack, Tabs, Text, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Button, Center, CopyButton, Divider, Grid, Group, LoadingOverlay, Menu, Modal, Paper, Popover, Stack, Tabs, Text, Title } from "@mantine/core";
 import { IconDotsVertical, IconPencil, IconPlus, IconSalad, IconTrash, IconShare, IconCopy, IconCheck } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -29,16 +29,16 @@ const Data = ({ chart, isViewing = false }: { chart: ChartInfo; isViewing?: bool
       <LoadingOverlay visible={mealChart.isPending} overlayProps={{ radius: "sm", blur: 2 }} />
       <Grid grow gutter="xs">
         <Grid.Col span={{ xs: 3, base: 6 }}>
-          <MacroCard type="Calories" color="cyan" total={100} amount={chart.intakeCalories} />
+          <MacroCard type="Calories" color="cyan" total={100} amount={chart.intakeCalories} unit="kcal" />
         </Grid.Col>
         <Grid.Col span={{ xs: 3, base: 6 }}>
-          <MacroCard type="Protein" color="green" total={chart.protein} amount={calToGm(calcPercentage(chart.intakeCalories, chart.protein), "protein")} />
+          <MacroCard type="Protein" color="green" total={chart.protein} amount={calToGm(calcPercentage(chart.intakeCalories, chart.protein), "protein")} unit="g" />
         </Grid.Col>
         <Grid.Col span={{ xs: 3, base: 6 }}>
-          <MacroCard type="Fat" color="orange" total={chart.fat} amount={calToGm(calcPercentage(chart.intakeCalories, chart.fat), "fat")} />
+          <MacroCard type="Fat" color="orange" total={chart.fat} amount={calToGm(calcPercentage(chart.intakeCalories, chart.fat), "fat")} unit="g" />
         </Grid.Col>
         <Grid.Col span={{ xs: 3, base: 6 }}>
-          <MacroCard type="Carb" color="red" total={chart.carb} amount={calToGm(calcPercentage(chart.intakeCalories, chart.carb), "carbohydrates")} />
+          <MacroCard type="Carb" color="red" total={chart.carb} amount={calToGm(calcPercentage(chart.intakeCalories, chart.carb), "carbohydrates")} unit="g" />
         </Grid.Col>
       </Grid>
       <Divider my="xs" />
@@ -47,10 +47,10 @@ const Data = ({ chart, isViewing = false }: { chart: ChartInfo; isViewing?: bool
         <Center mt="xs">
           <Stack gap="xs">
             <Text size="sm" ta="center">
-              No Meal Chat
+              No Meal Chart
             </Text>
             <Button onClick={() => setMealChartModal({ open: true, isEditing: false, data: undefined })} size="xs">
-              Create Meal Cart
+              Create Meal Chart
             </Button>
           </Stack>
         </Center>
@@ -218,53 +218,20 @@ const MealList = ({ isViewing, mealChartInfo }: { mealChartInfo: MealChartInfo; 
             <Title order={5}>Meal List</Title>
             {!isViewing && (
               <Group gap="xs">
-                <Popover width={400} position="bottom" radius="lg" withArrow shadow="md">
+                <Popover width={140} position="bottom" radius="lg" withArrow shadow="md">
                   <Popover.Target>
                     <Button leftSection={<IconShare size={16} />} size="xs" data-no-print>
                       Share
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    <Title order={5} mb="xs">
-                      Share Chart
-                    </Title>
-                    <TextInput placeholder="Email" />
-                    <Text size="sm" fw="bold" my="xs">
-                      People with access
-                    </Text>
-                    <Stack my="xs">
-                      <Paper withBorder p="xs" radius="md">
-                        <Group justify="space-between">
-                          <Group>
-                            <Avatar color="cyan" radius="xl">
-                              SK
-                            </Avatar>
-                            <div>
-                              <Text size="14px" fw="bold">
-                                Soumen Khara
-                              </Text>
-                              <Text size="12px">soumen2015.s.k@gmail.com</Text>
-                            </div>
-                          </Group>
-                          <ActionIcon size="sm" variant="filled" color="red">
-                            <IconTrash size={14} />
-                          </ActionIcon>
-                        </Group>
-                      </Paper>
-                    </Stack>
-
-                    <Group grow mt="md">
-                      <CopyButton value={`${window.location.origin}/diet-chart/view/${chartId}`} timeout={2000}>
-                        {({ copied, copy }) => (
-                          <Button color={copied ? "green" : undefined} leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />} size="xs" variant="light" onClick={copy}>
-                            {copied ? "Copied" : "Copy Link"}
-                          </Button>
-                        )}
-                      </CopyButton>
-                      <Button leftSection={<IconShare size={16} />} size="xs">
-                        Share
-                      </Button>
-                    </Group>
+                    <CopyButton value={`${window.location.origin}/diet-chart/view/${chartId}`} timeout={2000}>
+                      {({ copied, copy }) => (
+                        <Button color={copied ? "green" : undefined} leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />} size="xs" variant="light" onClick={copy}>
+                          {copied ? "Copied" : "Copy Link"}
+                        </Button>
+                      )}
+                    </CopyButton>
                   </Popover.Dropdown>
                 </Popover>
 
@@ -333,12 +300,13 @@ const MealList = ({ isViewing, mealChartInfo }: { mealChartInfo: MealChartInfo; 
                     {!isViewing && <td style={{ width: "80px" }}>Action</td>}
                   </tr>
                   {list.data.mealList?.map((item) => (
+                    // console.log(item.protein);
                     <Fragment key={item.id}>
                       <tr className="t-meal-head">
                         <td colSpan={2}>{item.name}</td>
-                        <td>{item.protein} g</td>
-                        <td>{item.fat} g</td>
-                        <td>{item.carb} g</td>
+                        <td>{item.protein.toFixed(2)} g</td>
+                        <td>{item.fat.toFixed(2)} g</td>
+                        <td>{item.carb.toFixed(2)} g</td>
                         {!isViewing && (
                           <td>
                             <Group gap="xs" justify="center">
@@ -398,9 +366,9 @@ const MealList = ({ isViewing, mealChartInfo }: { mealChartInfo: MealChartInfo; 
                             <td>
                               {mealFood.qty} {mealFood.foodItem.metric === METRIC.GRAM ? "g" : mealFood.foodItem.metric === METRIC.PIECE ? "pc" : "ml"}
                             </td>
-                            <td>{(mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
-                            <td>{(mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
-                            <td>{(mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
+                            <td>{mealFood.foodItem.metric === METRIC.GRAM ? ((mealFood.foodItem.protein * mealFood.qty) / 100).toFixed(2) : (mealFood.foodItem.protein * mealFood.qty).toFixed(2)} g</td>
+                            <td>{mealFood.foodItem.metric === METRIC.GRAM ? ((mealFood.foodItem.fat * mealFood.qty) / 100).toFixed(2) : (mealFood.foodItem.fat * mealFood.qty).toFixed(2)} g</td>
+                            <td>{mealFood.foodItem.metric === METRIC.GRAM ? ((mealFood.foodItem.carb * mealFood.qty) / 100).toFixed(2) : (mealFood.foodItem.carb * mealFood.qty).toFixed(2)} g</td>
                             {!isViewing && (
                               <td>
                                 <Group gap="xs" wrap="nowrap" justify="center" data-no-print>

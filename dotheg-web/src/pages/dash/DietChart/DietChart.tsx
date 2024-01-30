@@ -1,17 +1,19 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
-import { useCreateChart, useCreateCopyChart, useDeleteChart, useGetChart } from "@/hooks/api/chart.hook";
+import { EntryBase } from "@/data/constant";
+import { useCreateChart, useCreateCopyChart, useDeleteChart, useGetChart, useImportChart } from "@/hooks/api/chart.hook";
 import { queryClient } from "@/main";
 import { createChartSchema } from "@/schema";
-import { CreateChartDTO } from "@/types/index.type";
-import { ActionIcon, Button, Container, Group, Menu, Modal, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { ChartInfo, CreateChartDTO } from "@/types/index.type";
+import { downloadFile, toUrl } from "@/utils";
+import { ActionIcon, Button, Container, FileInput, Group, Menu, Modal, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { IconCopy, IconEdit, IconSettings, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconEdit, IconJson, IconSettings, IconTrash } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useFormik } from "formik";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DietChart = () => {
@@ -20,6 +22,7 @@ const DietChart = () => {
   const [data] = useGetChart();
   const [deleteChart] = useDeleteChart();
   const [copyChart] = useCreateCopyChart();
+  const [importData, setImportData] = useState(false);
   const handleDelete = async (id: string) => {
     modals.openConfirmModal({
       title: "Action Required",
@@ -97,11 +100,43 @@ const DietChart = () => {
     return (
       <Container size="xl">
         <Breadcrumbs data={[{ name: "Diet Chart", path: "/diet-chart" }]} />
-        <Table columns={columns} data={data.data} showAddButton buttonProps={{}} onAddButtonClick={open} />
+        <Table
+          columns={columns}
+          data={data.data}
+          showAddButton
+          buttonProps={{}}
+          onAddButtonClick={open}
+          otherButtons={
+            <Menu shadow="md" width={100} position="bottom-start">
+              <Menu.Target>
+                <ActionIcon size="lg" radius="md" variant="filled">
+                  <IconSettings size={18} />
+                </ActionIcon>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item leftSection={<IconEdit size={14} />} onClick={() => setImportData(true)}>
+                  Import
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item leftSection={<IconTrash size={16} />} onClick={() => downloadFile(toUrl([EntryBase.CHART, "export"]))}>
+                  Export
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          }
+        />
         <Modal opened={opened} onClose={close} title={"Create Diet Chart"} centered>
           <DietChartForm
             onSave={() => {
               close();
+            }}
+          />
+        </Modal>
+        <Modal opened={importData} onClose={() => setImportData(false)} title="Import Food Item" centered>
+          <ChartImport
+            onSave={() => {
+              close();
+              setImportData(false);
             }}
           />
         </Modal>
@@ -161,5 +196,46 @@ const DietChartForm: React.FC<{ onSave?: (id: string) => void }> = ({ onSave }) 
         </Group>
       </form>
     </>
+  );
+};
+
+const ChartImport: React.FC<{ onSave?: () => void; editingItem?: ChartInfo }> = ({ onSave }) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [importFoodItem] = useImportChart();
+  const handleUpload = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!file) {
+      setError("Please select a file");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file, "file.json");
+    importFoodItem.mutate(formData, {
+      onSuccess: () => {
+        onSave && onSave();
+        queryClient.invalidateQueries();
+      },
+    });
+  };
+
+  return (
+    <form onSubmit={handleUpload}>
+      <FileInput
+        rightSection={<IconJson />}
+        mb="sm"
+        label="File"
+        onChange={(e) => {
+          setFile(e);
+        }}
+        value={file}
+        error={error}
+        // @ts-ignore
+        placeholder="Upload files"
+      />
+      <Button w="100%" type="submit">
+        Import
+      </Button>
+    </form>
   );
 };
