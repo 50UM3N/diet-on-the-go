@@ -143,8 +143,11 @@ export class ChartService {
       },
     });
   }
-  async export() {
+  async export(userId: string) {
     return await this.prismaService.chart.findMany({
+      where: {
+        userId: userId,
+      },
       include: {
         mealChart: {
           include: {

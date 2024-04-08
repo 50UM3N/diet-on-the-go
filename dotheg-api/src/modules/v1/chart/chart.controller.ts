@@ -69,8 +69,10 @@ export class ChartController {
   }
 
   @Get("export")
-  async export(@Res() res: Response) {
-    const data = await this.chartService.export();
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth("JWT-token")
+  async export(@Res() res: Response, @User() user: userDTO) {
+    const data = await this.chartService.export(user.id);
     res.setHeader("Content-Type", "application/json");
     res.setHeader(
       "Content-Disposition",
