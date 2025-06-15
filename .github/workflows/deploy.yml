@@ -15,75 +15,51 @@ jobs:
 
       - name: Deploy code to EC2
         uses: appleboy/ssh-action@master
-        env:
-          PROJECT_WEB_ENV: ${{ secrets.PROJECT_WEB_ENV }}
-          PROJECT_API_ENV: ${{ secrets.PROJECT_API_ENV }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: PROJECT_API_ENV, PROJECT_WEB_ENV
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            # Navigate to your code directory
-            code_dir="/var/www/dotheg"
-            first_time=true
-            # Check if the code directory exists
-            if [ -d "$code_dir" ]; then
-              first_time=false
+
+            # Define directories
+            BASE_DIR="/var/www/dotheg"
+            APP_DIR="$BASE_DIR/dotheg-api"
+            WEB_DIR="$BASE_DIR/dotheg-web"
+
+            echo "------------------------------------"
+            echo "|        Updating Code             |"
+            echo "------------------------------------"
+
+            # Try to update and build the code
+            if cd $BASE_DIR && \
+               git pull origin main && \
+               cd $APP_DIR && \
+               pm2 stop ecosystem.config.js && \
+               cd $WEB_DIR && \
+               npm install && \
+               npm run build && \
+               cd $APP_DIR && \
+               npm install && \
+               npm run prisma:migrate && \
+               npm run build && \
+               pm2 start ecosystem.config.js; then
+              
+              echo "------------------------------------"
+              echo "|      Deployment Successful       |"
+              echo "------------------------------------"
+              
+              # Delete the backup we just created since deployment was successful
+              rm -rf $BACKUP_DIR/backup_$TIMESTAMP
+              echo "Backup deleted as deployment was successful"
+            else
+              echo "------------------------------------"
+              echo "|      Deployment Failed           |"
+              echo "|      Starting Rollback          |"
+              echo "------------------------------------"
+              exit 1
             fi
 
-            # Check if the code directory exists, if not, clone the repository
-            if [ "$first_time" = true ]; then
-              git clone https://github.com/50UM3N/diet-on-the-go.git "$code_dir"
-              cd "$code_dir"
-            fi
-            cd "$code_dir"
-            git pull origin main
-
-            echo "------------------------------------------"
-            echo "|          Starting Web Build            |"
-            echo "------------------------------------------"
-
-            cd dotheg-web
-            npm install
-            echo "$PROJECT_WEB_ENV" > ".env.prod"
-            NODE_OPTIONS=--max_old_space_size=512 npm run build
-            echo "------------------------------------------"
-            echo "|            Build Completed              |"
-            echo "------------------------------------------"
-            echo ""
-            echo ""
-            cd ..
-            echo ""
-            echo ""
-            echo "------------------------------------------"
-            echo "|          Starting Api Build            |"
-            echo "------------------------------------------"
-            cd dotheg-api
-            npm install
-            echo "$PROJECT_API_ENV" > ".env.prod"
-            npm run prisma:migrate
-            npm run build
-
-            echo "------------------------------------------"
-            echo "|            Build Completed              |"
-            echo "------------------------------------------"
-            echo ""
-            echo ""
-            echo ""
-            echo ""
-            echo "------------------------------------------"
-            echo "|             Starting PM2                |"
-            echo "------------------------------------------"
-            if [ "$first_time" = true ]; then
-              pm2 start npm --name "dotheg" -- run start
-              pm2 start dotheg
-              pm2 save
-            fi
-
-            pm2 restart dotheg
-
-          # Optional: Ignore SSH host key checking
+          # Disable SSH host key checking
           options: "-o StrictHostKeyChecking=no"
